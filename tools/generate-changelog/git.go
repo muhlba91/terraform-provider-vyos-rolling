@@ -20,7 +20,10 @@ func GenerateGitChanges() (previousVersion *version.Version, commitsSinceLastVer
 	die(err)
 	err = itr.ForEach(func(ref *plumbing.Reference) error {
 		v, err := version.NewVersion(ref.Name().Short())
-		die(err)
+		if err != nil {
+			// Not a valid version tag, just ignore it.
+			return nil
+		}
 		if v.GreaterThan(previousVersion) {
 			previousVersion = v
 		}
@@ -28,25 +31,34 @@ func GenerateGitChanges() (previousVersion *version.Version, commitsSinceLastVer
 	})
 	die(err)
 
-	hash, err := repo.ResolveRevision(plumbing.Revision(previousVersion.Original()))
-	die(err)
-	releaseCommit, err := repo.CommitObject(*hash)
-	die(err)
+	var releaseCommit *object.Commit
+	if previousVersion.Original() != "0.0.0" {
+		hash, err := repo.ResolveRevision(plumbing.Revision(previousVersion.Original()))
+		if err == nil {
+			c, err := repo.CommitObject(*hash)
+			if err == nil {
+				releaseCommit = c
+			}
+		}
+	}
 
-	commits, err := repo.Log(&git.LogOptions{
-		Since: &releaseCommit.Author.When,
+	logOptions := &git.LogOptions{
 		Order: git.LogOrderCommitterTime,
-	})
+	}
+	if releaseCommit != nil {
+		logOptions.Since = &releaseCommit.Author.When
+	}
+
+	commits, err := repo.Log(logOptions)
 	die(err)
 
 	chgs := make([]conventionalcommits.Message, 0)
 	ccm := parser.NewMachine(parser.WithTypes(conventionalcommits.TypesConventional), parser.WithBestEffort())
 
-	// skip the commit for the previous release
-	_, err = commits.Next()
-	die(err)
-
 	err = commits.ForEach(func(commit *object.Commit) error {
+		if releaseCommit != nil && commit.Hash == releaseCommit.Hash {
+			return nil // Skip the release commit itself
+		}
 		cc, _ := ccm.Parse([]byte(commit.Message))
 
 		chgs = append(chgs, cc)
