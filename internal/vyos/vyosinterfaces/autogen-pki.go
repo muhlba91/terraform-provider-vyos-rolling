@@ -23,7 +23,7 @@ func pki() schemadefinition.InterfaceDefinition {
 				Local: "node",
 			},
 			NodeNameAttr: "pki",
-			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/pki.py"),
+			OwnerAttr:    "${vyos_conf_scripts_dir}/pki.py",
 			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
 					Local: "properties",
@@ -440,7 +440,7 @@ func pki() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "url",
-												ArgumentAttr: vyosTools.String("--scheme http --scheme https"),
+												ArgumentAttr: "--scheme http --scheme https",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
