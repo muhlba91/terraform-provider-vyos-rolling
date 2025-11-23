@@ -1,6 +1,12 @@
 name: "Nightly Rolling Release"
 on:
   workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Force a release even if no changes are detected'
+        required: false
+        type: boolean
+        default: false
   schedule:
     - cron: 00 08 * * *
 jobs:
@@ -44,6 +50,8 @@ jobs:
             sudo chown -R $(id -u) .
             echo "Running make target"
             make ci-update
+        env:
+          FORCE_RELEASE: ${{ github.event.inputs.force_release }}
       - name: GIT Push new version
         id: git-push
         run: |
