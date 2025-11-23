@@ -13,60 +13,41 @@ func GenerateGitChanges() (previousVersion *version.Version, commitsSinceLastVer
 	repo, err := git.PlainOpen("../..")
 	die(err)
 
-	tags, err := repo.Tags()
+	previousVersion, err = version.NewVersion("0.0.0")
 	die(err)
 
-	latestVersion, err := version.NewVersion("0.0.0")
+	itr, err := repo.Tags()
 	die(err)
-	var latestVersionRef *plumbing.Reference
-	err = tags.ForEach(func(ref *plumbing.Reference) error {
+	err = itr.ForEach(func(ref *plumbing.Reference) error {
 		v, err := version.NewVersion(ref.Name().Short())
-		if err != nil {
-			return nil
-		}
-		if v.GreaterThan(latestVersion) {
-			latestVersion = v
-			latestVersionRef = ref
+		die(err)
+		if v.GreaterThan(previousVersion) {
+			previousVersion = v
 		}
 		return nil
 	})
 	die(err)
-	previousVersion = latestVersion
 
-	var logOptions git.LogOptions
-	logOptions.Order = git.LogOrderCommitterTime
+	hash, err := repo.ResolveRevision(plumbing.Revision(previousVersion.Original()))
+	die(err)
+	releaseCommit, err := repo.CommitObject(*hash)
+	die(err)
 
-	if latestVersionRef != nil {
-		releaseCommit, err := repo.CommitObject(latestVersionRef.Hash())
-		die(err)
-		logOptions.Since = &releaseCommit.Author.When
-	}
-
-	commits, err := repo.Log(&logOptions)
+	commits, err := repo.Log(&git.LogOptions{
+		Since: &releaseCommit.Author.When,
+		Order: git.LogOrderCommitterTime,
+	})
 	die(err)
 
 	chgs := make([]conventionalcommits.Message, 0)
 	ccm := parser.NewMachine(parser.WithTypes(conventionalcommits.TypesConventional), parser.WithBestEffort())
 
-	err = commits.ForEach(func(c *object.Commit) error {
-		if c == nil {
-			return nil
-		}
-		if latestVersionRef != nil && c.Hash == latestVersionRef.Hash() {
-			return nil
-		}
+	// skip the commit for the previous release
+	_, err = commits.Next()
+	die(err)
 
-		cc, err := ccm.Parse([]byte(c.Message))
-		// WithBestEffort still returns errors for malformed commits.
-		// It also can return a nil error and a nil message for non-conventional commits.
-		if err != nil || cc == nil {
-			return nil
-		}
-
-		// Skip commits that are not conventional, which WithBestEffort parses into an empty struct
-		if cc.Type == "" && cc.Description == "" {
-			return nil
-		}
+	err = commits.ForEach(func(commit *object.Commit) error {
+		cc, _ := ccm.Parse([]byte(commit.Message))
 
 		chgs = append(chgs, cc)
 		return nil
