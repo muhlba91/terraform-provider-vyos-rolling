@@ -64,7 +64,7 @@ func GenerateGitChanges() (previousVersion *version.Version, commitsSinceLastVer
 		}
 
 		// Skip commits that are not conventional, which WithBestEffort parses into an empty struct
-		if cc.Type() == "" && cc.Description() == "" {
+		if cc.Type == "" && cc.Description == "" {
 			return nil
 		}
 
