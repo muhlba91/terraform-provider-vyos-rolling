@@ -208,9 +208,7 @@ func (c SchemaChanges) GetChangeSeverity(s SchemaChangeSeverityStr) SchemaChange
 	return chgs
 }
 
-type ProviderSchemas struct {
-	tfjson.ProviderSchemas
-}
+type ProviderSchemas tfjson.ProviderSchemas
 
 func (p ProviderSchemas) Count() int {
 	return len(p.Schemas)

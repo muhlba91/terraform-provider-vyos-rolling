@@ -13,6 +13,7 @@ import (
 	"github.com/gdexlab/go-render/render"
 	"github.com/go-git/go-git/v5"
 	"github.com/hashicorp/go-version"
+	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/leodido/go-conventionalcommits"
 )
 
@@ -63,16 +64,30 @@ func main() {
 	err = json.Unmarshal(newSchemaByte, &newProvidersSchema)
 	die(err)
 
-	if oldProvidersSchema.Count() != 1 {
-		die(fmt.Errorf("old provider schema contains too many providers, expected exactly 1 got: %d", oldProvidersSchema.Count()))
+	if oldProvidersSchema.Count() > 1 {
+		die(fmt.Errorf("old provider schema contains too many providers, expected at most 1 got: %d", oldProvidersSchema.Count()))
 	}
 	if newProvidersSchema.Count() != 1 {
 		die(fmt.Errorf("new provider schema contains too many providers, expected exactly 1 got: %d", newProvidersSchema.Count()))
 	}
 
-	providerName := oldProvidersSchema.ProviderNames()[0]
+	var oldProvider *tfjson.ProviderSchema
+	var providerName string
+	if oldProvidersSchema.Count() == 1 {
+		providerName = oldProvidersSchema.ProviderNames()[0]
+		oldProvider = oldProvidersSchema.Schemas[providerName]
+	} else {
+		// Create an empty provider schema
+		oldProvider = &tfjson.ProviderSchema{
+			ConfigSchema: &tfjson.Schema{
+				Block: &tfjson.SchemaBlock{},
+			},
+			ResourceSchemas:   make(map[string]*tfjson.Schema),
+			DataSourceSchemas: make(map[string]*tfjson.Schema),
+		}
+	}
 
-	oldProvider := oldProvidersSchema.Schemas[providerName]
+	providerName = newProvidersSchema.ProviderNames()[0]
 	newProvider := newProvidersSchema.Schemas[providerName]
 
 	schemaChanges := GetSchemaChanges(oldProvider, newProvider)
