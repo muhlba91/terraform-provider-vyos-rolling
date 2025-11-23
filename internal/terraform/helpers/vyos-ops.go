@@ -77,20 +77,36 @@ func iron(ctx context.Context, vyosPath []string, values map[string]interface{})
 			val := append(cVyosPath, strconv.FormatFloat(value, 'f', -1, 64))
 			tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
 			ret = append(ret, val)
-		// LeafNodes multi value
-		case []string:
-
-			tools.Trace(ctx, "ironing slice of strings value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
-			for _, element := range value {
-				val := slices.Clone(append(cVyosPath, element))
-				tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
-				ret = append(ret, val)
-			}
-
-		// TagNodes and Nodes
-		case map[string]interface{}:
-
-			tools.Trace(ctx, "ironing nested map value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
+		        // LeafNodes multi value
+				case []string:
+		
+					tools.Trace(ctx, "ironing slice of strings value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
+					for _, element := range value {
+						val := slices.Clone(append(cVyosPath, element))
+						tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
+						ret = append(ret, val)
+					}
+						// LeafNodes multi value
+						case []interface{}:
+				
+							tools.Trace(ctx, "ironing slice of interface value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
+							for _, element := range value {
+								val := slices.Clone(append(cVyosPath, fmt.Sprintf("%v", element)))
+								tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
+								ret = append(ret, val)
+							}
+						// LeafNodes multi value
+						case []int:
+				
+							tools.Trace(ctx, "ironing slice of int value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
+							for _, element := range value {
+								val := slices.Clone(append(cVyosPath, strconv.Itoa(element)))
+								tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
+								ret = append(ret, val)
+							}
+				
+						// TagNodes and Nodes
+						case map[string]interface{}:			tools.Trace(ctx, "ironing nested map value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
 			tools.Trace(ctx, "recursing for ret", map[string]interface{}{"cVyosPath": fmt.Sprintf("%#v", cVyosPath)})
 			val := iron(ctx, cVyosPath, value)
 			ret = append(
