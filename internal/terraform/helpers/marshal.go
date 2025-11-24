@@ -87,7 +87,7 @@ func MarshalVyos(ctx context.Context, data any) (map[string]any, error) {
 			if !(v.IsNull() || v.IsUnknown()) {
 
 				tools.Debug(ctx, "Marshalling Number Field", map[string]interface{}{"field-name": fName, flags["name"].(string): v.ValueBigFloat()})
-				res[flags["name"].(string)], _ = v.ValueBigFloat().Float64()
+				res[flags["name"].(string)], _ = v.ValueBigFloat().Int64()
 			} else if !flags["omitempty"].(bool) {
 				panic(fmt.Sprintf("Missing value: %s", fName))
 			}
@@ -104,7 +104,7 @@ func MarshalVyos(ctx context.Context, data any) (map[string]any, error) {
 					}
 					res[flags["name"].(string)] = lst
 				case basetypes.NumberType:
-					var lst []float64
+					var lst []int64
 					diags := v.ElementsAs(ctx, &lst, false)
 					if diags != nil {
 						return nil, fmt.Errorf("ERROR: %v", diags)
