@@ -19,7 +19,7 @@ import (
 /* tools/generate-terraform-resource-full/templates/resources/common/resource-model.gotmpl #resource-model (ssh) */
 // Validate compliance
 
-var _ helpers.VyosTopResourceDataModel = &ServiceTCP{}
+var _ helpers.VyosTopResourceDataModel = &ServiceSSH{}
 
 // ServiceTCP describes the resource data model.
 // This is a basenode!
