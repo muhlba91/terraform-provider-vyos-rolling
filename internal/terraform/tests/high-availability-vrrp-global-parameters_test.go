@@ -26,7 +26,7 @@ func TestHighAvailabilityVrrpGlobalParametersMarshalVyos(t *testing.T) {
 	}
 
 	want := map[string]interface{}{
-		"startup-delay": float64(12),
+		"startup-delay": int64(12),
 	}
 
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -75,7 +75,7 @@ func TestHighAvailabilityVrrpGlobalParametersGenerateVyosOps(t *testing.T) {
 	hasPath := []string{"high-availability", "vrrp"}
 	hasData := map[string]interface{}{
 		"global-parameters": map[string]interface{}{
-			"startup-delay": float64(12),
+			"startup-delay": int64(12),
 		},
 	}
 

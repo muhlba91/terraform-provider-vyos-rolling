@@ -37,7 +37,7 @@ func TestFirewallIPvfourNameRuleMarshalVyos(t *testing.T) {
 		// "id":                    "firewall__name__rule-one__rule__42",
 		"action":                "accept",
 		"disable":               map[string]interface{}{},
-		"queue":                 float64(28),
+		"queue":                 int64(28),
 		"packet-length-exclude": []string{"420", "13-37"},
 		"destination": map[string]interface{}{
 			"address": "127.0.0.2",
@@ -58,7 +58,7 @@ func TestFirewallIPvfourNameRuleUnmarshalVyos(t *testing.T) {
 	has := map[string]interface{}{
 		"action":                "accept",
 		"disable":               map[string]interface{}{},
-		"queue":                 float64(28),
+		"queue":                 int64(28),
 		"packet-length-exclude": []string{"420", "13-37"},
 		"destination": map[string]interface{}{
 			"address": "127.0.0.2",
