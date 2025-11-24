@@ -15,1488 +15,2206 @@ var _ = vyosTools.String("")
 func highavailability() schemadefinition.InterfaceDefinition {
 	return schemadefinition.InterfaceDefinition{
 		XMLName: xml.Name{
-			Local: "interfaceDefinition"},
-		Node: []*schemadefinition.Node{&schemadefinition.Node{
+			Local: "interfaceDefinition",
+		},
+		Node: []*schemadefinition.Node{{
 			IsBaseNode: true,
 			XMLName: xml.Name{
-				Local: "node"},
+				Local: "node",
+			},
 			NodeNameAttr: "high-availability",
 			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/high-availability.py"),
-			Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
-					Local: "properties"},
+					Local: "properties",
+				},
 				Help:     []string{"High availability settings"},
-				Priority: []string{"800"}}},
-			Children: []*schemadefinition.Children{&schemadefinition.Children{
+				Priority: []string{"800"},
+			}},
+			Children: []*schemadefinition.Children{{
 				XMLName: xml.Name{
-					Local: "children"},
-				Node: []*schemadefinition.Node{&schemadefinition.Node{
+					Local: "children",
+				},
+				Node: []*schemadefinition.Node{{
 					IsBaseNode: true,
 					XMLName: xml.Name{
-						Local: "node"},
+						Local: "node",
+					},
 					NodeNameAttr: "vrrp",
-					Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
-							Local: "properties"},
-						Help: []string{"Virtual Router Redundancy Protocol settings"}}},
-					Children: []*schemadefinition.Children{&schemadefinition.Children{
+							Local: "properties",
+						},
+						Help: []string{"Virtual Router Redundancy Protocol settings"},
+					}},
+					Children: []*schemadefinition.Children{{
 						XMLName: xml.Name{
-							Local: "children"},
-						Node: []*schemadefinition.Node{&schemadefinition.Node{
+							Local: "children",
+						},
+						Node: []*schemadefinition.Node{{
 							IsBaseNode: true,
 							XMLName: xml.Name{
-								Local: "node"},
+								Local: "node",
+							},
 							NodeNameAttr: "global-parameters",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
-								Help: []string{"VRRP global parameters"}}},
-							Children: []*schemadefinition.Children{&schemadefinition.Children{
+									Local: "properties",
+								},
+								Help: []string{"VRRP global parameters"},
+							}},
+							Children: []*schemadefinition.Children{{
 								XMLName: xml.Name{
-									Local: "children"},
-								Node: []*schemadefinition.Node{&schemadefinition.Node{
+									Local: "children",
+								},
+								Node: []*schemadefinition.Node{{
 									IsBaseNode: true,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "garp",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Gratuitous ARP parameters"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Gratuitous ARP parameters"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interval",
 											DefaultValue: []string{"0"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Interval between Gratuitous ARP"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 0.000-1000 --float")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 0.000-1000 --float"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "<0.000-1000>",
-													Description: "Interval in seconds, resolution microseconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Interval in seconds, resolution microseconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-delay",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Delay for second set of gratuitous ARPs after transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-1000")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-1000"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-1000",
-													Description: "Delay in seconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Delay in seconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-refresh",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Minimum time interval for refreshing gratuitous ARPs while beeing master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:0",
-													Description: "No refresh"}, &schemadefinition.ValueHelp{
+													Description: "No refresh",
+												}, {
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Interval in seconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Interval in seconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-refresh-repeat",
 											DefaultValue: []string{"1"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Number of gratuitous ARP messages to send at a time while beeing master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Number of gratuitous ARP messages"}}}}}, &schemadefinition.LeafNode{
+													Description: "Number of gratuitous ARP messages",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-repeat",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Number of gratuitous ARP messages to send at a time after transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Number of gratuitous ARP messages"}}}}}}}}}},
-								LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+													Description: "Number of gratuitous ARP messages",
+												}},
+											}},
+										}},
+									}},
+								}},
+								LeafNode: []*schemadefinition.LeafNode{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "startup-delay",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Time VRRP startup process (in seconds)"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-600")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 1-600"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:1-600",
-											Description: "Interval in seconds"}}}}}, &schemadefinition.LeafNode{
+											Description: "Interval in seconds",
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "version",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Default VRRP version to use, IPv6 always uses VRRP version 3"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 2-3")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 2-3"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "2",
-											Description: "VRRP version 2"}, &schemadefinition.ValueHelp{
+											Description: "VRRP version 2",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "3",
-											Description: "VRRP version 3"}}}}}}}}}},
-						TagNode: []*schemadefinition.TagNode{&schemadefinition.TagNode{
+											Description: "VRRP version 3",
+										}},
+									}},
+								}},
+							}},
+						}},
+						TagNode: []*schemadefinition.TagNode{{
 							IsBaseNode: true,
 							XMLName: xml.Name{
-								Local: "tagNode"},
+								Local: "tagNode",
+							},
 							NodeNameAttr: "group",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
-								Help: []string{"VRRP group"}}},
-							Children: []*schemadefinition.Children{&schemadefinition.Children{
+									Local: "properties",
+								},
+								Help: []string{"VRRP group"},
+							}},
+							Children: []*schemadefinition.Children{{
 								XMLName: xml.Name{
-									Local: "children"},
-								Node: []*schemadefinition.Node{&schemadefinition.Node{
+									Local: "children",
+								},
+								Node: []*schemadefinition.Node{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "garp",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Gratuitous ARP parameters"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Gratuitous ARP parameters"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interval",
 											DefaultValue: []string{"0"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Interval between Gratuitous ARP"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 0.000-1000 --float")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 0.000-1000 --float"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "<0.000-1000>",
-													Description: "Interval in seconds, resolution microseconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Interval in seconds, resolution microseconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-delay",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Delay for second set of gratuitous ARPs after transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-1000")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-1000"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-1000",
-													Description: "Delay in seconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Delay in seconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-refresh",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Minimum time interval for refreshing gratuitous ARPs while beeing master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:0",
-													Description: "No refresh"}, &schemadefinition.ValueHelp{
+													Description: "No refresh",
+												}, {
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Interval in seconds"}}}}}, &schemadefinition.LeafNode{
+													Description: "Interval in seconds",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-refresh-repeat",
 											DefaultValue: []string{"1"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Number of gratuitous ARP messages to send at a time while beeing master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Number of gratuitous ARP messages"}}}}}, &schemadefinition.LeafNode{
+													Description: "Number of gratuitous ARP messages",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master-repeat",
 											DefaultValue: []string{"5"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Number of gratuitous ARP messages to send at a time after transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														ArgumentAttr: vyosTools.String("--range 1-255"),
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "u32:1-255",
-													Description: "Number of gratuitous ARP messages"}}}}}}}}}, &schemadefinition.Node{
+													Description: "Number of gratuitous ARP messages",
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "authentication",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"VRRP authentication"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"VRRP authentication"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "password",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"VRRP password"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Regex: []string{".{1,8}"}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														Local: "constraint",
+													},
+													Regex: []string{".{1,8}"},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "txt",
-													Description: "Password string (up to 8 characters)"}},
-												ConstraintErrorMessage: []string{"Password must not be longer than 8 characters"}}}}, &schemadefinition.LeafNode{
+													Description: "Password string (up to 8 characters)",
+												}},
+												ConstraintErrorMessage: []string{"Password must not be longer than 8 characters"},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "type",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Authentication type"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Regex: []string{"(plaintext-password|ah)"}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+														Local: "constraint",
+													},
+													Regex: []string{"(plaintext-password|ah)"},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "plaintext-password",
-													Description: "Simple password string"}, &schemadefinition.ValueHelp{
+													Description: "Simple password string",
+												}, {
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "ah",
-													Description: "AH - IPSEC (not recommended)"}},
+													Description: "AH - IPSEC (not recommended)",
+												}},
 												ConstraintErrorMessage: []string{"Authentication type must be plaintext-password or ah"},
-												CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+												CompletionHelp: []*schemadefinition.CompletionHelp{{
 													XMLName: xml.Name{
-														Local: "completionHelp"},
-													List: []string{"plaintext-password ah"}}}}}}}}}}, &schemadefinition.Node{
+														Local: "completionHelp",
+													},
+													List: []string{"plaintext-password ah"},
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "health-check",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Health check"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Health check"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "failure-count",
 											DefaultValue: []string{"3"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check failure count required for transition to fault"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--positive")}}}}}}}, &schemadefinition.LeafNode{
+														ArgumentAttr: vyosTools.String("--positive"),
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interval",
 											DefaultValue: []string{"60"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check execution interval in seconds"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--positive")}}}}}}}, &schemadefinition.LeafNode{
+														ArgumentAttr: vyosTools.String("--positive"),
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "ping",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"ICMP ping health check"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "ip-address"}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+															Local: "validator",
+														},
+														NameAttr: "ip-address",
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "ipv4",
-													Description: "IPv4 ping target address"}, &schemadefinition.ValueHelp{
+													Description: "IPv4 ping target address",
+												}, {
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "ipv6",
-													Description: "IPv6 ping target address"}}}}}, &schemadefinition.LeafNode{
+													Description: "IPv6 ping target address",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "script",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check script file"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}}}}}, &schemadefinition.Node{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "track",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Track settings"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Track settings"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "exclude-vrrp-interface",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Disable track state of main interface"},
-												Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+												Valueless: []*schemadefinition.Valueless{{
 													XMLName: xml.Name{
-														Local: "valueless"}}}}}}, &schemadefinition.LeafNode{
+														Local: "valueless",
+													},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interface",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Interface"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
+														Local: "constraint",
+													},
 													Regex: []string{"(bond|br|dum|en|ersp|eth|gnv|ifb|ipoe|lan|l2tp|l2tpeth|macsec|peth|ppp|pppoe|pptp|sstp|sstpc|tun|veth|vpptap|vpptun|vti|vtun|vxlan|wg|wlan|wwan)[0-9]+(.\\d+)?|pod-[-_a-zA-Z0-9]{1,11}|lo"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "file-path --lookup-path /sys/class/net --directory"}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+															Local: "validator",
+														},
+														NameAttr: "file-path --lookup-path /sys/class/net --directory",
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "txt",
-													Description: "Interface name"}},
-												CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+													Description: "Interface name",
+												}},
+												CompletionHelp: []*schemadefinition.CompletionHelp{{
 													XMLName: xml.Name{
-														Local: "completionHelp"},
-													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"}}},
-												Multi: []*schemadefinition.Multi{&schemadefinition.Multi{
+														Local: "completionHelp",
+													},
+													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"},
+												}},
+												Multi: []*schemadefinition.Multi{{
 													XMLName: xml.Name{
-														Local: "multi"}}}}}}}}}}, &schemadefinition.Node{
+														Local: "multi",
+													},
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "transition-script",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"VRRP transition scripts"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"VRRP transition scripts"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "backup",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to backup"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "fault",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to fault"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "stop",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to stop"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}}}}}},
-								TagNode: []*schemadefinition.TagNode{&schemadefinition.TagNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}},
+									}},
+								}},
+								TagNode: []*schemadefinition.TagNode{{
 									IsBaseNode: true,
 									XMLName: xml.Name{
-										Local: "tagNode"},
+										Local: "tagNode",
+									},
 									NodeNameAttr: "address",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Virtual IP address"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-host"}, &schemadefinition.Validator{
+													Local: "validator",
+												},
+												NameAttr: "ip-host",
+											}, {
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-address"}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+													Local: "validator",
+												},
+												NameAttr: "ip-address",
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4net",
-											Description: "IPv4 address and prefix length"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 address and prefix length",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6net",
-											Description: "IPv6 address and prefix length"}, &schemadefinition.ValueHelp{
+											Description: "IPv6 address and prefix length",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4",
-											Description: "IPv4 address"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 address",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6",
-											Description: "IPv6 address"}}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Description: "IPv6 address",
+										}},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interface",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Interface"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
+														Local: "constraint",
+													},
 													Regex: []string{"(bond|br|dum|en|ersp|eth|gnv|ifb|ipoe|lan|l2tp|l2tpeth|macsec|peth|ppp|pppoe|pptp|sstp|sstpc|tun|veth|vpptap|vpptun|vti|vtun|vxlan|wg|wlan|wwan)[0-9]+(.\\d+)?|pod-[-_a-zA-Z0-9]{1,11}|lo"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "file-path --lookup-path /sys/class/net --directory"}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+															Local: "validator",
+														},
+														NameAttr: "file-path --lookup-path /sys/class/net --directory",
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "txt",
-													Description: "Interface name"}},
-												CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+													Description: "Interface name",
+												}},
+												CompletionHelp: []*schemadefinition.CompletionHelp{{
 													XMLName: xml.Name{
-														Local: "completionHelp"},
-													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"}}}}}}}}}}, &schemadefinition.TagNode{
+														Local: "completionHelp",
+													},
+													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"},
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: true,
 									XMLName: xml.Name{
-										Local: "tagNode"},
+										Local: "tagNode",
+									},
 									NodeNameAttr: "excluded-address",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Virtual address (If you need additional IPv4 and IPv6 in same group)"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-host"}, &schemadefinition.Validator{
+													Local: "validator",
+												},
+												NameAttr: "ip-host",
+											}, {
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-address"}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+													Local: "validator",
+												},
+												NameAttr: "ip-address",
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4net",
-											Description: "IPv4 address and prefix length"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 address and prefix length",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6net",
-											Description: "IPv6 address and prefix length"}, &schemadefinition.ValueHelp{
+											Description: "IPv6 address and prefix length",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4",
-											Description: "IPv4 address"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 address",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6",
-											Description: "IPv6 address"}}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Description: "IPv6 address",
+										}},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interface",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Interface"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
+														Local: "constraint",
+													},
 													Regex: []string{"(bond|br|dum|en|ersp|eth|gnv|ifb|ipoe|lan|l2tp|l2tpeth|macsec|peth|ppp|pppoe|pptp|sstp|sstpc|tun|veth|vpptap|vpptun|vti|vtun|vxlan|wg|wlan|wwan)[0-9]+(.\\d+)?|pod-[-_a-zA-Z0-9]{1,11}|lo"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "file-path --lookup-path /sys/class/net --directory"}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+															Local: "validator",
+														},
+														NameAttr: "file-path --lookup-path /sys/class/net --directory",
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "txt",
-													Description: "Interface name"}},
-												CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+													Description: "Interface name",
+												}},
+												CompletionHelp: []*schemadefinition.CompletionHelp{{
 													XMLName: xml.Name{
-														Local: "completionHelp"},
-													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"}}}}}}}}}}},
-								LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+														Local: "completionHelp",
+													},
+													Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"},
+												}},
+											}},
+										}},
+									}},
+								}},
+								LeafNode: []*schemadefinition.LeafNode{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "interface",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Interface"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
+												Local: "constraint",
+											},
 											Regex: []string{"(bond|br|dum|en|ersp|eth|gnv|ifb|ipoe|lan|l2tp|l2tpeth|macsec|peth|ppp|pppoe|pptp|sstp|sstpc|tun|veth|vpptap|vpptun|vti|vtun|vxlan|wg|wlan|wwan)[0-9]+(.\\d+)?|pod-[-_a-zA-Z0-9]{1,11}|lo"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "file-path --lookup-path /sys/class/net --directory"}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+													Local: "validator",
+												},
+												NameAttr: "file-path --lookup-path /sys/class/net --directory",
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "txt",
-											Description: "Interface name"}},
-										CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+											Description: "Interface name",
+										}},
+										CompletionHelp: []*schemadefinition.CompletionHelp{{
 											XMLName: xml.Name{
-												Local: "completionHelp"},
-											Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"}}}}}}, &schemadefinition.LeafNode{
+												Local: "completionHelp",
+											},
+											Script: []string{"${vyos_completion_dir}/list_interfaces --broadcast"},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "advertise-interval",
 									DefaultValue: []string{"1"},
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Advertise interval"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 1-255"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:1-255",
-											Description: "Advertise interval in seconds"}}}}}, &schemadefinition.LeafNode{
+											Description: "Advertise interval in seconds",
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "description",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Description"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Regex: []string{".{0,255}"}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												Local: "constraint",
+											},
+											Regex: []string{".{0,255}"},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "txt",
-											Description: "Description"}},
-										ConstraintErrorMessage: []string{"Description too long (limit 255 characters)"}}}}, &schemadefinition.LeafNode{
+											Description: "Description",
+										}},
+										ConstraintErrorMessage: []string{"Description too long (limit 255 characters)"},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "disable",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Disable instance"},
-										Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+										Valueless: []*schemadefinition.Valueless{{
 											XMLName: xml.Name{
-												Local: "valueless"}}}}}}, &schemadefinition.LeafNode{
+												Local: "valueless",
+											},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "hello-source-address",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"VRRP hello source address"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-address"}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+													Local: "validator",
+												},
+												NameAttr: "ip-address",
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4",
-											Description: "IPv4 hello source address"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 hello source address",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6",
-											Description: "IPv6 hello source address"}}}}}, &schemadefinition.LeafNode{
+											Description: "IPv6 hello source address",
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "peer-address",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Unicast VRRP peer address"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
-												NameAttr: "ip-address"}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+													Local: "validator",
+												},
+												NameAttr: "ip-address",
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv4",
-											Description: "IPv4 unicast peer address"}, &schemadefinition.ValueHelp{
+											Description: "IPv4 unicast peer address",
+										}, {
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "ipv6",
-											Description: "IPv6 unicast peer address"}},
-										Multi: []*schemadefinition.Multi{&schemadefinition.Multi{
+											Description: "IPv6 unicast peer address",
+										}},
+										Multi: []*schemadefinition.Multi{{
 											XMLName: xml.Name{
-												Local: "multi"}}}}}}, &schemadefinition.LeafNode{
+												Local: "multi",
+											},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "no-preempt",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Disable master preemption"},
-										Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+										Valueless: []*schemadefinition.Valueless{{
 											XMLName: xml.Name{
-												Local: "valueless"}}}}}}, &schemadefinition.LeafNode{
+												Local: "valueless",
+											},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "preempt-delay",
 									DefaultValue: []string{"0"},
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Preempt delay (in seconds)"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 0-1000")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 0-1000"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:0-1000",
-											Description: "preempt delay"}}}}}, &schemadefinition.LeafNode{
+											Description: "preempt delay",
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "priority",
 									DefaultValue: []string{"100"},
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Router priority"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 1-255"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:1-255",
-											Description: "Router priority"}}}}}, &schemadefinition.LeafNode{
+											Description: "Router priority",
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "rfc3768-compatibility",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Use VRRP virtual MAC address as per RFC3768"},
-										Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+										Valueless: []*schemadefinition.Valueless{{
 											XMLName: xml.Name{
-												Local: "valueless"}}}}}}, &schemadefinition.LeafNode{
+												Local: "valueless",
+											},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "vrid",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Virtual router identifier"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-255")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 1-255"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:1-255",
-											Description: "Virtual router identifier"}}}}}}}}}, &schemadefinition.TagNode{
+											Description: "Virtual router identifier",
+										}},
+									}},
+								}},
+							}},
+						}, {
 							IsBaseNode: true,
 							XMLName: xml.Name{
-								Local: "tagNode"},
+								Local: "tagNode",
+							},
 							NodeNameAttr: "sync-group",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
-								Help: []string{"VRRP sync group"}}},
-							Children: []*schemadefinition.Children{&schemadefinition.Children{
+									Local: "properties",
+								},
+								Help: []string{"VRRP sync group"},
+							}},
+							Children: []*schemadefinition.Children{{
 								XMLName: xml.Name{
-									Local: "children"},
-								Node: []*schemadefinition.Node{&schemadefinition.Node{
+									Local: "children",
+								},
+								Node: []*schemadefinition.Node{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "health-check",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Health check"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Health check"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "failure-count",
 											DefaultValue: []string{"3"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check failure count required for transition to fault"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--positive")}}}}}}}, &schemadefinition.LeafNode{
+														ArgumentAttr: vyosTools.String("--positive"),
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "interval",
 											DefaultValue: []string{"60"},
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check execution interval in seconds"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
+															Local: "validator",
+														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--positive")}}}}}}}, &schemadefinition.LeafNode{
+														ArgumentAttr: vyosTools.String("--positive"),
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "ping",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"ICMP ping health check"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "ip-address"}}}},
-												ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+															Local: "validator",
+														},
+														NameAttr: "ip-address",
+													}},
+												}},
+												ValueHelp: []*schemadefinition.ValueHelp{{
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "ipv4",
-													Description: "IPv4 ping target address"}, &schemadefinition.ValueHelp{
+													Description: "IPv4 ping target address",
+												}, {
 													XMLName: xml.Name{
-														Local: "valueHelp"},
+														Local: "valueHelp",
+													},
 													Format:      "ipv6",
-													Description: "IPv6 ping target address"}}}}}, &schemadefinition.LeafNode{
+													Description: "IPv6 ping target address",
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "script",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check script file"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}}}}}, &schemadefinition.Node{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "transition-script",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"VRRP transition scripts"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"VRRP transition scripts"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "master",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to master"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "backup",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to backup"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "fault",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to fault"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}, &schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}, {
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "stop",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Script to run on VRRP state transition to stop"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}}}}}},
-								LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}},
+									}},
+								}},
+								LeafNode: []*schemadefinition.LeafNode{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "member",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Sync group member"},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "txt",
-											Description: "VRRP group name"}},
-										CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+											Description: "VRRP group name",
+										}},
+										CompletionHelp: []*schemadefinition.CompletionHelp{{
 											XMLName: xml.Name{
-												Local: "completionHelp"},
-											Path: []string{"high-availability vrrp group"}}},
-										Multi: []*schemadefinition.Multi{&schemadefinition.Multi{
+												Local: "completionHelp",
+											},
+											Path: []string{"high-availability vrrp group"},
+										}},
+										Multi: []*schemadefinition.Multi{{
 											XMLName: xml.Name{
-												Local: "multi"}}}}}}}}}}},
-						LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+												Local: "multi",
+											},
+										}},
+									}},
+								}},
+							}},
+						}},
+						LeafNode: []*schemadefinition.LeafNode{{
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "snmp",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Enable SNMP"},
-								Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+								Valueless: []*schemadefinition.Valueless{{
 									XMLName: xml.Name{
-										Local: "valueless"}}}}}}}}}}},
-				TagNode: []*schemadefinition.TagNode{&schemadefinition.TagNode{
+										Local: "valueless",
+									},
+								}},
+							}},
+						}},
+					}},
+				}},
+				TagNode: []*schemadefinition.TagNode{{
 					IsBaseNode: true,
 					XMLName: xml.Name{
-						Local: "tagNode"},
+						Local: "tagNode",
+					},
 					NodeNameAttr: "virtual-server",
-					Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
-							Local: "properties"},
-						Help: []string{"Load-balancing virtual server alias"}}},
-					Children: []*schemadefinition.Children{&schemadefinition.Children{
+							Local: "properties",
+						},
+						Help: []string{"Load-balancing virtual server alias"},
+					}},
+					Children: []*schemadefinition.Children{{
 						XMLName: xml.Name{
-							Local: "children"},
-						TagNode: []*schemadefinition.TagNode{&schemadefinition.TagNode{
+							Local: "children",
+						},
+						TagNode: []*schemadefinition.TagNode{{
 							IsBaseNode: true,
 							XMLName: xml.Name{
-								Local: "tagNode"},
+								Local: "tagNode",
+							},
 							NodeNameAttr: "real-server",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
-								Help: []string{"Real server address"}}},
-							Children: []*schemadefinition.Children{&schemadefinition.Children{
+									Local: "properties",
+								},
+								Help: []string{"Real server address"},
+							}},
+							Children: []*schemadefinition.Children{{
 								XMLName: xml.Name{
-									Local: "children"},
-								Node: []*schemadefinition.Node{&schemadefinition.Node{
+									Local: "children",
+								},
+								Node: []*schemadefinition.Node{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "node"},
+										Local: "node",
+									},
 									NodeNameAttr: "health-check",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
-										Help: []string{"Health check script"}}},
-									Children: []*schemadefinition.Children{&schemadefinition.Children{
+											Local: "properties",
+										},
+										Help: []string{"Health check script"},
+									}},
+									Children: []*schemadefinition.Children{{
 										XMLName: xml.Name{
-											Local: "children"},
-										LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Local: "children",
+										},
+										LeafNode: []*schemadefinition.LeafNode{{
 											IsBaseNode: false,
 											XMLName: xml.Name{
-												Local: "leafNode"},
+												Local: "leafNode",
+											},
 											NodeNameAttr: "script",
-											Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+											Properties: []*schemadefinition.Properties{{
 												XMLName: xml.Name{
-													Local: "properties"},
+													Local: "properties",
+												},
 												Help: []string{"Health check script file"},
-												Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+												Constraint: []*schemadefinition.Constraint{{
 													XMLName: xml.Name{
-														Local: "constraint"},
-													Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+														Local: "constraint",
+													},
+													Validator: []*schemadefinition.Validator{{
 														XMLName: xml.Name{
-															Local: "validator"},
-														NameAttr: "script"}}}}}}}}}}}},
-								LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+															Local: "validator",
+														},
+														NameAttr: "script",
+													}},
+												}},
+											}},
+										}},
+									}},
+								}},
+								LeafNode: []*schemadefinition.LeafNode{{
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "port",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Port number used by connection"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 0-65535")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 0-65535"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:0-65535",
-											Description: "Numeric IP port"}},
-										ConstraintErrorMessage: []string{"Port number must be in range 0 to 65535"}}}}, &schemadefinition.LeafNode{
+											Description: "Numeric IP port",
+										}},
+										ConstraintErrorMessage: []string{"Port number must be in range 0 to 65535"},
+									}},
+								}, {
 									IsBaseNode: false,
 									XMLName: xml.Name{
-										Local: "leafNode"},
+										Local: "leafNode",
+									},
 									NodeNameAttr: "connection-timeout",
-									Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+									Properties: []*schemadefinition.Properties{{
 										XMLName: xml.Name{
-											Local: "properties"},
+											Local: "properties",
+										},
 										Help: []string{"Server connection timeout"},
-										Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+										Constraint: []*schemadefinition.Constraint{{
 											XMLName: xml.Name{
-												Local: "constraint"},
-											Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+												Local: "constraint",
+											},
+											Validator: []*schemadefinition.Validator{{
 												XMLName: xml.Name{
-													Local: "validator"},
+													Local: "validator",
+												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-86400")}}}},
-										ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+												ArgumentAttr: vyosTools.String("--range 1-86400"),
+											}},
+										}},
+										ValueHelp: []*schemadefinition.ValueHelp{{
 											XMLName: xml.Name{
-												Local: "valueHelp"},
+												Local: "valueHelp",
+											},
 											Format:      "u32:1-86400",
-											Description: "Connection timeout to remote server"}}}}}}}}}},
-						LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+											Description: "Connection timeout to remote server",
+										}},
+									}},
+								}},
+							}},
+						}},
+						LeafNode: []*schemadefinition.LeafNode{{
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "address",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"IP address"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+										Local: "constraint",
+									},
+									Validator: []*schemadefinition.Validator{{
 										XMLName: xml.Name{
-											Local: "validator"},
-										NameAttr: "ip-address"}}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+											Local: "validator",
+										},
+										NameAttr: "ip-address",
+									}},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "ipv4",
-									Description: "IPv4 address"}, &schemadefinition.ValueHelp{
+									Description: "IPv4 address",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "ipv6",
-									Description: "IPv6 address"}}}}}, &schemadefinition.LeafNode{
+									Description: "IPv6 address",
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "algorithm",
 							DefaultValue: []string{"least-connection"},
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Schedule algorithm (default - least-connection)"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Regex: []string{"(round-robin|weighted-round-robin|least-connection|weighted-least-connection|source-hashing|destination-hashing|locality-based-least-connection)"}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										Local: "constraint",
+									},
+									Regex: []string{"(round-robin|weighted-round-robin|least-connection|weighted-least-connection|source-hashing|destination-hashing|locality-based-least-connection)"},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "round-robin",
-									Description: "Round robin"}, &schemadefinition.ValueHelp{
+									Description: "Round robin",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "weighted-round-robin",
-									Description: "Weighted round robin"}, &schemadefinition.ValueHelp{
+									Description: "Weighted round robin",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "least-connection",
-									Description: "Least connection"}, &schemadefinition.ValueHelp{
+									Description: "Least connection",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "weighted-least-connection",
-									Description: "Weighted least connection"}, &schemadefinition.ValueHelp{
+									Description: "Weighted least connection",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "source-hashing",
-									Description: "Source hashing"}, &schemadefinition.ValueHelp{
+									Description: "Source hashing",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "destination-hashing",
-									Description: "Destination hashing"}, &schemadefinition.ValueHelp{
+									Description: "Destination hashing",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "locality-based-least-connection",
-									Description: "Locality-Based least connection"}},
-								CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+									Description: "Locality-Based least connection",
+								}},
+								CompletionHelp: []*schemadefinition.CompletionHelp{{
 									XMLName: xml.Name{
-										Local: "completionHelp"},
-									List: []string{"round-robin weighted-round-robin least-connection weighted-least-connection source-hashing destination-hashing locality-based-least-connection"}}}}}}, &schemadefinition.LeafNode{
+										Local: "completionHelp",
+									},
+									List: []string{"round-robin weighted-round-robin least-connection weighted-least-connection source-hashing destination-hashing locality-based-least-connection"},
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "delay-loop",
 							DefaultValue: []string{"10"},
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Interval between health-checks (in seconds)"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+										Local: "constraint",
+									},
+									Validator: []*schemadefinition.Validator{{
 										XMLName: xml.Name{
-											Local: "validator"},
+											Local: "validator",
+										},
 										NameAttr:     "numeric",
-										ArgumentAttr: vyosTools.String("--range 1-3600")}}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										ArgumentAttr: vyosTools.String("--range 1-3600"),
+									}},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "u32:1-600",
-									Description: "Interval in seconds"}}}}}, &schemadefinition.LeafNode{
+									Description: "Interval in seconds",
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "forward-method",
 							DefaultValue: []string{"nat"},
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Forwarding method"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Regex: []string{"(direct|nat|tunnel)"}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										Local: "constraint",
+									},
+									Regex: []string{"(direct|nat|tunnel)"},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "direct",
-									Description: "Direct routing"}, &schemadefinition.ValueHelp{
+									Description: "Direct routing",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "nat",
-									Description: "NAT"}, &schemadefinition.ValueHelp{
+									Description: "NAT",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "tunnel",
-									Description: "Tunneling"}},
-								CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+									Description: "Tunneling",
+								}},
+								CompletionHelp: []*schemadefinition.CompletionHelp{{
 									XMLName: xml.Name{
-										Local: "completionHelp"},
-									List: []string{"direct nat tunnel"}}}}}}, &schemadefinition.LeafNode{
+										Local: "completionHelp",
+									},
+									List: []string{"direct nat tunnel"},
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "fwmark",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Match fwmark value"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+										Local: "constraint",
+									},
+									Validator: []*schemadefinition.Validator{{
 										XMLName: xml.Name{
-											Local: "validator"},
+											Local: "validator",
+										},
 										NameAttr:     "numeric",
-										ArgumentAttr: vyosTools.String("--range 1-2147483647")}}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										ArgumentAttr: vyosTools.String("--range 1-2147483647"),
+									}},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "u32:1-2147483647",
-									Description: "Match firewall mark value"}}}}}, &schemadefinition.LeafNode{
+									Description: "Match firewall mark value",
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "port",
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Port number used by connection"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+										Local: "constraint",
+									},
+									Validator: []*schemadefinition.Validator{{
 										XMLName: xml.Name{
-											Local: "validator"},
+											Local: "validator",
+										},
 										NameAttr:     "numeric",
-										ArgumentAttr: vyosTools.String("--range 0-65535")}}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										ArgumentAttr: vyosTools.String("--range 0-65535"),
+									}},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "u32:0-65535",
-									Description: "Numeric IP port"}},
-								ConstraintErrorMessage: []string{"Port number must be in range 0 to 65535"}}}}, &schemadefinition.LeafNode{
+									Description: "Numeric IP port",
+								}},
+								ConstraintErrorMessage: []string{"Port number must be in range 0 to 65535"},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "persistence-timeout",
 							DefaultValue: []string{"300"},
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Timeout for persistent connections"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Validator: []*schemadefinition.Validator{&schemadefinition.Validator{
+										Local: "constraint",
+									},
+									Validator: []*schemadefinition.Validator{{
 										XMLName: xml.Name{
-											Local: "validator"},
+											Local: "validator",
+										},
 										NameAttr:     "numeric",
-										ArgumentAttr: vyosTools.String("--range 1-86400")}}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										ArgumentAttr: vyosTools.String("--range 1-86400"),
+									}},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "u32:1-86400",
-									Description: "Timeout for persistent connections"}}}}}, &schemadefinition.LeafNode{
+									Description: "Timeout for persistent connections",
+								}},
+							}},
+						}, {
 							IsBaseNode: false,
 							XMLName: xml.Name{
-								Local: "leafNode"},
+								Local: "leafNode",
+							},
 							NodeNameAttr: "protocol",
 							DefaultValue: []string{"tcp"},
-							Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+							Properties: []*schemadefinition.Properties{{
 								XMLName: xml.Name{
-									Local: "properties"},
+									Local: "properties",
+								},
 								Help: []string{"Protocol for port checks"},
-								Constraint: []*schemadefinition.Constraint{&schemadefinition.Constraint{
+								Constraint: []*schemadefinition.Constraint{{
 									XMLName: xml.Name{
-										Local: "constraint"},
-									Regex: []string{"(tcp|udp)"}}},
-								ValueHelp: []*schemadefinition.ValueHelp{&schemadefinition.ValueHelp{
+										Local: "constraint",
+									},
+									Regex: []string{"(tcp|udp)"},
+								}},
+								ValueHelp: []*schemadefinition.ValueHelp{{
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "tcp",
-									Description: "TCP"}, &schemadefinition.ValueHelp{
+									Description: "TCP",
+								}, {
 									XMLName: xml.Name{
-										Local: "valueHelp"},
+										Local: "valueHelp",
+									},
 									Format:      "udp",
-									Description: "UDP"}},
-								CompletionHelp: []*schemadefinition.CompletionHelp{&schemadefinition.CompletionHelp{
+									Description: "UDP",
+								}},
+								CompletionHelp: []*schemadefinition.CompletionHelp{{
 									XMLName: xml.Name{
-										Local: "completionHelp"},
-									List: []string{"tcp udp"}}}}}}}}}}},
-				LeafNode: []*schemadefinition.LeafNode{&schemadefinition.LeafNode{
+										Local: "completionHelp",
+									},
+									List: []string{"tcp udp"},
+								}},
+							}},
+						}},
+					}},
+				}},
+				LeafNode: []*schemadefinition.LeafNode{{
 					IsBaseNode: false,
 					XMLName: xml.Name{
-						Local: "leafNode"},
+						Local: "leafNode",
+					},
 					NodeNameAttr: "disable",
-					Properties: []*schemadefinition.Properties{&schemadefinition.Properties{
+					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
-							Local: "properties"},
+							Local: "properties",
+						},
 						Help: []string{"Disable instance"},
-						Valueless: []*schemadefinition.Valueless{&schemadefinition.Valueless{
+						Valueless: []*schemadefinition.Valueless{{
 							XMLName: xml.Name{
-								Local: "valueless"}}}}}}}}}}}}
+								Local: "valueless",
+							},
+						}},
+					}},
+				}},
+			}},
+		}},
+	}
 }
