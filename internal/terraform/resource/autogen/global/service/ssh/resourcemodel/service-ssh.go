@@ -264,7 +264,7 @@ func (o ServiceTCP) ResourceSchemaAttributes(ctx context.Context) map[string]sch
 		"port":
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype-multi (port) */
 		schema.ListAttribute{
-			ElementType: types.NumberType,
+			ElementType: types.StringType,
 			Optional:    true,
 			MarkdownDescription: `Port for SSH service
 
