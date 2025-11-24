@@ -24,7 +24,7 @@ var _ helpers.VyosTopResourceDataModel = &ServiceTCP{}
 // ServiceTCP describes the resource data model.
 // This is a basenode!
 // Top level basenode type: `Node`
-type ServiceSSH struct {
+type ServiceTCP struct {
 	ID       types.String   `tfsdk:"id" vyos:"-,tfsdk-id"`
 	Timeouts timeouts.Value `tfsdk:"timeouts" vyos:"-,timeout"`
 
@@ -38,7 +38,7 @@ type ServiceSSH struct {
 	LeafServiceTCPListenAddress                 types.List   `tfsdk:"listen_address" vyos:"listen-address,omitempty"`
 	LeafServiceTCPLoglevel                      types.String `tfsdk:"loglevel" vyos:"loglevel,omitempty"`
 	LeafServiceTCPMac                           types.List   `tfsdk:"mac" vyos:"mac,omitempty"`
-	LeafServiceSSHPort                          types.Number `tfsdk:"port" vyos:"port,omitempty"`
+	LeafServiceTCPPort                          types.List   `tfsdk:"port" vyos:"port,omitempty"`
 	LeafServiceTCPClientKeepaliveInterval       types.Number `tfsdk:"client_keepalive_interval" vyos:"client-keepalive-interval,omitempty"`
 	LeafServiceTCPTrustedUserCa                 types.String `tfsdk:"trusted_user_ca" vyos:"trusted-user-ca,omitempty"`
 	LeafServiceTCPVrf                           types.List   `tfsdk:"vrf" vyos:"vrf,omitempty"`
@@ -55,12 +55,12 @@ type ServiceSSH struct {
 }
 
 // SetID configures the resource ID
-func (o *ServiceSSH) SetID(id []string) {
+func (o *ServiceTCP) SetID(id []string) {
 	o.ID = basetypes.NewStringValue(strings.Join(id, "__"))
 }
 
 // GetTimeouts returns resource timeout config
-func (o *ServiceSSH) GetTimeouts() timeouts.Value {
+func (o *ServiceTCP) GetTimeouts() timeouts.Value {
 	return o.Timeouts
 }
 
@@ -263,7 +263,8 @@ func (o ServiceTCP) ResourceSchemaAttributes(ctx context.Context) map[string]sch
 
 		"port":
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype-multi (port) */
-		schema.NumberAttribute{
+		schema.ListAttribute{
+			ElementType: types.NumberType,
 			Optional:    true,
 			MarkdownDescription: `Port for SSH service
 
