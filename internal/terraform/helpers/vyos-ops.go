@@ -97,7 +97,17 @@ func iron(ctx context.Context, vyosPath []string, values map[string]interface{})
 				
 							tools.Trace(ctx, "ironing slice of interface value", map[string]interface{}{"current-vyos-path": cVyosPath, "type": fmt.Sprintf("%T", value), "value": fmt.Sprintf("%#v", value)})
 							for _, element := range value {
-								val := slices.Clone(append(cVyosPath, fmt.Sprintf("%v", element)))
+								var formattedElement string
+								if fVal, ok := element.(float64); ok {
+									if fVal == float64(int64(fVal)) {
+										formattedElement = strconv.FormatInt(int64(fVal), 10)
+									} else {
+										formattedElement = strconv.FormatFloat(fVal, 'f', -1, 64)
+									}
+								} else {
+									formattedElement = fmt.Sprintf("%v", element)
+								}
+								val := slices.Clone(append(cVyosPath, formattedElement))
 								tools.Trace(ctx, "appending to ret", map[string]interface{}{"ret": fmt.Sprintf("%#v", ret), "val": fmt.Sprintf("%#v", val)})
 								ret = append(ret, val)
 							}
