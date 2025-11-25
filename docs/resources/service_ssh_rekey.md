@@ -45,13 +45,13 @@ Secure Shell (SSH)
 ### Optional
 
 #### data
-- `data` (Number) Threshold data in megabytes
+- `data` (String) Threshold data in megabytes
 
     |  Format   &emsp;|  Description  |
     |-----------|---------------|
     |  1-65535  &emsp;|  Megabytes    |
 #### time
-- `time` (Number) Threshold time in minutes
+- `time` (String) Threshold time in minutes
 
     |  Format   &emsp;|  Description  |
     |-----------|---------------|

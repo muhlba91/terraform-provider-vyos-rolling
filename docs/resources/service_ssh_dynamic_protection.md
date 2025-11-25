@@ -56,19 +56,19 @@ Secure Shell (SSH)
     |  ipv6     &emsp;|  IPv6 address to match against   |
     |  ipv6net  &emsp;|  IPv6 address and prefix length  |
 #### block_time
-- `block_time` (Number) Block source IP in seconds. Subsequent blocks increase by a factor of 1.5
+- `block_time` (String) Block source IP in seconds. Subsequent blocks increase by a factor of 1.5
 
     |  Format   &emsp;|  Description                            |
     |-----------|-----------------------------------------|
     |  1-65535  &emsp;|  Time interval in seconds for blocking  |
 #### detect_time
-- `detect_time` (Number) Remember source IP in seconds before reset their score
+- `detect_time` (String) Remember source IP in seconds before reset their score
 
     |  Format   &emsp;|  Description               |
     |-----------|----------------------------|
     |  1-65535  &emsp;|  Time interval in seconds  |
 #### threshold
-- `threshold` (Number) Block source IP when their cumulative attack score exceeds threshold
+- `threshold` (String) Block source IP when their cumulative attack score exceeds threshold
 
     |  Format   &emsp;|  Description      |
     |-----------|-------------------|

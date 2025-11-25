@@ -253,6 +253,22 @@ func (o *LeafNode) AncestorDescription() string {
 // number (if value help only lists u32)
 // bool (if valueless is defined)
 func (o *LeafNode) ValueType() string {
+	// TMP HACK: due to a bug in vyos API some values are returned as strings
+	// when they should be numbers.
+	// We will work around this by forcing these values to be strings
+	// See: https://vyos.dev/T6332
+	if tools.ListContains([]string{
+		"service ssh port",
+		"service ssh client-keepalive-interval",
+		"service ssh dynamic-protection block-time",
+		"service ssh dynamic-protection detect-time",
+		"service ssh dynamic-protection threshold",
+		"service ssh rekey data",
+		"service ssh rekey time",
+	}, strings.Join(o.AbsName(), " ")) {
+		return "string"
+	}
+
 	if len(o.Properties[0].Valueless) > 0 {
 		return "bool"
 	}

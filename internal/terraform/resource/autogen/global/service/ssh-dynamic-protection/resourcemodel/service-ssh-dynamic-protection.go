@@ -28,9 +28,9 @@ type ServiceTCPDynamicProtection struct {
 	Timeouts timeouts.Value `tfsdk:"timeouts" vyos:"-,timeout"`
 
 	// LeafNodes
-	LeafServiceTCPDynamicProtectionBlockTime  types.Number `tfsdk:"block_time" vyos:"block-time,omitempty"`
-	LeafServiceTCPDynamicProtectionDetectTime types.Number `tfsdk:"detect_time" vyos:"detect-time,omitempty"`
-	LeafServiceTCPDynamicProtectionThreshold  types.Number `tfsdk:"threshold" vyos:"threshold,omitempty"`
+	LeafServiceTCPDynamicProtectionBlockTime  types.String `tfsdk:"block_time" vyos:"block-time,omitempty"`
+	LeafServiceTCPDynamicProtectionDetectTime types.String `tfsdk:"detect_time" vyos:"detect-time,omitempty"`
+	LeafServiceTCPDynamicProtectionThreshold  types.String `tfsdk:"threshold" vyos:"threshold,omitempty"`
 	LeafServiceTCPDynamicProtectionAllowFrom  types.List   `tfsdk:"allow_from" vyos:"allow-from,omitempty"`
 
 	// TagNodes
@@ -108,7 +108,7 @@ func (o ServiceTCPDynamicProtection) ResourceSchemaAttributes(ctx context.Contex
 		"block_time":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (block-time) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Block source IP in seconds. Subsequent blocks increase by a factor of 1.5
 
@@ -130,7 +130,7 @@ func (o ServiceTCPDynamicProtection) ResourceSchemaAttributes(ctx context.Contex
 		"detect_time":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (detect-time) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Remember source IP in seconds before reset their score
 
@@ -152,7 +152,7 @@ func (o ServiceTCPDynamicProtection) ResourceSchemaAttributes(ctx context.Contex
 		"threshold":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (threshold) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Block source IP when their cumulative attack score exceeds threshold
 

@@ -117,4 +117,12 @@ resource "vyos_service_conntrack_sync" "this" {
 
 resource "vyos_service_ssh" "this" {
   port = [2222]
+
+lifecycle {
+    ignore_changes = ["port"]
+  }
+  timeouts = {
+    create = "5m"
+  }
+
 }

@@ -56,7 +56,7 @@ description: |-
 #### ciphers
 - `ciphers` (List of String) Allowed ciphers
 #### client_keepalive_interval
-- `client_keepalive_interval` (Number) Enable transmission of keepalives from server to client
+- `client_keepalive_interval` (String) Enable transmission of keepalives from server to client
 
     |  Format   &emsp;|  Description                                     |
     |-----------|--------------------------------------------------|
@@ -89,7 +89,7 @@ description: |-
 #### mac
 - `mac` (List of String) Allowed message authentication code (MAC) algorithms
 #### port
-- `port` (List of Number) Port for SSH service
+- `port` (List of String) Port for SSH service
 
     |  Format   &emsp;|  Description      |
     |-----------|-------------------|

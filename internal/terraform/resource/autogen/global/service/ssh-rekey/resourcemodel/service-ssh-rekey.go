@@ -28,8 +28,8 @@ type ServiceTCPRekey struct {
 	Timeouts timeouts.Value `tfsdk:"timeouts" vyos:"-,timeout"`
 
 	// LeafNodes
-	LeafServiceTCPRekeyData types.Number `tfsdk:"data" vyos:"data,omitempty"`
-	LeafServiceTCPRekeyTime types.Number `tfsdk:"time" vyos:"time,omitempty"`
+	LeafServiceTCPRekeyData types.String `tfsdk:"data" vyos:"data,omitempty"`
+	LeafServiceTCPRekeyTime types.String `tfsdk:"time" vyos:"time,omitempty"`
 
 	// TagNodes
 
@@ -106,7 +106,7 @@ func (o ServiceTCPRekey) ResourceSchemaAttributes(ctx context.Context) map[strin
 		"data":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (data) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Threshold data in megabytes
 
@@ -125,7 +125,7 @@ func (o ServiceTCPRekey) ResourceSchemaAttributes(ctx context.Context) map[strin
 		"time":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (time) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Threshold time in minutes
 

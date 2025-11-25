@@ -39,7 +39,7 @@ type ServiceTCP struct {
 	LeafServiceTCPLoglevel                      types.String `tfsdk:"loglevel" vyos:"loglevel,omitempty"`
 	LeafServiceTCPMac                           types.List   `tfsdk:"mac" vyos:"mac,omitempty"`
 	LeafServiceTCPPort                          types.List   `tfsdk:"port" vyos:"port,omitempty"`
-	LeafServiceTCPClientKeepaliveInterval       types.Number `tfsdk:"client_keepalive_interval" vyos:"client-keepalive-interval,omitempty"`
+	LeafServiceTCPClientKeepaliveInterval       types.String `tfsdk:"client_keepalive_interval" vyos:"client-keepalive-interval,omitempty"`
 	LeafServiceTCPTrustedUserCa                 types.String `tfsdk:"trusted_user_ca" vyos:"trusted-user-ca,omitempty"`
 	LeafServiceTCPVrf                           types.List   `tfsdk:"vrf" vyos:"vrf,omitempty"`
 
@@ -264,7 +264,7 @@ func (o ServiceTCP) ResourceSchemaAttributes(ctx context.Context) map[string]sch
 		"port":
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype-multi (port) */
 		schema.ListAttribute{
-			ElementType: types.NumberType,
+			ElementType: types.StringType,
 			Optional:    true,
 			MarkdownDescription: `Port for SSH service
 
@@ -286,7 +286,7 @@ func (o ServiceTCP) ResourceSchemaAttributes(ctx context.Context) map[string]sch
 		"client_keepalive_interval":
 
 		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (client-keepalive-interval) */
-		schema.NumberAttribute{
+		schema.StringAttribute{
 			Optional: true,
 			MarkdownDescription: `Enable transmission of keepalives from server to client
 
