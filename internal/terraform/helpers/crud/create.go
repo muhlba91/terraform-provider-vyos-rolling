@@ -3,6 +3,7 @@ package crud
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -133,57 +134,43 @@ func create(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 	}
 
 	// Check if resource already exists
+	var resourceExists bool
 	if !providerCfg.Config.CrudSkipExistingResourceCheck {
 		tools.Debug(ctx, fmt.Sprintf("checking for existing resource: '%s'", planModel.GetVyosPath()))
+		exists, err := c.Has(ctx, planModel.GetVyosPath())
+		if err != nil {
+			return fmt.Errorf("resource check error for: [%s]: %w", strings.Join(planModel.GetVyosPath(), " "), err)
+		}
+		resourceExists = exists
+	}
 
-		// Check timeout before retrying
-		var lastErr error
-		boMs := 500
-		boExp := 1.04
-		boMaxS := 10.0
-		retryTotalDelay := time.Duration(0)
-		retryCnt := 0
-	EL:
-		for {
-			select {
-			case <-ctx.Done():
-
-				tools.Warn(ctx, "retry timeout reached")
-				return lastErr
-			default:
-				resourceExists, err := c.Has(ctx, planModel.GetVyosPath())
-				if err != nil {
-					return fmt.Errorf("resource check error for: [%s]: %w", strings.Join(planModel.GetVyosPath(), " "), err)
-				} else if !resourceExists {
-					break EL
-				} else {
-					tools.Info(ctx, "resource already exists, retrying", map[string]interface{}{"resource": planModel.GetVyosPath()})
-					lastErr = fmt.Errorf("resource already exists: [%s]", strings.Join(planModel.GetVyosPath(), " "))
+	// If resource exists, perform update instead of create
+	if resourceExists {
+		tools.Info(ctx, "resource already exists, performing update instead of create", map[string]interface{}{"resource": planModel.GetVyosPath()})
+		// Create a new model instance for current state
+		modelType := reflect.TypeOf(planModel)
+		pointerType := modelType.Elem()
+		reflectedValue := reflect.New(pointerType)
+		stateModel := reflectedValue.Interface().(helpers.VyosTopResourceDataModel)
+		// Copy SelfIdentifier from planModel to stateModel
+		planValue := reflect.ValueOf(planModel).Elem()
+		stateValue := reflect.ValueOf(stateModel).Elem()
+		if planValue.IsValid() && stateValue.IsValid() {
+			if planField := planValue.FieldByName("SelfIdentifier"); planField.IsValid() {
+				if stateField := stateValue.FieldByName("SelfIdentifier"); stateField.CanSet() {
+					stateField.Set(planField)
 				}
-
-				// No Deadline means we do not wish to retry
-				if _, ok := ctx.Deadline(); !ok {
-
-					tools.Warn(ctx, "no retry deadline configured, disabling retry.")
-					if lastErr != nil {
-						return lastErr
-					}
-					break EL
-				}
-
-				// Wait a bit before allowing the next attempt
-				boMs = int(float64(boMs) * boExp)
-				backOff := min(
-					time.Duration(boMs)*time.Millisecond,
-					time.Duration(boMaxS)*time.Second,
-				)
-
-				tools.Info(ctx, "delaying before next retry", map[string]interface{}{"retryTotalDelay": retryTotalDelay, "retryCnt": retryCnt, "backOff": backOff})
-				time.Sleep(backOff)
-				retryTotalDelay += backOff
-				retryCnt++
 			}
 		}
+		err := read(ctx, c, stateModel)
+		if err != nil {
+			return fmt.Errorf("failed to read existing resource for update: %w", err)
+		}
+		err = update(ctx, c, stateModel, planModel)
+		if err != nil {
+			return fmt.Errorf("failed to update existing resource: %w", err)
+		}
+		return nil
 	}
 
 	// Marshal resource model for vyos

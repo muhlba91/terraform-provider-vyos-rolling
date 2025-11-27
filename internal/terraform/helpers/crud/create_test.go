@@ -134,10 +134,10 @@ func TestCrudCreateSuccess(t *testing.T) {
 	}
 }
 
-// TestCrudCreateResourceAlreadyExistsFailure test CRUD helper: Create
+// TestCrudCreateResourceAlreadyExistsSuccess test CRUD helper: Create
 //
-//	Default situation where the resource already exists and we fail because of it
-func TestCrudCreateResourceAlreadyExistsFailure(t *testing.T) {
+//	Default situation where the resource already exists and we update it
+func TestCrudCreateResourceAlreadyExistsSuccess(t *testing.T) {
 	// API mocking
 	eList := api.NewExchangeList()
 	apiKey := "test-key"
@@ -168,6 +168,56 @@ func TestCrudCreateResourceAlreadyExistsFailure(t *testing.T) {
 		`{
 			"success": true,
 			"data": true,
+			"error": null
+		}`,
+	)
+
+	// Read exists check API call
+	exchangeReadExistsCheck := eList.Add()
+	exchangeReadExistsCheck.Expect(
+		"/retrieve",
+		apiKey,
+		`{"op":"exists","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42"]}`,
+	).Response(
+		200,
+		`{
+			"success": true,
+			"data": true,
+			"error": null
+		}`,
+	)
+
+	// Read resource API call
+	exchangeReadResource := eList.Add()
+	exchangeReadResource.Expect(
+		"/retrieve",
+		apiKey,
+		`{"op":"showConfig","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42"]}`,
+	).Response(
+		200,
+		`{
+			"success": true,
+			"data": {},
+			"error": null
+		}`,
+	)
+
+	// Update resource API call
+	exchangeUpdateResource := eList.Add()
+	exchangeUpdateResource.Expect(
+		"/configure",
+		apiKey,
+		`[`+
+			`{"op":"set","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42","action","accept"]},`+
+			`{"op":"set","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42","description","Allow http outgoing traffic"]},`+
+			`{"op":"set","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42","protocol","tcp"]},`+
+			`{"op":"set","path":["firewall","ipv4","name","TestCrudCreateResourceAlreadyExistsFailure","rule","42","destination","group","port-group","Web"]}`+
+			`]`,
+	).Response(
+		200,
+		`{
+			"success": true,
+			"data": null,
 			"error": null
 		}`,
 	)
@@ -203,8 +253,8 @@ func TestCrudCreateResourceAlreadyExistsFailure(t *testing.T) {
 
 	// Execute test
 	err := create(ctx, providerData, client, model)
-	if err == nil {
-		t.Errorf("Should have failed to create existing resource")
+	if err != nil {
+		t.Errorf("Create failed: %v", err)
 	}
 
 	// Validate API calls
@@ -719,8 +769,7 @@ func TestCrudCreateTimeoutFailure(t *testing.T) {
 // TestCrudCreateRetrySuccess test CRUD helper: Create
 //
 // Default situation where we attempt to create a resource where the parent exists,
-// but the resource is in the process of being destroyed so we must wait and retry
-// until the resource has been removed so we can re-create it
+// but the resource already exists so we perform update instead
 func TestCrudCreateRetrySuccess(t *testing.T) {
 	// API mocking
 	eList := api.NewExchangeList()
@@ -741,26 +790,9 @@ func TestCrudCreateRetrySuccess(t *testing.T) {
 		}`,
 	)
 
-	// Self check API call: before remove x3
-	for range 3 {
-		exchangeExistingResourceCheckBefore := eList.Add()
-		exchangeExistingResourceCheckBefore.Expect(
-			"/retrieve",
-			apiKey,
-			`{"op":"exists","path":["firewall","ipv4","name","TestCrudCreateRetrySuccess","rule","42"]}`,
-		).Response(
-			200,
-			`{
-			"success": true,
-			"data": true,
-			"error": null
-		}`,
-		)
-	}
-
-	// Self check API call: after remove
-	exchangeExistingResourceCheckAfter := eList.Add()
-	exchangeExistingResourceCheckAfter.Expect(
+	// Self check API call: resource exists
+	exchangeExistingResourceCheck := eList.Add()
+	exchangeExistingResourceCheck.Expect(
 		"/retrieve",
 		apiKey,
 		`{"op":"exists","path":["firewall","ipv4","name","TestCrudCreateRetrySuccess","rule","42"]}`,
@@ -768,14 +800,44 @@ func TestCrudCreateRetrySuccess(t *testing.T) {
 		200,
 		`{
 			"success": true,
-			"data": false,
+			"data": true,
 			"error": null
 		}`,
 	)
 
-	// Create resource API call
-	exchangeCreateResource := eList.Add()
-	exchangeCreateResource.Expect(
+	// Read resource exists check API call
+	exchangeReadResourceExists := eList.Add()
+	exchangeReadResourceExists.Expect(
+		"/retrieve",
+		apiKey,
+		`{"op":"exists","path":["firewall","ipv4","name","TestCrudCreateRetrySuccess","rule","42"]}`,
+	).Response(
+		200,
+		`{
+			"success": true,
+			"data": true,
+			"error": null
+		}`,
+	)
+
+	// Read resource API call
+	exchangeReadResource := eList.Add()
+	exchangeReadResource.Expect(
+		"/retrieve",
+		apiKey,
+		`{"op":"showConfig","path":["firewall","ipv4","name","TestCrudCreateRetrySuccess","rule","42"]}`,
+	).Response(
+		200,
+		`{
+			"success": true,
+			"data": {},
+			"error": null
+		}`,
+	)
+
+	// Update resource API call
+	exchangeUpdateResource := eList.Add()
+	exchangeUpdateResource.Expect(
 		"/configure",
 		apiKey,
 		`[`+
