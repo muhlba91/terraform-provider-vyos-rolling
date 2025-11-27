@@ -64,32 +64,35 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
 func update(ctx context.Context, client client.Client, stateModel, planModel helpers.VyosTopResourceDataModel) error {
-	// Delete existing config
+	// Get existing and planned config
 	stateVyosData, err := helpers.MarshalVyos(ctx, stateModel)
 	if err != nil {
 		return fmt.Errorf("API marshalling error: %s", err)
 	}
 
-	vyosOpsState := helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), stateVyosData)
-	tools.Trace(ctx, "Compiling vyos state operations", map[string]interface{}{"vyosOpsState": vyosOpsState})
-
-	client.StageDelete(ctx, vyosOpsState)
-
-	// Create new config
 	planVyosData, err := helpers.MarshalVyos(ctx, planModel)
 	if err != nil {
 		return fmt.Errorf("API marshalling error: %s", err)
 	}
 
+	// Delete fields that are in state but not in plan
+	for key := range stateVyosData {
+		if _, exists := planVyosData[key]; !exists {
+			deletePath := append(stateModel.GetVyosPath(), key)
+			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+		}
+	}
+
+	// Set the new config
 	vyosOpsPlan := helpers.GenerateVyosOps(ctx, planModel.GetVyosPath(), planVyosData)
-	tools.Error(ctx, "Compiling vyos plan operations", map[string]interface{}{"vyosOpsPlan": vyosOpsPlan})
+	tools.Trace(ctx, "Compiling vyos plan operations", map[string]interface{}{"vyosOpsPlan": vyosOpsPlan})
 
 	client.StageSet(ctx, vyosOpsPlan)
 
 	// Commit changes to api
 	response, err := client.CommitChanges(ctx)
 	if err != nil {
-		return fmt.Errorf("client error: unable to create '%s', got error: %s", planModel.GetVyosPath(), err)
+		return fmt.Errorf("client error: unable to update '%s', got error: %s", planModel.GetVyosPath(), err)
 	}
 	if response != nil {
 		tools.Warn(ctx, "Got non-nil response from API", map[string]interface{}{"response": response})
