@@ -368,14 +368,7 @@ provider-schema:
 	mkdir -p .build
 
 	echo use provider to generate schema
-	[ ! -e examples/provider/.tmp/provider-schema.json ] || rm examples/provider/.tmp/provider-schema.json
-	cd examples/provider
-	make .tmp/provider-schema.json
-	cd $(ROOT_DIR)
-
-	echo move new schema to build dir
-	[ ! -e ".build/new-provider-schema.json" ] || rm -rf ".build/new-provider-schema.json"
-	mv examples/provider/.tmp/provider-schema.json .build/new-provider-schema.json
+	cp data/provider-schema.json .build/new-provider-schema.json
 
 	echo create copy with clean provider name
 	old_name="$$(cat .build/new-provider-schema.json | jq -r '.provider_schemas | keys | .[0]')"
