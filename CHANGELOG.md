@@ -4,30 +4,39 @@
 <!--TOC-->
 
 - [CHANGELOG](#changelog)
-  - [Release 0.1.202507150 (2025-11-25 10-43-40 UTC)](#release-01202507150-2025-11-25-10-43-40-utc)
+  - [Release 0.1.202507151 (2025-11-27 15-25-27 UTC)](#release-01202507151-2025-11-27-15-25-27-utc)
     - [Project changes](#project-changes)
       - [Notes](#notes)
+  - [Release 0.1.202507150 (2025-11-25 10-43-40 UTC)](#release-01202507150-2025-11-25-10-43-40-utc)
+    - [Project changes](#project-changes-1)
+      - [Notes](#notes-1)
       - [Features](#features)
       - [Bug fixes](#bug-fixes)
     - [Schema changes](#schema-changes)
       - [Features](#features-1)
         - [Resources](#resources)
   - [Release 0.1.202507159 (2025-11-24 17-34-26 UTC)](#release-01202507159-2025-11-24-17-34-26-utc)
-    - [Project changes](#project-changes-1)
-      - [Notes](#notes-1)
-  - [Release 0.1.202507158 (2025-11-24 02-39-41 UTC)](#release-01202507158-2025-11-24-02-39-41-utc)
     - [Project changes](#project-changes-2)
       - [Notes](#notes-2)
-  - [Release 0.1.202507157 (2025-11-24 00-09-35 UTC)](#release-01202507157-2025-11-24-00-09-35-utc)
-  - [Release 0.1.202507156 (2025-11-23 23-33-13 UTC)](#release-01202507156-2025-11-23-23-33-13-utc)
+  - [Release 0.1.202507158 (2025-11-24 02-39-41 UTC)](#release-01202507158-2025-11-24-02-39-41-utc)
     - [Project changes](#project-changes-3)
       - [Notes](#notes-3)
+  - [Release 0.1.202507157 (2025-11-24 00-09-35 UTC)](#release-01202507157-2025-11-24-00-09-35-utc)
+  - [Release 0.1.202507156 (2025-11-23 23-33-13 UTC)](#release-01202507156-2025-11-23-23-33-13-utc)
+    - [Project changes](#project-changes-4)
+      - [Notes](#notes-4)
   - [Release 0.1.202507155 (2025-11-23 18-07-05 UTC)](#release-01202507155-2025-11-23-18-07-05-utc)
   - [Release 0.1.202507154 (2025-11-23 17-37-39 UTC)](#release-01202507154-2025-11-23-17-37-39-utc)
   - [Release 0.1.202507153 (2025-11-23 17-03-09 UTC)](#release-01202507153-2025-11-23-17-03-09-utc)
   - [Previous changelogs](#previous-changelogs)
 
 <!--TOC-->
+
+
+## Release 0.1.202507151 (2025-11-27 15-25-27 UTC)
+### Project changes
+#### Notes
+* Update resource configuration logic to handle planned deletions and improve error messaging
 
 
 ## Release 0.1.202507150 (2025-11-25 10-43-40 UTC)
