@@ -159,8 +159,7 @@ func delete(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 		return cruderrors.WrapIntoResourceError(stateModel, err)
 	}
 	if response != nil {
-		tools.Error(ctx, "got non-nil response from API", map[string]interface{}{"response": response})
-		return cruderrors.NewResourceError(stateModel, "got non-nil response from API: %s", response)
+		tools.Warn(ctx, "Got non-nil response from API", map[string]interface{}{"response": response})
 	}
 
 	return nil
