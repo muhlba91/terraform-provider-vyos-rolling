@@ -23,7 +23,7 @@ func netns() schemadefinition.InterfaceDefinition {
 				Local: "node",
 			},
 			NodeNameAttr: "netns",
-			OwnerAttr:    "${vyos_conf_scripts_dir}/netns.py",
+			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/netns.py"),
 			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
 					Local: "properties",
