@@ -514,7 +514,7 @@ prepare-git-for-release:
 	git commit -m "chore: Prepare for release v$$(cat VERSION)"
 
 	echo "Create git release tag v$$(cat VERSION)"
-	git tag "v$$(cat VERSION)"
+	git tag -a "v$$(cat VERSION)" -m "chore: Release v$$(cat VERSION)"
 
 	cp .build/CHANGELOG.md CHANGELOG-FOR-GO-RELEASER.md.tmp
 
