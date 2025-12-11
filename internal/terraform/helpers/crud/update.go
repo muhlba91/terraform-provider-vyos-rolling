@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"slices"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -76,11 +77,16 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	}
 
 	// Delete fields that are in state but not in plan
-	for key := range stateVyosData {
-		if _, exists := planVyosData[key]; !exists {
-			deletePath := append(stateModel.GetVyosPath(), key)
+	resourcePath := stateModel.GetVyosPath()
+	for key, stateValue := range stateVyosData {
+		planValue, exists := planVyosData[key]
+		if !exists {
+			deletePath := append(slices.Clone(resourcePath), key)
 			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+			continue
 		}
+
+		resetListValueIfNeeded(ctx, client, resourcePath, key, stateValue, planValue)
 	}
 
 	// Set the new config
@@ -102,4 +108,38 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	planModel.SetID(planModel.GetVyosPath())
 
 	return nil
+}
+
+func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, stateValue, planValue any) {
+	stateList, ok := stringSliceFromAny(stateValue)
+	if !ok {
+		return
+	}
+
+	planList, ok := stringSliceFromAny(planValue)
+	if !ok {
+		return
+	}
+
+	if slices.Equal(stateList, planList) {
+		return
+	}
+
+	deletePath := append(slices.Clone(basePath), key)
+	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+}
+
+func stringSliceFromAny(value any) ([]string, bool) {
+	switch v := value.(type) {
+	case []string:
+		return v, true
+	case []interface{}:
+		res := make([]string, 0, len(v))
+		for _, item := range v {
+			res = append(res, fmt.Sprint(item))
+		}
+		return res, true
+	default:
+		return nil, false
+	}
 }
