@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/go-test/deep"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers"
 	ntpResourceModel "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/global/service/ntp/resourcemodel"
+	qoscake "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/qos/policy-cake/resourcemodel"
+	"github.com/go-test/deep"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
 // TestMarshalToVyosNamedResMergedIntoGlobal
@@ -59,5 +60,34 @@ func TestUnmarshalToVyosNamedResMergedIntoGlobal(t *testing.T) {
 		t.Errorf("Want: %v", want)
 		t.Errorf("Got: %v", got)
 		t.Errorf("compare failed: %v", diff)
+	}
+}
+
+func TestUnmarshalStringFromNestedTagNode(t *testing.T) {
+	ctx := context.Background()
+
+	data := map[string]any{
+		"flow-isolation": map[string]any{
+			"dual-src-host": map[string]any{
+				"nat": map[string]any{},
+			},
+		},
+		"flow-isolation-nat": map[string]any{},
+	}
+
+	got := &qoscake.QosPolicyCake{}
+	err := helpers.UnmarshalVyos(ctx, data, got)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if got.LeafQosPolicyCakeFlowIsolation.IsNull() {
+		t.Fatalf("flow isolation remained null")
+	}
+	if got.LeafQosPolicyCakeFlowIsolation.ValueString() != "dual-src-host" {
+		t.Fatalf("unexpected flow isolation value: %s", got.LeafQosPolicyCakeFlowIsolation.ValueString())
+	}
+	if got.LeafQosPolicyCakeFlowIsolationNat.IsNull() || !got.LeafQosPolicyCakeFlowIsolationNat.ValueBool() {
+		t.Fatalf("flow isolation nat flag was not set")
 	}
 }

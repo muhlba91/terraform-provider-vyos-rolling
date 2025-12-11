@@ -23,7 +23,7 @@ func policy() schemadefinition.InterfaceDefinition {
 				Local: "node",
 			},
 			NodeNameAttr: "policy",
-			OwnerAttr:    "${vyos_conf_scripts_dir}/policy.py",
+			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/policy.py"),
 			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
 					Local: "properties",
@@ -41,7 +41,7 @@ func policy() schemadefinition.InterfaceDefinition {
 						Local: "node",
 					},
 					NodeNameAttr: "local-route",
-					OwnerAttr:    "${vyos_conf_scripts_dir}/policy_local-route.py",
+					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/policy_local-route.py"),
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -73,7 +73,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-32765",
+										ArgumentAttr: vyosTools.String("--range 1-32765"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -257,7 +257,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -353,7 +353,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -388,7 +388,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 1-2147483647",
+												ArgumentAttr: vyosTools.String("--range 1-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -469,7 +469,7 @@ func policy() schemadefinition.InterfaceDefinition {
 						Local: "node",
 					},
 					NodeNameAttr: "local-route6",
-					OwnerAttr:    "${vyos_conf_scripts_dir}/policy_local-route.py",
+					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/policy_local-route.py"),
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -501,7 +501,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-32765",
+										ArgumentAttr: vyosTools.String("--range 1-32765"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -685,7 +685,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -781,7 +781,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -816,7 +816,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 1-2147483647",
+												ArgumentAttr: vyosTools.String("--range 1-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -953,7 +953,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1356,7 +1356,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1591,7 +1591,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1762,7 +1762,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2036,7 +2036,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2226,7 +2226,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2422,7 +2422,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2520,7 +2520,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-32",
+												ArgumentAttr: vyosTools.String("--range 0-32"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2551,7 +2551,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-32",
+												ArgumentAttr: vyosTools.String("--range 0-32"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2673,7 +2673,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2771,7 +2771,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-128",
+												ArgumentAttr: vyosTools.String("--range 0-128"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2802,7 +2802,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-128",
+												ArgumentAttr: vyosTools.String("--range 0-128"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2924,7 +2924,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-65535",
+										ArgumentAttr: vyosTools.String("--range 1-65535"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3061,7 +3061,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "bgp-rd-rt",
-																ArgumentAttr: "--route-distinguisher",
+																ArgumentAttr: vyosTools.String("--route-distinguisher"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3135,7 +3135,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 0-16777214",
+																ArgumentAttr: vyosTools.String("--range 0-16777214"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3255,7 +3255,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																			Local: "validator",
 																		},
 																		NameAttr:     "numeric",
-																		ArgumentAttr: "--range 0-32",
+																		ArgumentAttr: vyosTools.String("--range 0-32"),
 																	}},
 																}},
 																ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3371,7 +3371,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																			Local: "validator",
 																		},
 																		NameAttr:     "numeric",
-																		ArgumentAttr: "--range 0-32",
+																		ArgumentAttr: vyosTools.String("--range 0-32"),
 																	}},
 																}},
 																ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3603,7 +3603,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																			Local: "validator",
 																		},
 																		NameAttr:     "numeric",
-																		ArgumentAttr: "--range 0-128",
+																		ArgumentAttr: vyosTools.String("--range 0-128"),
 																	}},
 																}},
 																ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3870,7 +3870,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3901,7 +3901,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -4189,7 +4189,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -4238,7 +4238,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -4320,7 +4320,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 1-4294967295",
+																ArgumentAttr: vyosTools.String("--range 1-4294967295"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -4472,7 +4472,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 1-10",
+																ArgumentAttr: vyosTools.String("--range 1-10"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -4964,7 +4964,7 @@ func policy() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 1-25600",
+																ArgumentAttr: vyosTools.String("--range 1-25600"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5424,7 +5424,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5505,7 +5505,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5537,13 +5537,13 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--relative --",
+														ArgumentAttr: vyosTools.String("--relative --"),
 													}, {
 														XMLName: xml.Name{
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5744,7 +5744,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-4294967295",
+														ArgumentAttr: vyosTools.String("--range 1-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5775,7 +5775,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-65535",
+														ArgumentAttr: vyosTools.String("--range 1-65535"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5806,7 +5806,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -5964,7 +5964,7 @@ func policy() schemadefinition.InterfaceDefinition {
 						Local: "tagNode",
 					},
 					NodeNameAttr: "route6",
-					OwnerAttr:    "${vyos_conf_scripts_dir}/policy_route.py",
+					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/policy_route.py"),
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -6002,7 +6002,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -6863,7 +6863,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -6937,7 +6937,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-255",
+														ArgumentAttr: vyosTools.String("--range 1-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -6968,7 +6968,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7017,7 +7017,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-2147483647",
+														ArgumentAttr: vyosTools.String("--range 0-2147483647"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7048,7 +7048,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-63",
+														ArgumentAttr: vyosTools.String("--range 0-63"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7079,7 +7079,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-2147483647",
+														ArgumentAttr: vyosTools.String("--range 1-2147483647"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7111,7 +7111,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-200",
+														ArgumentAttr: vyosTools.String("--range 1-200"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7199,7 +7199,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 500-1460",
+														ArgumentAttr: vyosTools.String("--range 500-1460"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7558,7 +7558,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--allow-range --range 1-16384",
+														ArgumentAttr: vyosTools.String("--allow-range --range 1-16384"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -7721,7 +7721,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8016,7 +8016,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8047,7 +8047,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8078,7 +8078,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8187,7 +8187,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric-exclude",
-												ArgumentAttr: "--allow-range --range 0-2147483647",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8379,7 +8379,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 0-63",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-63"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8421,7 +8421,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 0-63",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-63"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8463,7 +8463,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 1-65535",
+												ArgumentAttr: vyosTools.String("--allow-range --range 1-65535"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8505,7 +8505,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 1-65535",
+												ArgumentAttr: vyosTools.String("--allow-range --range 1-65535"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8596,7 +8596,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-2147483647",
+												ArgumentAttr: vyosTools.String("--range 0-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -8708,7 +8708,7 @@ func policy() schemadefinition.InterfaceDefinition {
 						Local: "tagNode",
 					},
 					NodeNameAttr: "route",
-					OwnerAttr:    "${vyos_conf_scripts_dir}/policy_route.py",
+					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/policy_route.py"),
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -8746,7 +8746,7 @@ func policy() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9627,7 +9627,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9701,7 +9701,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-255",
+														ArgumentAttr: vyosTools.String("--range 1-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9732,7 +9732,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-4294967295",
+														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9781,7 +9781,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-2147483647",
+														ArgumentAttr: vyosTools.String("--range 0-2147483647"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9812,7 +9812,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-63",
+														ArgumentAttr: vyosTools.String("--range 0-63"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9843,7 +9843,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-2147483647",
+														ArgumentAttr: vyosTools.String("--range 1-2147483647"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9875,7 +9875,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 1-200",
+														ArgumentAttr: vyosTools.String("--range 1-200"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -9963,7 +9963,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 500-1460",
+														ArgumentAttr: vyosTools.String("--range 500-1460"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10322,7 +10322,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--allow-range --range 1-16384",
+														ArgumentAttr: vyosTools.String("--allow-range --range 1-16384"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10484,7 +10484,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10515,7 +10515,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10679,7 +10679,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10710,7 +10710,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10741,7 +10741,7 @@ func policy() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: "--range 0-255",
+														ArgumentAttr: vyosTools.String("--range 0-255"),
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -10850,7 +10850,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric-exclude",
-												ArgumentAttr: "--allow-range --range 0-2147483647",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -11042,7 +11042,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 0-63",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-63"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -11084,7 +11084,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 0-63",
+												ArgumentAttr: vyosTools.String("--allow-range --range 0-63"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -11126,7 +11126,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 1-65535",
+												ArgumentAttr: vyosTools.String("--allow-range --range 1-65535"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -11168,7 +11168,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--allow-range --range 1-65535",
+												ArgumentAttr: vyosTools.String("--allow-range --range 1-65535"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -11259,7 +11259,7 @@ func policy() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: "--range 0-2147483647",
+												ArgumentAttr: vyosTools.String("--range 0-2147483647"),
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{

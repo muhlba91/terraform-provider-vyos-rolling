@@ -36,10 +36,12 @@ endif
 
 # Target test
 ifeq (test,$(firstword $(MAKECMDGOALS)))
-  # use the rest as arguments for target
-  INPUT_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  # ...and turn them into do-nothing targets
-  $(eval $(INPUT_ARGS):;@:)
+	# Only treat arguments that come after "--" as go test flags
+	ifeq (--,$(word 2,$(MAKECMDGOALS)))
+		INPUT_ARGS := $(wordlist 3,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+		# ...and turn them into do-nothing targets so make does not look for them
+		$(eval $(INPUT_ARGS):;@:)
+	endif
 endif
 
 ######
@@ -585,11 +587,11 @@ clean:
 	go clean -fuzzcache
 	rm -rf "${DIST_DIR}"
 	rm -rf .build
-	rm generate
-	rm test
-	rm build
-	rm version
-	rm release
+	rm -f generate
+	rm -f test
+	rm -f build
+	rm -f version
+	rm -f release
 
 
 

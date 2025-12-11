@@ -8,10 +8,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers/tools"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers/tools"
 )
 
 // UnmarshalVyos takes unmarshalled json data and a Terraform resource model pointer and populates it with the data
@@ -85,7 +85,15 @@ func UnmarshalVyos(ctx context.Context, data map[string]any, value VyosResourceD
 
 				tools.Debug(ctx, "Unmarshalling String Field", map[string]interface{}{"field-name": fName, flags["name"].(string): dataValue})
 
-				tfval = basetypes.NewStringValue(dataValue.(string))
+				if dataValue == nil {
+					tfval = basetypes.NewStringNull()
+				} else {
+					stringValue, err := vyosStringValue(dataValue)
+					if err != nil {
+						return fmt.Errorf("string conversion for field %s: %w", fName, err)
+					}
+					tfval = basetypes.NewStringValue(stringValue)
+				}
 			}
 			tfValueRefection := reflect.ValueOf(tfval)
 			fValue.Set(tfValueRefection)
@@ -235,4 +243,69 @@ func UnmarshalVyos(ctx context.Context, data map[string]any, value VyosResourceD
 
 	// Return no error
 	return nil
+}
+
+func vyosStringValue(value any) (string, error) {
+	switch v := value.(type) {
+	case string:
+		return v, nil
+	case fmt.Stringer:
+		return v.String(), nil
+	case []byte:
+		return string(v), nil
+	case int:
+		return strconv.Itoa(v), nil
+	case int8:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int16:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int32:
+		return strconv.FormatInt(int64(v), 10), nil
+	case int64:
+		return strconv.FormatInt(v, 10), nil
+	case uint:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint8:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint16:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint32:
+		return strconv.FormatUint(uint64(v), 10), nil
+	case uint64:
+		return strconv.FormatUint(v, 10), nil
+	case float32:
+		return strconv.FormatFloat(float64(v), 'f', -1, 64), nil
+	case float64:
+		return strconv.FormatFloat(v, 'f', -1, 64), nil
+	case []interface{}:
+		if len(v) == 1 {
+			return vyosStringValue(v[0])
+		}
+		return "", fmt.Errorf("slice does not contain a single string value: %#v", v)
+	case map[string]any:
+		if val, ok := v["_value"]; ok {
+			return fmt.Sprint(val), nil
+		}
+		if val, ok := v["value"]; ok {
+			return fmt.Sprint(val), nil
+		}
+		if len(v) == 1 {
+			for key, nested := range v {
+				// Some VyOS config nodes encode the selected option as the map key
+				// and store additional metadata inside the nested map. In that case,
+				// returning the key reconstructs the intended string value.
+				if nestedMap, ok := nested.(map[string]any); ok {
+					if val, ok := nestedMap["_value"]; ok {
+						return fmt.Sprint(val), nil
+					}
+				}
+				return key, nil
+			}
+		}
+		return "", fmt.Errorf("map does not contain a recognizable string payload: %#v", v)
+	case nil:
+		return "", nil
+	default:
+		return "", fmt.Errorf("unsupported value type %T", value)
+	}
 }
