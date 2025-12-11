@@ -121,12 +121,38 @@ func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath 
 		return
 	}
 
+	// If the lists are identical, no reset is required.
 	if slices.Equal(stateList, planList) {
 		return
 	}
 
-	deletePath := append(slices.Clone(basePath), key)
-	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+	// Compute which values exist in state but not in plan; only those
+	// should be deleted. This avoids unnecessarily deleting values that
+	// are still desired while ensuring removed entries are cleaned up.
+	planSet := make(map[string]struct{}, len(planList))
+	for _, v := range planList {
+		planSet[v] = struct{}{}
+	}
+
+	toDelete := make([]string, 0, len(stateList))
+	for _, v := range stateList {
+		if _, exists := planSet[v]; !exists {
+			toDelete = append(toDelete, v)
+		}
+	}
+
+	// Nothing to delete – differences may be only in ordering.
+	if len(toDelete) == 0 {
+		return
+	}
+
+	// Build a vyosData map so GenerateVyosOps produces per-element
+	// operations like: [interfaces wireguard wgX address 172.16.x.x/30]
+	vyosData := map[string]any{
+		key: toDelete,
+	}
+
+	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, slices.Clone(basePath), vyosData))
 }
 
 func stringSliceFromAny(value any) ([]string, bool) {
