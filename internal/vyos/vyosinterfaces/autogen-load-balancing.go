@@ -33,7 +33,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 						Local: "node",
 					},
 					NodeNameAttr: "haproxy",
-					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/load-balancing_haproxy.py"),
+					OwnerAttr:    "${vyos_conf_scripts_dir}/load-balancing_haproxy.py",
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -315,7 +315,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-2000000"),
+												ArgumentAttr: "--range 1-2000000",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -482,7 +482,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-3600"),
+												ArgumentAttr: "--range 1-3600",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -514,7 +514,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-3600"),
+												ArgumentAttr: "--range 1-3600",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -546,7 +546,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-3600"),
+												ArgumentAttr: "--range 1-3600",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -578,7 +578,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-3600"),
+												ArgumentAttr: "--range 1-3600",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -884,7 +884,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-65535"),
+														ArgumentAttr: "--range 1-65535",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -934,7 +934,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-3600"),
+														ArgumentAttr: "--range 1-3600",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1159,7 +1159,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-10000"),
+												ArgumentAttr: "--range 1-10000",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1616,7 +1616,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-65535"),
+												ArgumentAttr: "--range 1-65535",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1955,7 +1955,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: vyosTools.String("--range 200-399"),
+																ArgumentAttr: "--range 200-399",
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2136,7 +2136,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-3600"),
+														ArgumentAttr: "--range 1-3600",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2167,7 +2167,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-3600"),
+														ArgumentAttr: "--range 1-3600",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2198,7 +2198,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-3600"),
+														ArgumentAttr: "--range 1-3600",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2289,7 +2289,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-10000"),
+												ArgumentAttr: "--range 1-10000",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2666,7 +2666,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-65535"),
+														ArgumentAttr: "--range 1-65535",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2927,7 +2927,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 						Local: "node",
 					},
 					NodeNameAttr: "wan",
-					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/load-balancing_wan.py"),
+					OwnerAttr:    "${vyos_conf_scripts_dir}/load-balancing_wan.py",
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -3017,7 +3017,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 0-4294967295"),
+												ArgumentAttr: "--range 0-4294967295",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3053,7 +3053,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-30"),
+														ArgumentAttr: "--range 1-30",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3145,7 +3145,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-254"),
+														ArgumentAttr: "--range 1-254",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3224,7 +3224,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-10"),
+												ArgumentAttr: "--range 1-10",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3299,7 +3299,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 													Local: "validator",
 												},
 												NameAttr:     "numeric",
-												ArgumentAttr: vyosTools.String("--range 1-10"),
+												ArgumentAttr: "--range 1-10",
 											}},
 										}},
 										ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3332,7 +3332,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: vyosTools.String("--range 1-9999"),
+										ArgumentAttr: "--range 1-9999",
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3534,7 +3534,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
+														ArgumentAttr: "--range 0-4294967295",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3610,7 +3610,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 0-4294967295"),
+														ArgumentAttr: "--range 0-4294967295",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3855,7 +3855,7 @@ func loadbalancing() schemadefinition.InterfaceDefinition {
 															Local: "validator",
 														},
 														NameAttr:     "numeric",
-														ArgumentAttr: vyosTools.String("--range 1-255"),
+														ArgumentAttr: "--range 1-255",
 													}},
 												}},
 												ValueHelp: []*schemadefinition.ValueHelp{{
