@@ -116,13 +116,27 @@ func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath 
 	// This guarantees that list-valued attributes (like interface
 	// addresses) are fully replaced by the plan, even if Terraform
 	// state does not contain all values that currently exist on VyOS.
+	tools.Trace(ctx, "resetListValueIfNeeded: inspecting attribute", map[string]interface{}{
+		"basePath":   basePath,
+		"key":        key,
+		"stateValue": stateValue,
+		"planValue":  planValue,
+	})
+
 	if _, ok := stringSliceFromAny(stateValue); !ok {
 		if _, okPlan := stringSliceFromAny(planValue); !okPlan {
+			tools.Trace(ctx, "resetListValueIfNeeded: attribute is not list-like, skipping", map[string]interface{}{
+				"key": key,
+			})
 			return
 		}
 	}
 
 	deletePath := append(slices.Clone(basePath), key)
+	tools.Info(ctx, "resetListValueIfNeeded: staging delete for list-like attribute", map[string]interface{}{
+		"deletePath": deletePath,
+		"key":        key,
+	})
 	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
 }
 
