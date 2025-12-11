@@ -65,6 +65,15 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
 func update(ctx context.Context, client client.Client, stateModel, planModel helpers.VyosTopResourceDataModel) error {
+	// Refresh live state from VyOS to avoid drift where Terraform state
+	// no longer reflects the actual device configuration (for example,
+	// when previous provider versions failed to delete list elements
+	// like interface addresses). This ensures list-diff logic below
+	// sees the real current values on the router.
+	if err := read(ctx, client, stateModel); err != nil {
+		return fmt.Errorf("API read error before update: %s", err)
+	}
+
 	// Get existing and planned config
 	stateVyosData, err := helpers.MarshalVyos(ctx, stateModel)
 	if err != nil {
