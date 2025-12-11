@@ -23,7 +23,7 @@ func nat66() schemadefinition.InterfaceDefinition {
 				Local: "node",
 			},
 			NodeNameAttr: "nat66",
-			OwnerAttr:    "${vyos_conf_scripts_dir}/nat66.py",
+			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/nat66.py"),
 			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
 					Local: "properties",
@@ -71,7 +71,7 @@ func nat66() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -763,7 +763,7 @@ func nat66() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{

@@ -23,7 +23,7 @@ func nat() schemadefinition.InterfaceDefinition {
 				Local: "node",
 			},
 			NodeNameAttr: "nat",
-			OwnerAttr:    "${vyos_conf_scripts_dir}/nat.py",
+			OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/nat.py"),
 			Properties: []*schemadefinition.Properties{{
 				XMLName: xml.Name{
 					Local: "properties",
@@ -71,7 +71,7 @@ func nat() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -446,7 +446,7 @@ func nat() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--allow-range --range 1-100",
+																ArgumentAttr: vyosTools.String("--allow-range --range 1-100"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -1718,7 +1718,7 @@ func nat() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
@@ -2093,7 +2093,7 @@ func nat() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--allow-range --range 1-100",
+																ArgumentAttr: vyosTools.String("--allow-range --range 1-100"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3511,7 +3511,7 @@ func nat() schemadefinition.InterfaceDefinition {
 						Local: "node",
 					},
 					NodeNameAttr: "cgnat",
-					OwnerAttr:    "${vyos_conf_scripts_dir}/nat_cgnat.py",
+					OwnerAttr:    vyosTools.String("${vyos_conf_scripts_dir}/nat_cgnat.py"),
 					Properties: []*schemadefinition.Properties{{
 						XMLName: xml.Name{
 							Local: "properties",
@@ -3606,7 +3606,7 @@ func nat() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 1-65535",
+																ArgumentAttr: vyosTools.String("--range 1-65535"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3690,7 +3690,7 @@ func nat() schemadefinition.InterfaceDefinition {
 																	Local: "validator",
 																},
 																NameAttr:     "numeric",
-																ArgumentAttr: "--range 1-999999",
+																ArgumentAttr: vyosTools.String("--range 1-999999"),
 															}},
 														}},
 														ValueHelp: []*schemadefinition.ValueHelp{{
@@ -3844,7 +3844,7 @@ func nat() schemadefinition.InterfaceDefinition {
 											Local: "validator",
 										},
 										NameAttr:     "numeric",
-										ArgumentAttr: "--range 1-999999",
+										ArgumentAttr: vyosTools.String("--range 1-999999"),
 									}},
 								}},
 								ValueHelp: []*schemadefinition.ValueHelp{{
