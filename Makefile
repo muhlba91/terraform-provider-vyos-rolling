@@ -320,9 +320,14 @@ build: test
 		*)				echo "Unsupported system architecture: '$$(uname -m)'"; exit 1 ;;
 	esac
 
-	version=$(shell date +%Y%m%d.%H%M.%S);
-	echo "Building for $${os} ($${arch})"
-	build_dir="${DIST_DIR}/providers.localhost/dev/$(PROVIDER_NAME)/$${version}/$${os}_$${arch}"
+	# Use the semantic VERSION file so local dev builds match
+	# the version required in providers.tf (e.g. 0.2.202507155).
+	version=$(shell cat VERSION);
+	echo "Building for $${os} ($${arch}) version $${version}"
+	# Lay out the build directory to match the standard
+	# registry structure so OpenTofu/Terraform dev_overrides
+	# can load the provider directly from ${DIST_DIR}.
+	build_dir="${DIST_DIR}/registry.terraform.io/$(NAMESPACE)/$(PROVIDER_NAME)/$${version}/$${os}_$${arch}"
 
 	mkdir -p "$${build_dir}/";
 	GOOS="$$os" \
@@ -340,15 +345,16 @@ build-all: test
 
 	rm -rf "${DIST_DIR}/providers.localhost" || true
 
-	version=$(shell date +%Y%m%d.%H%M.%S);
+	# Build all platforms using the semantic VERSION value
+	version=$(shell cat VERSION);
 	for os in $(BUILD_OS); do
 		for arch in $(BUILD_ARCH); do
 			if [ "$${os}/$${arch}" == "darwin/arm" -o "$${os}/$${arch}" == "darwin/386" ]; then
 				echo "Skipping unsupported os/arch combination: $${os}/$${arch}";
 				continue;
 			fi;
-			echo "Building for $${os} ($${arch})"
-			build_dir="${DIST_DIR}/providers.localhost/dev/$(PROVIDER_NAME)/$${version}/$${os}_$${arch}"
+				echo "Building for $${os} ($${arch}) version $${version}"
+				build_dir="${DIST_DIR}/registry.terraform.io/$(NAMESPACE)/$(PROVIDER_NAME)/$${version}/$${os}_$${arch}"
 
 			mkdir -p "$${build_dir}/";
 			GOOS="$$os" \
