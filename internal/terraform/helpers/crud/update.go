@@ -88,10 +88,10 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	// For any list-like attribute present in the plan, ensure the
 	// corresponding key on VyOS is deleted before re-applying the list
 	// from the plan. This guarantees full replacement semantics for
-	// lists like interface addresses, even if Terraform state does not
-	// reflect all values currently configured on the device.
+	// lists like interface addresses regardless of what Terraform state
+	// currently contains.
 	for key, planValue := range planVyosData {
-		resetListValueIfNeeded(ctx, client, resourcePath, key, stateVyosData[key], planValue)
+		resetListValueIfNeeded(ctx, client, resourcePath, key, planValue)
 	}
 
 	// Set the new config
@@ -115,59 +115,25 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	return nil
 }
 
-func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, stateValue, planValue any) {
+func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, planValue any) {
 	// Detect whether this attribute is list-like in the plan. If not,
 	// there is nothing to do here.
-	planSlice, okPlan := stringSliceFromAny(planValue)
-	if !okPlan {
+	if _, okPlan := stringSliceFromAny(planValue); !okPlan {
 		tools.Trace(ctx, "resetListValueIfNeeded: attribute is not list-like in plan, skipping", map[string]interface{}{
 			"key": key,
 		})
 		return
 	}
 
-	// If we don't have a list-like state value, fall back to deleting
-	// the entire key to guarantee that any existing config is removed
-	// before we apply the plan.
-	stateSlice, okState := stringSliceFromAny(stateValue)
-	if !okState {
-		deletePath := append(slices.Clone(basePath), key)
-		tools.Info(ctx, "resetListValueIfNeeded: no list-like state, deleting whole key", map[string]interface{}{
-			"deletePath": deletePath,
-			"key":        key,
-		})
-		client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
-		return
-	}
-
-	// Compute which elements exist on the device (state) but are not
-	// present in the plan, and stage explicit deletes for each of those
-	// elements. This ensures we remove stale entries (like old
-	// interface addresses) while keeping the ones that are still
-	// desired by the plan.
-	toDelete := make([]string, 0)
-	for _, existing := range stateSlice {
-		if !slices.Contains(planSlice, existing) {
-			toDelete = append(toDelete, existing)
-		}
-	}
-
-	if len(toDelete) == 0 {
-		tools.Trace(ctx, "resetListValueIfNeeded: no stale list elements to delete", map[string]interface{}{
-			"key": key,
-		})
-		return
-	}
-
-	for _, value := range toDelete {
-		deletePath := append(append(slices.Clone(basePath), key), value)
-		tools.Info(ctx, "resetListValueIfNeeded: staging delete for stale list element", map[string]interface{}{
-			"deletePath": deletePath,
-			"key":        key,
-			"value":      value,
-		})
-		client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
-	}
+	// Always delete the entire key before applying the new list
+	// values from the plan. This guarantees that any existing values
+	// on VyOS (including ones Terraform state never saw) are removed.
+	deletePath := append(slices.Clone(basePath), key)
+	tools.Info(ctx, "resetListValueIfNeeded: deleting whole list-valued key before reset", map[string]interface{}{
+		"deletePath": deletePath,
+		"key":        key,
+	})
+	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
 }
 
 func stringSliceFromAny(value any) ([]string, bool) {
