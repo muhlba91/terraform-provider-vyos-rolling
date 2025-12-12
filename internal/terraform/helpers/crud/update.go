@@ -78,15 +78,20 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 
 	// Delete fields that are in state but not in plan
 	resourcePath := stateModel.GetVyosPath()
-	for key, stateValue := range stateVyosData {
-		planValue, exists := planVyosData[key]
-		if !exists {
+	for key := range stateVyosData {
+		if _, exists := planVyosData[key]; !exists {
 			deletePath := append(slices.Clone(resourcePath), key)
 			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
-			continue
 		}
+	}
 
-		resetListValueIfNeeded(ctx, client, resourcePath, key, stateValue, planValue)
+	// For any list-like attribute present in the plan, ensure the
+	// corresponding key on VyOS is deleted before re-applying the list
+	// from the plan. This guarantees full replacement semantics for
+	// lists like interface addresses, even if Terraform state does not
+	// reflect all values currently configured on the device.
+	for key, planValue := range planVyosData {
+		resetListValueIfNeeded(ctx, client, resourcePath, key, planValue)
 	}
 
 	// Set the new config
@@ -110,26 +115,23 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	return nil
 }
 
-func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, stateValue, planValue any) {
-	// Detect whether this attribute is list-like in either state or plan.
-	// If so, always delete the key before re-applying the planned list.
-	// This guarantees that list-valued attributes (like interface
-	// addresses) are fully replaced by the plan, even if Terraform
-	// state does not contain all values that currently exist on VyOS.
+func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, planValue any) {
+	// Detect whether this attribute is list-like in the plan. If so,
+	// always delete the key before re-applying the planned list. This
+	// guarantees that list-valued attributes (like interface addresses)
+	// are fully replaced by the plan, even if Terraform state does not
+	// contain all values that currently exist on VyOS.
 	tools.Trace(ctx, "resetListValueIfNeeded: inspecting attribute", map[string]interface{}{
-		"basePath":   basePath,
-		"key":        key,
-		"stateValue": stateValue,
-		"planValue":  planValue,
+		"basePath":  basePath,
+		"key":       key,
+		"planValue": planValue,
 	})
 
-	if _, ok := stringSliceFromAny(stateValue); !ok {
-		if _, okPlan := stringSliceFromAny(planValue); !okPlan {
-			tools.Trace(ctx, "resetListValueIfNeeded: attribute is not list-like, skipping", map[string]interface{}{
-				"key": key,
-			})
-			return
-		}
+	if _, okPlan := stringSliceFromAny(planValue); !okPlan {
+		tools.Trace(ctx, "resetListValueIfNeeded: attribute is not list-like, skipping", map[string]interface{}{
+			"key": key,
+		})
+		return
 	}
 
 	deletePath := append(slices.Clone(basePath), key)
