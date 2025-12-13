@@ -76,27 +76,22 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 		return fmt.Errorf("API marshalling error: %s", err)
 	}
 
-	// Delete fields that are in state but not in plan
+	// Delete fields that are in state but not in plan, including nested
+	// attributes. This ensures that when a leaf attribute (for example,
+	// an address-mask under a destination block) is removed from the
+	// Terraform configuration, we issue the appropriate delete operation
+	// to VyOS even if the parent block still exists.
 	resourcePath := stateModel.GetVyosPath()
-	for key := range stateVyosData {
-		if _, exists := planVyosData[key]; !exists {
-			deletePath := append(slices.Clone(resourcePath), key)
-			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
-		}
-	}
+	deleteStateNotInPlan(ctx, &client, resourcePath, stateVyosData, planVyosData)
 
 	// For any list-like attribute present in the plan, ensure the
 	// corresponding key on VyOS is deleted before re-applying the list
 	// from the plan. This guarantees full replacement semantics for
-	// lists like interface addresses regardless of what is currently
-	// configured on the device.
-	for key, planValue := range planVyosData {
-		// Pass a pointer to the client so that any staged delete
-		// operations are applied to the same client instance that will
-		// later be used for CommitChanges. Using a value here would
-		// stage deletes on a copy, which would then be lost.
-		resetListValueIfNeeded(ctx, &client, resourcePath, key, planValue)
-	}
+	// lists like interface addresses and firewall zone members regardless
+	// of what is currently configured on the device. We do this
+	// recursively so that nested list attributes (for example,
+	// member.interface on a firewall zone) are also handled.
+	resetListValuesRecursive(ctx, &client, resourcePath, planVyosData)
 
 	// Set the new config
 	vyosOpsPlan := helpers.GenerateVyosOps(ctx, planModel.GetVyosPath(), planVyosData)
@@ -138,6 +133,52 @@ func resetListValueIfNeeded(ctx context.Context, client *client.Client, basePath
 		"key":        key,
 	})
 	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+}
+
+// deleteStateNotInPlan walks the marshalled VyOS representation of the
+// current (state) and desired (plan) configuration and stages delete
+// operations for any keys that exist in state but not in plan. It
+// operates recursively so that nested attributes like
+// destination.address-mask are also removed when they are no longer
+// present in the plan.
+func deleteStateNotInPlan(ctx context.Context, client *client.Client, basePath []string, stateMap, planMap map[string]any) {
+	for key, stateVal := range stateMap {
+		planVal, exists := planMap[key]
+		if !exists {
+			deletePath := append(slices.Clone(basePath), key)
+			tools.Info(ctx, "deleteStateNotInPlan: deleting key missing from plan", map[string]interface{}{
+				"deletePath": deletePath,
+				"key":        key,
+			})
+			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+			continue
+		}
+
+		// If both values are nested maps, recurse into them so that we
+		// can detect keys that were removed deeper in the structure.
+		stateSub, okState := stateVal.(map[string]any)
+		planSub, okPlan := planVal.(map[string]any)
+		if okState && okPlan {
+			deleteStateNotInPlan(ctx, client, append(slices.Clone(basePath), key), stateSub, planSub)
+		}
+	}
+}
+
+// resetListValuesRecursive traverses the planned VyOS data and applies
+// list reset semantics to any list-like attributes it finds. It ensures
+// we delete the full key (for example, member.interface) before
+// re-applying all values from the plan.
+func resetListValuesRecursive(ctx context.Context, client *client.Client, basePath []string, planMap map[string]any) {
+	for key, planVal := range planMap {
+		if _, ok := stringSliceFromAny(planVal); ok {
+			resetListValueIfNeeded(ctx, client, basePath, key, planVal)
+			continue
+		}
+
+		if subMap, ok := planVal.(map[string]any); ok {
+			resetListValuesRecursive(ctx, client, append(slices.Clone(basePath), key), subMap)
+		}
+	}
 }
 
 func stringSliceFromAny(value any) ([]string, bool) {
