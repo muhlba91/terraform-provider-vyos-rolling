@@ -91,7 +91,11 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	// lists like interface addresses regardless of what is currently
 	// configured on the device.
 	for key, planValue := range planVyosData {
-		resetListValueIfNeeded(ctx, client, resourcePath, key, planValue)
+		// Pass a pointer to the client so that any staged delete
+		// operations are applied to the same client instance that will
+		// later be used for CommitChanges. Using a value here would
+		// stage deletes on a copy, which would then be lost.
+		resetListValueIfNeeded(ctx, &client, resourcePath, key, planValue)
 	}
 
 	// Set the new config
@@ -115,7 +119,7 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	return nil
 }
 
-func resetListValueIfNeeded(ctx context.Context, client client.Client, basePath []string, key string, planValue any) {
+func resetListValueIfNeeded(ctx context.Context, client *client.Client, basePath []string, key string, planValue any) {
 	// Detect whether this attribute is list-like in the plan. If not,
 	// there is nothing to do here.
 	if _, okPlan := stringSliceFromAny(planValue); !okPlan {
