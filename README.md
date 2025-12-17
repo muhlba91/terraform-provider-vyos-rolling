@@ -20,6 +20,7 @@ schemas so it always ships the full surface area exposed by the OS.
 
 ## Getting Started
 
+
 ```hcl
 terraform {
 	required_version = ">= 1.0"
