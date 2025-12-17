@@ -30,7 +30,7 @@ var _ helpers.VyosTopResourceDataModel = &ServiceHTTPSAPIKeysID{}
 type ServiceHTTPSAPIKeysIDSelfIdentifier struct {
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (id) */
 
-	ServiceHTTPSAPIKeysID types.String `tfsdk:"id" vyos:"-,self-id"`
+	ServiceHTTPSAPIKeysID types.String `tfsdk:"id_param" vyos:"-,self-id"`
 
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (keys) */
 
