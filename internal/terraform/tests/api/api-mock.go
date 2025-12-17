@@ -282,8 +282,8 @@ func (r response) reply(w http.ResponseWriter) (ok bool) {
 // TODO change to using test server https://pkg.go.dev/net/http/httptest#Server
 //  milestone: 6
 
-// Server starts and maintains the http server until all exchanges are matched
-func Server(srv *http.Server, el *ExchangeList) {
+// Server starts and maintains the http server until all exchanges are matched and returns the bound address.
+func Server(srv *http.Server, el *ExchangeList) string {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
@@ -319,6 +319,9 @@ func Server(srv *http.Server, el *ExchangeList) {
 		log.Fatalf("Mock srv: error starting listener: %s\n", err)
 	}
 
+	// Update server address with the actual bound address (useful when requesting :0)
+	srv.Addr = l.Addr().String()
+
 	go func() {
 		err := srv.Serve(l)
 		if errors.Is(err, http.ErrServerClosed) {
@@ -330,4 +333,6 @@ func Server(srv *http.Server, el *ExchangeList) {
 	}()
 
 	time.Sleep(50 * time.Millisecond)
+
+	return srv.Addr
 }

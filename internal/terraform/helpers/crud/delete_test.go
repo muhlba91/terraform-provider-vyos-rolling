@@ -9,14 +9,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
 	cruderrors "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers/crud/cruderror"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
 	ipv4FwFilterResModel "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/global/firewall/ipv4-forward-filter/resourcemodel"
 	ipv4ResModel "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv4-name/resourcemodel"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/tests/api"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 )
 
 // TestCrudDeleteSuccess test CRUD helper: Delete
@@ -92,7 +92,7 @@ func TestCrudDeleteSuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -178,7 +178,7 @@ func TestCrudDeleteResourceHasChildFailure(t *testing.T) {
 		srv := &http.Server{
 			Addr: apiAddress,
 		}
-		api.Server(srv, eList)
+		apiAddress = api.Server(srv, eList)
 
 		// Client
 		ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -249,7 +249,7 @@ func TestCrudDeleteResourceHasChildIgnore(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -350,7 +350,7 @@ func TestCrudDeleteGlobalResourceWithChild(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -443,7 +443,7 @@ func TestCrudDeleteGlobalResourceWithoutChild(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -579,7 +579,7 @@ func TestCrudDeleteRetrySuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -665,7 +665,7 @@ func TestCrudDeleteEmptyGlobalResource(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -751,7 +751,7 @@ func TestCrudDeleteEmptyResource(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -807,7 +807,7 @@ func TestCrudDeleteDeletedGlobalResource(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -862,7 +862,7 @@ func TestCrudDeleteDeletedResource(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)

@@ -7,13 +7,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-test/deep"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
 	fw4res "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv4-name/resourcemodel"
 	polalres "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/policy/access-list/resourcemodel"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/tests/api"
+	"github.com/go-test/deep"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 )
 
 // TestCrudReadSuccess test CRUD helper: Read
@@ -67,7 +67,7 @@ func TestCrudReadSuccess(t *testing.T) {
 			}`,
 	)
 
-	api.Server(srv, eList)
+	address = api.Server(srv, eList)
 
 	// When API Client
 	client := client.NewClient(ctx, "http://"+address, apiKey, "test-agent", true)
@@ -153,7 +153,7 @@ func TestCrudReadEmptyGlobalResource(t *testing.T) {
 		`{"success": false, "error": "Configuration under specified path is empty\n", "data": null}`,
 	)
 
-	api.Server(srv, eList)
+	address = api.Server(srv, eList)
 
 	// When API Client
 	client := client.NewClient(ctx, "http://"+address, apiKey, "test-agent", true)

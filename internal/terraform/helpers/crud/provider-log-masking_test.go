@@ -9,17 +9,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
 	ipv4ResModel "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv4-name/resourcemodel"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/tests/api"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/hashicorp/terraform-plugin-log/tflogtest"
 )
 
 // TestProviderLogApiKeyMasking tests to ensure api key does not leak in logs
 func TestProviderLogApiKeyMasking(t *testing.T) {
-	endpoint := "localhost:50009"
+	endpoint := "localhost:0"
 	apiKey := `my-test-api-key`
 
 	logReader, logWriter, err := os.Pipe()
@@ -30,25 +30,6 @@ func TestProviderLogApiKeyMasking(t *testing.T) {
 		t.Fatal("Could not create log r/w:", err)
 	}
 	ctx := tflogtest.RootLogger(context.Background(), logWriter)
-
-	ctxMutilators := data.CtxMutilators(endpoint, apiKey)
-
-	// Run ctx mutilators for client
-	for _, fn := range ctxMutilators {
-		ctx = fn(ctx)
-	}
-
-	// Client configuration for data sources and resources
-	config := data.NewProviderData(
-		client.NewClient(ctx, endpoint, apiKey, "TODO: add useragent with provider version", true),
-	)
-
-	// Add ctx mutilators to provider data
-	config.CtxMutilatorAdd(ctxMutilators...)
-
-	// ---------------------------------
-	//  Test:
-	// ---------------------------------
 
 	// API mocking
 	eList := api.NewExchangeList()
@@ -83,7 +64,22 @@ func TestProviderLogApiKeyMasking(t *testing.T) {
 	srv := &http.Server{
 		Addr: endpoint,
 	}
-	api.Server(srv, eList)
+	endpoint = api.Server(srv, eList)
+
+	ctxMutilators := data.CtxMutilators(endpoint, apiKey)
+
+	// Run ctx mutilators for client
+	for _, fn := range ctxMutilators {
+		ctx = fn(ctx)
+	}
+
+	// Client configuration for data sources and resources
+	config := data.NewProviderData(
+		client.NewClient(ctx, endpoint, apiKey, "TODO: add useragent with provider version", true),
+	)
+
+	// Add ctx mutilators to provider data
+	config.CtxMutilatorAdd(ctxMutilators...)
 
 	// Client
 	client := client.NewClient(ctx, "http://"+endpoint, apiKey, "test-agent", true)

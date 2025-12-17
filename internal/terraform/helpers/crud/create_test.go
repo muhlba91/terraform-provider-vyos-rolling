@@ -13,6 +13,10 @@ import (
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers"
 	conntrackTcp "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/global/system/conntrack-tcp/resourcemodel"
 
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv4-name-rule/resourcemodel"
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/tests/api"
 	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -25,10 +29,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/hashicorp/terraform-plugin-log/tflogtest"
-	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
-	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
-	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv4-name-rule/resourcemodel"
-	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/tests/api"
 )
 
 // TestCrudCreateSuccess test CRUD helper: Create
@@ -112,7 +112,7 @@ func TestCrudCreateSuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -244,7 +244,7 @@ func TestCrudCreateResourceAlreadyExistsSuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -331,7 +331,7 @@ func TestCrudCreateResourceAlreadyExistsIgnore(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -400,7 +400,7 @@ func TestCrudCreateResourceParentMissingFailure(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -488,7 +488,7 @@ func TestCrudCreateResourceParentMissingIgnore(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -608,7 +608,7 @@ func TestCrudCreateTimeoutSuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	start := time.Now()
@@ -740,7 +740,7 @@ func TestCrudCreateTimeoutFailure(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
@@ -876,7 +876,7 @@ func TestCrudCreateRetrySuccess(t *testing.T) {
 	srv := &http.Server{
 		Addr: apiAddress,
 	}
-	api.Server(srv, eList)
+	apiAddress = api.Server(srv, eList)
 
 	// Client
 	ctx := tflogtest.RootLogger(context.Background(), os.Stdout)
