@@ -28,7 +28,7 @@ var _ helpers.VyosTopResourceDataModel = &ServiceBroadcastRelayID{}
 type ServiceBroadcastRelayIDSelfIdentifier struct {
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (id) */
 
-	ServiceBroadcastRelayID types.Number `tfsdk:"id_param" vyos:"-,self-id"`
+	ServiceBroadcastRelayID types.Number `tfsdk:"id" vyos:"-,self-id"`
 
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (broadcast-relay) */
 

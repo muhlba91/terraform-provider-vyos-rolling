@@ -31,7 +31,7 @@ var _ helpers.VyosTopResourceDataModel = &VpnIPsecRemoteAccessConnection{}
 type VpnIPsecRemoteAccessConnectionSelfIdentifier struct {
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (connection) */
 
-	VpnIPsecRemoteAccessConnection types.String `tfsdk:"connection_param" vyos:"-,self-id"`
+	VpnIPsecRemoteAccessConnection types.String `tfsdk:"connection" vyos:"-,self-id"`
 
 	/* tools/generate-terraform-resource-full/templates/resources/named/resource-model-tag-node-identifier.gotmpl #resource-model-parent-id-hack  (remote-access) */
 
