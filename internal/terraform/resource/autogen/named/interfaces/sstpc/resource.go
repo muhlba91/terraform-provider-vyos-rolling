@@ -33,7 +33,7 @@ type interfacesSstpc struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesSstpc) GetClient() client.Client {
+func (r *interfacesSstpc) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

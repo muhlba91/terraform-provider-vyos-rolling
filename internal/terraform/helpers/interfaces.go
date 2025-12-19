@@ -3,17 +3,17 @@ package helpers
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
+	"github.com/hashicorp/terraform-plugin-framework-timeouts/resource/timeouts"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
 
 // VyosResource is used to support CRUD operations for terraform resources via helpers
 type VyosResource interface {
 	// returned model must be ptr
 	GetModel() VyosTopResourceDataModel
-	GetClient() client.Client
+	GetClient() *client.Client
 	GetProviderConfig() data.ProviderData
 }
 

@@ -33,7 +33,7 @@ type protocolsRIPNetworkDistance struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPNetworkDistance) GetClient() client.Client {
+func (r *protocolsRIPNetworkDistance) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

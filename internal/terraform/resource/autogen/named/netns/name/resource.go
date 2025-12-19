@@ -33,7 +33,7 @@ type netnsName struct {
 }
 
 // GetClient returns the vyos api client
-func (r *netnsName) GetClient() client.Client {
+func (r *netnsName) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

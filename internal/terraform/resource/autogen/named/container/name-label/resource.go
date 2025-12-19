@@ -33,7 +33,7 @@ type containerNameLabel struct {
 }
 
 // GetClient returns the vyos api client
-func (r *containerNameLabel) GetClient() client.Client {
+func (r *containerNameLabel) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

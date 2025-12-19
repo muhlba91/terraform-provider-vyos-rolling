@@ -33,7 +33,7 @@ type policyAsPathListRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyAsPathListRule) GetClient() client.Client {
+func (r *policyAsPathListRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

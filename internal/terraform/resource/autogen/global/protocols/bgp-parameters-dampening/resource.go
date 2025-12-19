@@ -33,7 +33,7 @@ type protocolsBgpParametersDampening struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpParametersDampening) GetClient() client.Client {
+func (r *protocolsBgpParametersDampening) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

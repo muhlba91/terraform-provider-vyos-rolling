@@ -33,7 +33,7 @@ type protocolsNhrpTunnelMapTunnelIP struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsNhrpTunnelMapTunnelIP) GetClient() client.Client {
+func (r *protocolsNhrpTunnelMapTunnelIP) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

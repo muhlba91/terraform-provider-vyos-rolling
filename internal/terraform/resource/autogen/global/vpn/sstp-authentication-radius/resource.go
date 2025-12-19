@@ -33,7 +33,7 @@ type vpnSstpAuthenticationRadius struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnSstpAuthenticationRadius) GetClient() client.Client {
+func (r *vpnSstpAuthenticationRadius) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

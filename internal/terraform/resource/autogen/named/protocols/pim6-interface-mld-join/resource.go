@@ -33,7 +33,7 @@ type protocolsPimsixInterfaceMldJoin struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsPimsixInterfaceMldJoin) GetClient() client.Client {
+func (r *protocolsPimsixInterfaceMldJoin) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

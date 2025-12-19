@@ -33,7 +33,7 @@ type qosPolicyLimiterClass struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyLimiterClass) GetClient() client.Client {
+func (r *qosPolicyLimiterClass) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

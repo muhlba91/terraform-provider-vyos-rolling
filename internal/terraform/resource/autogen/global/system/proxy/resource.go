@@ -33,7 +33,7 @@ type systemProxy struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemProxy) GetClient() client.Client {
+func (r *systemProxy) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

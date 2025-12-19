@@ -33,7 +33,7 @@ type vpnOpenconnectAccountingMode struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnOpenconnectAccountingMode) GetClient() client.Client {
+func (r *vpnOpenconnectAccountingMode) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

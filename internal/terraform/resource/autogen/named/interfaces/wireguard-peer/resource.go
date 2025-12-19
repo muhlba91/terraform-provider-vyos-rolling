@@ -33,7 +33,7 @@ type interfacesWireguardPeer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesWireguardPeer) GetClient() client.Client {
+func (r *interfacesWireguardPeer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

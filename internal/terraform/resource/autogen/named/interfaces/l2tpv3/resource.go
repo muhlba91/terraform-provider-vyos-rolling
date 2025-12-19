@@ -33,7 +33,7 @@ type interfacesLtwotpvthree struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesLtwotpvthree) GetClient() client.Client {
+func (r *interfacesLtwotpvthree) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

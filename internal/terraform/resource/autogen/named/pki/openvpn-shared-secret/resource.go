@@ -33,7 +33,7 @@ type pkiOpenvpnSharedSecret struct {
 }
 
 // GetClient returns the vyos api client
-func (r *pkiOpenvpnSharedSecret) GetClient() client.Client {
+func (r *pkiOpenvpnSharedSecret) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

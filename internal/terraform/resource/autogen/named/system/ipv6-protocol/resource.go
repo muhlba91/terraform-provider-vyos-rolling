@@ -33,7 +33,7 @@ type systemIPvsixProtocol struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemIPvsixProtocol) GetClient() client.Client {
+func (r *systemIPvsixProtocol) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type serviceTCPRekey struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceTCPRekey) GetClient() client.Client {
+func (r *serviceTCPRekey) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

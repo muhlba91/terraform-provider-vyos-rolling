@@ -33,7 +33,7 @@ type vrfNameProtocolsIsisFastRerouteLfaLocalTiebreakerDownstreamIndex struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsIsisFastRerouteLfaLocalTiebreakerDownstreamIndex) GetClient() client.Client {
+func (r *vrfNameProtocolsIsisFastRerouteLfaLocalTiebreakerDownstreamIndex) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

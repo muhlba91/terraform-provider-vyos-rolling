@@ -33,7 +33,7 @@ type protocolsBgpTimers struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpTimers) GetClient() client.Client {
+func (r *protocolsBgpTimers) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

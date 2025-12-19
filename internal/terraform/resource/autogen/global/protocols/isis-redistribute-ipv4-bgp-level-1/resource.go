@@ -33,7 +33,7 @@ type protocolsIsisRedistributeIPvfourBgpLevelOne struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisRedistributeIPvfourBgpLevelOne) GetClient() client.Client {
+func (r *protocolsIsisRedistributeIPvfourBgpLevelOne) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

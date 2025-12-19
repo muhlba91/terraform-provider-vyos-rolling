@@ -33,7 +33,7 @@ type natSourceRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *natSourceRule) GetClient() client.Client {
+func (r *natSourceRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

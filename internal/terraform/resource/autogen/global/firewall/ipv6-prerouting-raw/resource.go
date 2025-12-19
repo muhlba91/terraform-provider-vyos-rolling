@@ -33,7 +33,7 @@ type firewallIPvsixPreroutingRaw struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallIPvsixPreroutingRaw) GetClient() client.Client {
+func (r *firewallIPvsixPreroutingRaw) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

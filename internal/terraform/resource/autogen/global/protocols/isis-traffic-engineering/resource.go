@@ -33,7 +33,7 @@ type protocolsIsisTrafficEngineering struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisTrafficEngineering) GetClient() client.Client {
+func (r *protocolsIsisTrafficEngineering) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

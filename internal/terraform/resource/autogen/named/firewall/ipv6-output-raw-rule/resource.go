@@ -33,7 +33,7 @@ type firewallIPvsixOutputRawRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallIPvsixOutputRawRule) GetClient() client.Client {
+func (r *firewallIPvsixOutputRawRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

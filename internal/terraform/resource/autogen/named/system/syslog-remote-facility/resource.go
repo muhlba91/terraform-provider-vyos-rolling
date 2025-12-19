@@ -33,7 +33,7 @@ type systemSyslogRemoteFacility struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemSyslogRemoteFacility) GetClient() client.Client {
+func (r *systemSyslogRemoteFacility) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

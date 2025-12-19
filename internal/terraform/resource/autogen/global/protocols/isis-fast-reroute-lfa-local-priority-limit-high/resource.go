@@ -33,7 +33,7 @@ type protocolsIsisFastRerouteLfaLocalPriorityLimitHigh struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisFastRerouteLfaLocalPriorityLimitHigh) GetClient() client.Client {
+func (r *protocolsIsisFastRerouteLfaLocalPriorityLimitHigh) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

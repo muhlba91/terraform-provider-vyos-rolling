@@ -33,7 +33,7 @@ type systemConntrackLogEventDestroy struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConntrackLogEventDestroy) GetClient() client.Client {
+func (r *systemConntrackLogEventDestroy) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

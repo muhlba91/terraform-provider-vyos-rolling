@@ -33,7 +33,7 @@ type vrfNameProtocolsStaticRoutesixNextHop struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsStaticRoutesixNextHop) GetClient() client.Client {
+func (r *vrfNameProtocolsStaticRoutesixNextHop) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

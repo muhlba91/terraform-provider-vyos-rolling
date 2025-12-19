@@ -33,7 +33,7 @@ type serviceDNSForwardingDomainNameServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDNSForwardingDomainNameServer) GetClient() client.Client {
+func (r *serviceDNSForwardingDomainNameServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

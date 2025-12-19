@@ -33,7 +33,7 @@ type protocolsOspfAggregation struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfAggregation) GetClient() client.Client {
+func (r *protocolsOspfAggregation) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

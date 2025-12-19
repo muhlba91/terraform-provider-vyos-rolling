@@ -33,7 +33,7 @@ type serviceDhcpvsixServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpvsixServer) GetClient() client.Client {
+func (r *serviceDhcpvsixServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

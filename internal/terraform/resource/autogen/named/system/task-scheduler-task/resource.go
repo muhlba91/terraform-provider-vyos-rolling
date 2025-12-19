@@ -33,7 +33,7 @@ type systemTaskSchedulerTask struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemTaskSchedulerTask) GetClient() client.Client {
+func (r *systemTaskSchedulerTask) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

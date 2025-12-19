@@ -8,7 +8,9 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client/clienterrors"
@@ -27,14 +29,17 @@ func NewClient(
 	apiKey string,
 	userAgent string,
 	disableVerify bool,
-) Client {
+) *Client {
 
-	c := Client{
+	c := &Client{
 		httpClient: http.Client{},
 
 		userAgent: userAgent,
 		endpoint:  endpoint,
 		apiKey:    apiKey,
+
+		state:       newCommitState(),
+		batchWindow: 500 * time.Millisecond,
 	}
 
 	if disableVerify {
@@ -49,6 +54,31 @@ func NewClient(
 	return c
 }
 
+// SetBindingOverrides configures manual binding rules where the map key is the
+// VyOS path prefix (joined by spaces) and the value is the binding key that
+// should be shared by matching resources.
+func (c *Client) SetBindingOverrides(overrides map[string]string) {
+	c.bindingMu.Lock()
+	defer c.bindingMu.Unlock()
+
+	c.bindingOverrides = c.bindingOverrides[:0]
+	for prefix, target := range overrides {
+		prefix = strings.TrimSpace(prefix)
+		target = strings.TrimSpace(target)
+		if prefix == "" || target == "" {
+			continue
+		}
+		c.bindingOverrides = append(c.bindingOverrides, bindingOverride{
+			prefix: prefix,
+			bindAs: target,
+		})
+	}
+
+	sort.SliceStable(c.bindingOverrides, func(i, j int) bool {
+		return len(c.bindingOverrides[i].prefix) > len(c.bindingOverrides[j].prefix)
+	})
+}
+
 // Client wrapper around http client with convenience functions
 // Use NewClient() to generate a new client
 type Client struct {
@@ -58,76 +88,299 @@ type Client struct {
 	endpoint  string
 	apiKey    string
 
-	opsSet    [][]string
-	opsDelete [][]string
+	state       *commitState
+	commitMu    sync.Mutex
+	batchWindow time.Duration
+
+	bindingMu        sync.RWMutex
+	bindingOverrides []bindingOverride
 }
 
-// StageSet saves vyos paths to configure during commit
-func (c *Client) StageSet(ctx context.Context, values [][]string) {
-	tools.Trace(ctx, "stageing set ops", map[string]interface{}{"client:httpClient": fmt.Sprintf("%p:%p", c, &c.httpClient), "paths": values, "current set ops": c.opsSet})
-	c.opsSet = append(c.opsSet, values...)
+type resourceBatch struct {
+	resourceID string
+	bindingKey string
+	setOps     [][]string
+	deleteOps  [][]string
 }
 
-// StageDelete saves vyos paths to delete during commit
-func (c *Client) StageDelete(ctx context.Context, values [][]string) {
-	tools.Trace(ctx, "stageing delete ops", map[string]interface{}{"client:httpClient": fmt.Sprintf("%p:%p", c, &c.httpClient), "paths": values, "current del ops": c.opsDelete})
-	c.opsDelete = append(c.opsDelete, values...)
+type bindingGroup struct {
+	key       string
+	resources []*resourceBatch
 }
 
-// CommitChanges executes staged vyos paths.
+type resourceResult struct {
+	data any
+	err  error
+}
+
+type bindingOverride struct {
+	prefix string
+	bindAs string
+}
+
+type commitState struct {
+	mu        sync.Mutex
+	pending   map[string]*resourceBatch
+	order     []string
+	completed map[string]resourceResult
+}
+
+func newCommitState() *commitState {
+	return &commitState{
+		pending:   make(map[string]*resourceBatch),
+		completed: make(map[string]resourceResult),
+	}
+}
+
+func (s *commitState) ensureBatchLocked(resourceID, bindingKey string) *resourceBatch {
+	if batch, ok := s.pending[resourceID]; ok {
+		return batch
+	}
+
+	batch := &resourceBatch{resourceID: resourceID, bindingKey: bindingKey}
+	s.pending[resourceID] = batch
+	s.order = append(s.order, resourceID)
+	return batch
+}
+
+func (s *commitState) addSet(resourceID, bindingKey string, ops [][]string) {
+	if len(ops) == 0 {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	batch := s.ensureBatchLocked(resourceID, bindingKey)
+	batch.setOps = append(batch.setOps, ops...)
+}
+
+func (s *commitState) addDelete(resourceID, bindingKey string, ops [][]string) {
+	if len(ops) == 0 {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	batch := s.ensureBatchLocked(resourceID, bindingKey)
+	batch.deleteOps = append(batch.deleteOps, ops...)
+}
+
+func (s *commitState) drainPending() []*resourceBatch {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if len(s.order) == 0 {
+		return nil
+	}
+	result := make([]*resourceBatch, 0, len(s.order))
+	for _, resourceID := range s.order {
+		result = append(result, s.pending[resourceID])
+	}
+	s.pending = make(map[string]*resourceBatch)
+	s.order = nil
+	return result
+}
+
+func (s *commitState) hasPending(resourceID string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	_, ok := s.pending[resourceID]
+	return ok
+}
+
+func (s *commitState) storeCompleted(results map[string]resourceResult) {
+	if len(results) == 0 {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for resourceID, res := range results {
+		s.completed[resourceID] = res
+	}
+}
+
+func (s *commitState) popCompleted(resourceID string) (resourceResult, bool) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	res, ok := s.completed[resourceID]
+	if ok {
+		delete(s.completed, resourceID)
+	}
+	return res, ok
+}
+
+// StageSet saves vyos paths to configure during commit for a specific resource
+func (c *Client) StageSet(ctx context.Context, resourcePath []string, values [][]string) {
+	resourceID := c.resourceKey(resourcePath)
+	bindingKey := c.bindingKey(resourcePath)
+	tools.Trace(ctx, "stageing set ops", map[string]interface{}{"client:httpClient": fmt.Sprintf("%p:%p", c, &c.httpClient), "paths": values, "resource": resourceID, "binding": bindingKey})
+	c.state.addSet(resourceID, bindingKey, values)
+}
+
+// StageDelete saves vyos paths to delete during commit for a specific resource
+func (c *Client) StageDelete(ctx context.Context, resourcePath []string, values [][]string) {
+	resourceID := c.resourceKey(resourcePath)
+	bindingKey := c.bindingKey(resourcePath)
+	tools.Trace(ctx, "stageing delete ops", map[string]interface{}{"client:httpClient": fmt.Sprintf("%p:%p", c, &c.httpClient), "paths": values, "resource": resourceID, "binding": bindingKey})
+	c.state.addDelete(resourceID, bindingKey, values)
+}
+
+// CommitChanges executes staged vyos paths for the provided resource path.
 // Order of operations as they are sent to VyOS:
 //  1. delete
 //  2. set
-func (c *Client) CommitChanges(ctx context.Context) (any, error) {
+func (c *Client) CommitChanges(ctx context.Context, resourcePath []string) (any, error) {
+	resourceID := c.resourceKey(resourcePath)
 
-	// TODO investigate options to speed up multiple resource config
-	//	Suggests pesudo solution:
-	//  1. Make client, or some part, a pointer shared across all resources
-	//	2. wait 500ms to allow multiple resources to gather up changes to be committed
-	//  3. on failure remove some resources changes from the commit and try again
-	//  4. on success return so to the resources that succeeded
-	//  milestone: 6
+	if res, ok := c.state.popCompleted(resourceID); ok {
+		return res.data, res.err
+	}
 
-	// TODO investigate options to manually bind two resources together
-	//  Resources that needs to be merged into a single resource
-	//  might benefit from having a manual override that can act
-	//  as a workaround until the merging can take place.
-	//  This is blocked until there is an implementation of
-	//  batched resource changes.
-	//  milestone: 6
+	if !c.state.hasPending(resourceID) {
+		return nil, nil
+	}
 
-	// TODO retry commit on error due to commit in progress
-	//  Error msg: unable to create resource '[service dns forwarding]' due to client error: API ERROR [400 Bad Request]: Configuration system temporarily locked due to another commit in progress
-	//  milestone: 6
+	c.commitMu.Lock()
+	defer c.commitMu.Unlock()
+
+	if res, ok := c.state.popCompleted(resourceID); ok {
+		return res.data, res.err
+	}
+
+	if !c.state.hasPending(resourceID) {
+		return nil, nil
+	}
+
+	if err := c.waitForBatchWindow(ctx); err != nil {
+		return nil, err
+	}
+
+	batches := c.state.drainPending()
+	if len(batches) == 0 {
+		return nil, nil
+	}
+
+	results := c.processBatches(ctx, batches)
+	c.state.storeCompleted(results)
+
+	if res, ok := results[resourceID]; ok {
+		return res.data, res.err
+	}
+
+	if res, ok := c.state.popCompleted(resourceID); ok {
+		return res.data, res.err
+	}
+
+	return nil, fmt.Errorf("missing commit result for resource '%s'", resourceID)
+}
+
+func (c *Client) waitForBatchWindow(ctx context.Context) error {
+	if c.batchWindow <= 0 {
+		return nil
+	}
+
+	timer := time.NewTimer(c.batchWindow)
+	defer timer.Stop()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-timer.C:
+		return nil
+	}
+}
+
+func (c *Client) processBatches(ctx context.Context, batches []*resourceBatch) map[string]resourceResult {
+	results := make(map[string]resourceResult, len(batches))
+	groups := groupBatches(batches)
+	operations := buildOperations(groups)
+
+	data, err := c.sendOperations(ctx, operations)
+	if err == nil {
+		for _, grp := range groups {
+			res := resourceResult{data: data, err: nil}
+			for _, batch := range grp.resources {
+				results[batch.resourceID] = res
+			}
+		}
+		return results
+	}
+
+	tools.Warn(ctx, "Batched commit failed, retrying per binding group", map[string]interface{}{"error": err})
+	for _, grp := range groups {
+		ops := buildOperations([]*bindingGroup{grp})
+		data, groupErr := c.sendOperations(ctx, ops)
+		if groupErr != nil {
+			groupErr = fmt.Errorf("commit failed for binding '%s': %w", grp.key, groupErr)
+		}
+		res := resourceResult{data: data, err: groupErr}
+		for _, batch := range grp.resources {
+			results[batch.resourceID] = res
+		}
+	}
+
+	return results
+}
+
+func groupBatches(batches []*resourceBatch) []*bindingGroup {
+	if len(batches) == 0 {
+		return nil
+	}
+
+	groups := make(map[string]*bindingGroup)
+	order := make([]string, 0, len(batches))
+	for _, batch := range batches {
+		key := batch.bindingKey
+		if key == "" {
+			key = batch.resourceID
+		}
+		grp, ok := groups[key]
+		if !ok {
+			grp = &bindingGroup{key: key}
+			groups[key] = grp
+			order = append(order, key)
+		}
+		grp.resources = append(grp.resources, batch)
+	}
+
+	result := make([]*bindingGroup, 0, len(order))
+	for _, key := range order {
+		result = append(result, groups[key])
+	}
+
+	return result
+}
+
+func buildOperations(groups []*bindingGroup) []map[string]interface{} {
+	if len(groups) == 0 {
+		return nil
+	}
+
+	ops := make([]map[string]interface{}, 0)
+	for _, grp := range groups {
+		for _, batch := range grp.resources {
+			for _, path := range batch.deleteOps {
+				ops = append(ops, map[string]interface{}{"op": "delete", "path": path})
+			}
+		}
+	}
+	for _, grp := range groups {
+		for _, batch := range grp.resources {
+			for _, path := range batch.setOps {
+				ops = append(ops, map[string]interface{}{"op": "set", "path": path})
+			}
+		}
+	}
+
+	return ops
+}
+
+func (c *Client) sendOperations(ctx context.Context, operations []map[string]interface{}) (any, error) {
+	if len(operations) == 0 {
+		return nil, nil
+	}
 
 	endpoint := c.endpoint + "/configure"
-	operations := []map[string]interface{}{}
-
-	for _, path := range c.opsDelete {
-		operations = append(
-			operations,
-			map[string]interface{}{
-				"op":   "delete",
-				"path": path,
-			},
-		)
-	}
-
-	for _, path := range c.opsSet {
-		operations = append(
-			operations,
-			map[string]interface{}{
-				"op":   "set",
-				"path": path,
-			},
-		)
-	}
-
-	jsonOperations, err := json.Marshal(
-		operations,
-	)
+	jsonOperations, err := json.Marshal(operations)
 	if err != nil {
-		return nil, fmt.Errorf("fail json marshal delete ops: %w", err)
+		return nil, fmt.Errorf("fail json marshal ops: %w", err)
 	}
 
 	payload := url.Values{
@@ -135,46 +388,114 @@ func (c *Client) CommitChanges(ctx context.Context) (any, error) {
 		"data": []string{string(jsonOperations)},
 	}
 
-	tools.Info(ctx, "Creating configure request for endpoint", map[string]interface{}{"endpoint": endpoint, "payload": payload})
+	payloadEncoded := payload.Encode()
+	tools.Info(ctx, "Creating configure request for endpoint", map[string]interface{}{"endpoint": endpoint, "operationCount": len(operations)})
 
-	req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payload.Encode()))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create http request object: %w", err)
+	backOffDelay := 500 * time.Millisecond
+	const (
+		lockBackOffMultiplier = 1.5
+		lockBackOffMax        = 10 * time.Second
+	)
+
+	for attempt := 0; ; attempt++ {
+		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEncoded))
+		if err != nil {
+			return nil, fmt.Errorf("failed to create http request object: %w", err)
+		}
+
+		req.Header.Set("User-Agent", c.userAgent)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("failed to complete http request: %w", err)
+		}
+
+		body, readErr := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if readErr != nil {
+			return nil, fmt.Errorf("failed to read http response: %w", readErr)
+		}
+
+		if resp.StatusCode >= 500 {
+			return nil, fmt.Errorf("http error [%s]: %s", resp.Status, string(body))
+		}
+
+		var ret map[string]interface{}
+		if err := json.Unmarshal(body, &ret); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
+		}
+
+		if ret["success"] == true {
+			return ret["data"], nil
+		}
+
+		apiErr := fmt.Errorf("API ERROR [%s]: %v", resp.Status, ret["error"])
+		if isCommitLockError(ret["error"]) {
+			delay := backOffDelay
+			if delay > lockBackOffMax {
+				delay = lockBackOffMax
+			}
+
+			tools.Warn(ctx, "VyOS configuration locked, retrying commit", map[string]interface{}{"attempt": attempt, "backOff": delay})
+			if err := waitForLock(ctx, delay); err != nil {
+				return nil, fmt.Errorf("commit aborted while waiting for lock to clear: %w", err)
+			}
+
+			if backOffDelay < lockBackOffMax {
+				backOffDelay = time.Duration(float64(backOffDelay) * lockBackOffMultiplier)
+				if backOffDelay > lockBackOffMax {
+					backOffDelay = lockBackOffMax
+				}
+			}
+
+			continue
+		}
+
+		return nil, apiErr
+	}
+}
+
+func (c *Client) resourceKey(resourcePath []string) string {
+	if len(resourcePath) == 0 {
+		return "__global__"
+	}
+	return strings.Join(resourcePath, " ")
+}
+
+func (c *Client) bindingKey(resourcePath []string) string {
+	joined := c.resourceKey(resourcePath)
+
+	c.bindingMu.RLock()
+	defer c.bindingMu.RUnlock()
+	for _, override := range c.bindingOverrides {
+		if strings.HasPrefix(joined, override.prefix) {
+			return override.bindAs
+		}
 	}
 
-	req.Header.Set("User-Agent", c.userAgent)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	return joined
+}
 
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to complete http request: %w", err)
+func waitForLock(ctx context.Context, delay time.Duration) error {
+	timer := time.NewTimer(delay)
+	defer timer.Stop()
+
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-timer.C:
+		return nil
 	}
-	defer resp.Body.Close()
+}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read http response: %w", err)
-	}
-
-	if resp.StatusCode >= 500 {
-		return nil, fmt.Errorf("http error [%s]: %s", resp.Status, string(body))
-	}
-
-	c.opsSet = [][]string{}
-	c.opsDelete = [][]string{}
-
-	var ret map[string]interface{}
-
-	err = json.Unmarshal(body, &ret)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
+func isCommitLockError(errVal any) bool {
+	msg, ok := errVal.(string)
+	if !ok {
+		msg = fmt.Sprint(errVal)
 	}
 
-	if ret["success"] == true {
-		return ret["data"], nil
-	}
-
-	return nil, fmt.Errorf("API ERROR [%s]: %v", resp.Status, ret["error"])
+	return strings.Contains(strings.ToLower(msg), "configuration system temporarily locked")
 }
 
 // Has checks the provided path for a configuration and returns

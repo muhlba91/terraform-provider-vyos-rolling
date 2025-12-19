@@ -58,7 +58,8 @@ func Delete(ctx context.Context, r helpers.VyosResource, req resource.DeleteRequ
 // model must be a ptr
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
-func delete(ctx context.Context, providerCfg data.ProviderData, c client.Client, stateModel helpers.VyosTopResourceDataModel) cruderrors.CrudError {
+func delete(ctx context.Context, providerCfg data.ProviderData, c *client.Client, stateModel helpers.VyosTopResourceDataModel) cruderrors.CrudError {
+	resourcePath := stateModel.GetVyosPath()
 
 	if stateModel.IsGlobalResource() {
 		// Handle global resources
@@ -80,17 +81,17 @@ func delete(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 			if err != nil {
 				return cruderrors.WrapIntoResourceError(stateModel, err)
 			}
-			c.StageDelete(ctx, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), vyosData))
+			c.StageDelete(ctx, resourcePath, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), vyosData))
 		} else {
 			// global resources with no children should delete the entire resource
-			c.StageDelete(ctx, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
+			c.StageDelete(ctx, resourcePath, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
 		}
 	} else {
 		// Handle named resources
 
 		if providerCfg.Config.CrudSkipCheckChildBeforeDelete {
 			// If we do not care about child resources we can nuke the entire resource
-			c.StageDelete(ctx, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
+			c.StageDelete(ctx, resourcePath, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
 		} else {
 
 			// Check timeout before retrying
@@ -120,7 +121,7 @@ func delete(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 					child, hasChild := helpers.GetChild(ctx, stateModel)
 					if !hasChild {
 						// named resources with no children means we can delete the entire resource
-						c.StageDelete(ctx, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
+						c.StageDelete(ctx, resourcePath, helpers.GenerateVyosOps(ctx, stateModel.GetVyosPath(), nil))
 						break L
 					}
 
@@ -154,7 +155,7 @@ func delete(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 	}
 
 	// Stage and Commit changes to api
-	response, err := c.CommitChanges(ctx)
+	response, err := c.CommitChanges(ctx, resourcePath)
 	if err != nil {
 		return cruderrors.WrapIntoResourceError(stateModel, err)
 	}

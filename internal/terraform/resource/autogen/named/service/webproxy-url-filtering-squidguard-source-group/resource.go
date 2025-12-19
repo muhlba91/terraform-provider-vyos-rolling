@@ -33,7 +33,7 @@ type serviceWebproxyURLFilteringSquIDguardSourceGroup struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceWebproxyURLFilteringSquIDguardSourceGroup) GetClient() client.Client {
+func (r *serviceWebproxyURLFilteringSquIDguardSourceGroup) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

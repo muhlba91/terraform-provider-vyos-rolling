@@ -33,7 +33,7 @@ type protocolsSegmentRoutingSrvsixLocator struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsSegmentRoutingSrvsixLocator) GetClient() client.Client {
+func (r *protocolsSegmentRoutingSrvsixLocator) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

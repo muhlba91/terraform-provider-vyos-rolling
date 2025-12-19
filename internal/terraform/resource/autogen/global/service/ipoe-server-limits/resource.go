@@ -33,7 +33,7 @@ type serviceIPoeServerLimits struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceIPoeServerLimits) GetClient() client.Client {
+func (r *serviceIPoeServerLimits) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

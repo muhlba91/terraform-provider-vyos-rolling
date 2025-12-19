@@ -33,7 +33,7 @@ type systemConfigManagement struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConfigManagement) GetClient() client.Client {
+func (r *systemConfigManagement) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

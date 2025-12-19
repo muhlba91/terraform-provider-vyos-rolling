@@ -33,7 +33,7 @@ type serviceMonitoringNetworkEvent struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringNetworkEvent) GetClient() client.Client {
+func (r *serviceMonitoringNetworkEvent) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

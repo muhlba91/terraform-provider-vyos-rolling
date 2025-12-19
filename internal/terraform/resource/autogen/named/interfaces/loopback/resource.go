@@ -33,7 +33,7 @@ type interfacesLoopback struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesLoopback) GetClient() client.Client {
+func (r *interfacesLoopback) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

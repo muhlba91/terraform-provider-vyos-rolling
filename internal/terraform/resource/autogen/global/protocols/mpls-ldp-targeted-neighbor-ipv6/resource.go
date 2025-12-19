@@ -33,7 +33,7 @@ type protocolsMplsLdpTargetedNeighborIPvsix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsMplsLdpTargetedNeighborIPvsix) GetClient() client.Client {
+func (r *protocolsMplsLdpTargetedNeighborIPvsix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

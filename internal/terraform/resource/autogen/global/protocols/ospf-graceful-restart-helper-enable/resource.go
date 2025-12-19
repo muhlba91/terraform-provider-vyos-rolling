@@ -33,7 +33,7 @@ type protocolsOspfGracefulRestartHelperEnable struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfGracefulRestartHelperEnable) GetClient() client.Client {
+func (r *protocolsOspfGracefulRestartHelperEnable) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

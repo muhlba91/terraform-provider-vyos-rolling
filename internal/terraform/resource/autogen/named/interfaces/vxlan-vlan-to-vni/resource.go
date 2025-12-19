@@ -33,7 +33,7 @@ type interfacesVxlanVlanToVni struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesVxlanVlanToVni) GetClient() client.Client {
+func (r *interfacesVxlanVlanToVni) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

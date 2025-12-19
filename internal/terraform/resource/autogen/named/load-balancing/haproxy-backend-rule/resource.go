@@ -33,7 +33,7 @@ type loadBalancingHaproxyBackendRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *loadBalancingHaproxyBackendRule) GetClient() client.Client {
+func (r *loadBalancingHaproxyBackendRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type servicePppoeServerExtendedScrIPts struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerExtendedScrIPts) GetClient() client.Client {
+func (r *servicePppoeServerExtendedScrIPts) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

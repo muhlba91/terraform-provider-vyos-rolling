@@ -33,7 +33,7 @@ type protocolsOspfvthreeRedistributeStatic struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfvthreeRedistributeStatic) GetClient() client.Client {
+func (r *protocolsOspfvthreeRedistributeStatic) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

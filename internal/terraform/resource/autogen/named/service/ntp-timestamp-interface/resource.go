@@ -33,7 +33,7 @@ type serviceNtpTimestampInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceNtpTimestampInterface) GetClient() client.Client {
+func (r *serviceNtpTimestampInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsBgpAddressFamilyIPvfourUnicastLabelVpnAllocationMode struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpAddressFamilyIPvfourUnicastLabelVpnAllocationMode) GetClient() client.Client {
+func (r *protocolsBgpAddressFamilyIPvfourUnicastLabelVpnAllocationMode) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

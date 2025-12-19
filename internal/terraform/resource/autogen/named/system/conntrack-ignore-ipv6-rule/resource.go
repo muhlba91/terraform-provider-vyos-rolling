@@ -33,7 +33,7 @@ type systemConntrackIgnoreIPvsixRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConntrackIgnoreIPvsixRule) GetClient() client.Client {
+func (r *systemConntrackIgnoreIPvsixRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

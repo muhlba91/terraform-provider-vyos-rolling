@@ -33,7 +33,7 @@ type protocolsPimSptSwitchoverInfinityAndBeyond struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsPimSptSwitchoverInfinityAndBeyond) GetClient() client.Client {
+func (r *protocolsPimSptSwitchoverInfinityAndBeyond) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

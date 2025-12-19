@@ -33,7 +33,7 @@ type serviceAwsGlbThreads struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceAwsGlbThreads) GetClient() client.Client {
+func (r *serviceAwsGlbThreads) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

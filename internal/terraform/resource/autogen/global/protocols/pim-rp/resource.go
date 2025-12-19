@@ -33,7 +33,7 @@ type protocolsPimRp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsPimRp) GetClient() client.Client {
+func (r *protocolsPimRp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

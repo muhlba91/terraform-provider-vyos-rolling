@@ -33,7 +33,7 @@ type protocolsBgpPeerGroupLocalRole struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpPeerGroupLocalRole) GetClient() client.Client {
+func (r *protocolsBgpPeerGroupLocalRole) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

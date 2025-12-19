@@ -33,7 +33,7 @@ type protocolsBgpAddressFamilyIPvfourUnicastRedistributeConnected struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpAddressFamilyIPvfourUnicastRedistributeConnected) GetClient() client.Client {
+func (r *protocolsBgpAddressFamilyIPvfourUnicastRedistributeConnected) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

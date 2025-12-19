@@ -33,7 +33,7 @@ type protocolsRIPngRedistributeBgp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPngRedistributeBgp) GetClient() client.Client {
+func (r *protocolsRIPngRedistributeBgp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

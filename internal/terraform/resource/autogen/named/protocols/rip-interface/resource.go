@@ -33,7 +33,7 @@ type protocolsRIPInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPInterface) GetClient() client.Client {
+func (r *protocolsRIPInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

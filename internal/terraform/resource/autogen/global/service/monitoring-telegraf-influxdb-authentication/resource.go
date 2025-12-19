@@ -33,7 +33,7 @@ type serviceMonitoringTelegrafInfluxdbAuthentication struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringTelegrafInfluxdbAuthentication) GetClient() client.Client {
+func (r *serviceMonitoringTelegrafInfluxdbAuthentication) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

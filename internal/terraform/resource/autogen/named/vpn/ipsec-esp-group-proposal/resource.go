@@ -33,7 +33,7 @@ type vpnIPsecEspGroupProposal struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnIPsecEspGroupProposal) GetClient() client.Client {
+func (r *vpnIPsecEspGroupProposal) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

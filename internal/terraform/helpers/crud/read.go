@@ -64,7 +64,7 @@ func Read(ctx context.Context, r helpers.VyosResource, req resource.ReadRequest,
 // model must be a ptr
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
-func read(ctx context.Context, c client.Client, model helpers.VyosTopResourceDataModel) error {
+func read(ctx context.Context, c *client.Client, model helpers.VyosTopResourceDataModel) error {
 	tools.Debug(ctx, "Fetching API data", map[string]interface{}{"vyos-path": model.GetVyosPath()})
 
 	// Check if we exists, if so this means we are an empty resource

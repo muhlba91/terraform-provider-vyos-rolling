@@ -33,7 +33,7 @@ type protocolsMplsLdp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsMplsLdp) GetClient() client.Client {
+func (r *protocolsMplsLdp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

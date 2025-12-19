@@ -33,7 +33,7 @@ type firewallGlobalOptions struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallGlobalOptions) GetClient() client.Client {
+func (r *firewallGlobalOptions) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

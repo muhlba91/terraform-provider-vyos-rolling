@@ -33,7 +33,7 @@ type serviceLldpLegacyProtocols struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceLldpLegacyProtocols) GetClient() client.Client {
+func (r *serviceLldpLegacyProtocols) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type servicePppoeServerAuthenticationRadiusRateLimit struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerAuthenticationRadiusRateLimit) GetClient() client.Client {
+func (r *servicePppoeServerAuthenticationRadiusRateLimit) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

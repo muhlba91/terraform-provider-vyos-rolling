@@ -33,7 +33,7 @@ type systemOptionKernelMemoryHugepageSize struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemOptionKernelMemoryHugepageSize) GetClient() client.Client {
+func (r *systemOptionKernelMemoryHugepageSize) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

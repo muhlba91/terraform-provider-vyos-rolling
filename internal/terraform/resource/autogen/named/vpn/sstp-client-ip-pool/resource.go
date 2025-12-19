@@ -33,7 +33,7 @@ type vpnSstpClientIPPool struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnSstpClientIPPool) GetClient() client.Client {
+func (r *vpnSstpClientIPPool) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

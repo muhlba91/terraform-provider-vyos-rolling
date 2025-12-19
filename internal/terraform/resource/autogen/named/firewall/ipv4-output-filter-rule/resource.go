@@ -33,7 +33,7 @@ type firewallIPvfourOutputFilterRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallIPvfourOutputFilterRule) GetClient() client.Client {
+func (r *firewallIPvfourOutputFilterRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsBgpBmpTarget struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpBmpTarget) GetClient() client.Client {
+func (r *protocolsBgpBmpTarget) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type firewallGlobalOptionsApplyToBrIDgedTraffic struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallGlobalOptionsApplyToBrIDgedTraffic) GetClient() client.Client {
+func (r *firewallGlobalOptionsApplyToBrIDgedTraffic) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type firewallIPvfourPreroutingRawRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallIPvfourPreroutingRawRule) GetClient() client.Client {
+func (r *firewallIPvfourPreroutingRawRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

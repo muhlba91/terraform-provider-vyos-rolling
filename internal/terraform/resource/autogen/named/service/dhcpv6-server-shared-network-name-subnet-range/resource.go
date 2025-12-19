@@ -33,7 +33,7 @@ type serviceDhcpvsixServerSharedNetworkNameSubnetRange struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpvsixServerSharedNetworkNameSubnetRange) GetClient() client.Client {
+func (r *serviceDhcpvsixServerSharedNetworkNameSubnetRange) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

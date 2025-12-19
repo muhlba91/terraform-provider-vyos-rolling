@@ -33,7 +33,7 @@ type vrfNameProtocolsOspfvthreeInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsOspfvthreeInterface) GetClient() client.Client {
+func (r *vrfNameProtocolsOspfvthreeInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type interfacesEthernet struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesEthernet) GetClient() client.Client {
+func (r *interfacesEthernet) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

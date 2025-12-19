@@ -33,7 +33,7 @@ type policyAccessListsix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyAccessListsix) GetClient() client.Client {
+func (r *policyAccessListsix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

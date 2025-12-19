@@ -33,7 +33,7 @@ type protocolsIsisRedistributeIPvsixStaticLevelTwo struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisRedistributeIPvsixStaticLevelTwo) GetClient() client.Client {
+func (r *protocolsIsisRedistributeIPvsixStaticLevelTwo) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

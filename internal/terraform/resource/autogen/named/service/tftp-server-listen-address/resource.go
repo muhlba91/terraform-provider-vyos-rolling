@@ -33,7 +33,7 @@ type serviceTftpServerListenAddress struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceTftpServerListenAddress) GetClient() client.Client {
+func (r *serviceTftpServerListenAddress) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

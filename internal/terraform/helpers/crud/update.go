@@ -38,6 +38,11 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 		return
 	}
 
+	resourceIdentifier := planModel.GetVyosPath()
+	if len(resourceIdentifier) == 0 {
+		resourceIdentifier = stateModel.GetVyosPath()
+	}
+
 	// Setup timeout
 	createTimeout, diags := stateModel.GetTimeouts().Update(ctx, time.Duration(r.GetProviderConfig().Config.CrudDefaultTimeouts)*time.Minute)
 	resp.Diagnostics.Append(diags...)
@@ -48,7 +53,7 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 	defer cancel()
 
 	// Execute
-	err := update(ctx, r.GetClient(), stateModel, planModel)
+	err := update(ctx, r.GetClient(), stateModel, planModel, resourceIdentifier)
 	if err != nil {
 		resp.Diagnostics.AddError("API Config error", err.Error())
 		return
@@ -64,7 +69,7 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 // model must be a ptr
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
-func update(ctx context.Context, client client.Client, stateModel, planModel helpers.VyosTopResourceDataModel) error {
+func update(ctx context.Context, client *client.Client, stateModel, planModel helpers.VyosTopResourceDataModel, resourceIdentifier []string) error {
 	// Get existing and planned config based on Terraform state and plan
 	stateVyosData, err := helpers.MarshalVyos(ctx, stateModel)
 	if err != nil {
@@ -82,7 +87,7 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	// Terraform configuration, we issue the appropriate delete operation
 	// to VyOS even if the parent block still exists.
 	resourcePath := stateModel.GetVyosPath()
-	deleteStateNotInPlan(ctx, &client, resourcePath, stateVyosData, planVyosData)
+	deleteStateNotInPlan(ctx, client, resourceIdentifier, resourcePath, stateVyosData, planVyosData)
 
 	// For any list-like attribute present in the plan, ensure the
 	// corresponding key on VyOS is deleted before re-applying the list
@@ -91,16 +96,16 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	// of what is currently configured on the device. We do this
 	// recursively so that nested list attributes (for example,
 	// member.interface on a firewall zone) are also handled.
-	resetListValuesRecursive(ctx, &client, resourcePath, planVyosData)
+	resetListValuesRecursive(ctx, client, resourceIdentifier, resourcePath, planVyosData)
 
 	// Set the new config
 	vyosOpsPlan := helpers.GenerateVyosOps(ctx, planModel.GetVyosPath(), planVyosData)
 	tools.Trace(ctx, "Compiling vyos plan operations", map[string]interface{}{"vyosOpsPlan": vyosOpsPlan})
 
-	client.StageSet(ctx, vyosOpsPlan)
+	client.StageSet(ctx, resourceIdentifier, vyosOpsPlan)
 
 	// Commit changes to api
-	response, err := client.CommitChanges(ctx)
+	response, err := client.CommitChanges(ctx, resourceIdentifier)
 	if err != nil {
 		return fmt.Errorf("client error: unable to update '%s', got error: %s", planModel.GetVyosPath(), err)
 	}
@@ -114,7 +119,7 @@ func update(ctx context.Context, client client.Client, stateModel, planModel hel
 	return nil
 }
 
-func resetListValueIfNeeded(ctx context.Context, client *client.Client, basePath []string, key string, planValue any) {
+func resetListValueIfNeeded(ctx context.Context, client *client.Client, resourceIdentifier []string, basePath []string, key string, planValue any) {
 	// Detect whether this attribute is list-like in the plan. If not,
 	// there is nothing to do here.
 	if _, okPlan := stringSliceFromAny(planValue); !okPlan {
@@ -132,7 +137,7 @@ func resetListValueIfNeeded(ctx context.Context, client *client.Client, basePath
 		"deletePath": deletePath,
 		"key":        key,
 	})
-	client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+	client.StageDelete(ctx, resourceIdentifier, helpers.GenerateVyosOps(ctx, deletePath, nil))
 }
 
 // deleteStateNotInPlan walks the marshalled VyOS representation of the
@@ -141,7 +146,7 @@ func resetListValueIfNeeded(ctx context.Context, client *client.Client, basePath
 // operates recursively so that nested attributes like
 // destination.address-mask are also removed when they are no longer
 // present in the plan.
-func deleteStateNotInPlan(ctx context.Context, client *client.Client, basePath []string, stateMap, planMap map[string]any) {
+func deleteStateNotInPlan(ctx context.Context, client *client.Client, resourceIdentifier []string, basePath []string, stateMap, planMap map[string]any) {
 	for key, stateVal := range stateMap {
 		planVal, exists := planMap[key]
 		if !exists {
@@ -150,7 +155,7 @@ func deleteStateNotInPlan(ctx context.Context, client *client.Client, basePath [
 				"deletePath": deletePath,
 				"key":        key,
 			})
-			client.StageDelete(ctx, helpers.GenerateVyosOps(ctx, deletePath, nil))
+			client.StageDelete(ctx, resourceIdentifier, helpers.GenerateVyosOps(ctx, deletePath, nil))
 			continue
 		}
 
@@ -159,7 +164,7 @@ func deleteStateNotInPlan(ctx context.Context, client *client.Client, basePath [
 		stateSub, okState := stateVal.(map[string]any)
 		planSub, okPlan := planVal.(map[string]any)
 		if okState && okPlan {
-			deleteStateNotInPlan(ctx, client, append(slices.Clone(basePath), key), stateSub, planSub)
+			deleteStateNotInPlan(ctx, client, resourceIdentifier, append(slices.Clone(basePath), key), stateSub, planSub)
 		}
 	}
 }
@@ -168,15 +173,15 @@ func deleteStateNotInPlan(ctx context.Context, client *client.Client, basePath [
 // list reset semantics to any list-like attributes it finds. It ensures
 // we delete the full key (for example, member.interface) before
 // re-applying all values from the plan.
-func resetListValuesRecursive(ctx context.Context, client *client.Client, basePath []string, planMap map[string]any) {
+func resetListValuesRecursive(ctx context.Context, client *client.Client, resourceIdentifier []string, basePath []string, planMap map[string]any) {
 	for key, planVal := range planMap {
 		if _, ok := stringSliceFromAny(planVal); ok {
-			resetListValueIfNeeded(ctx, client, basePath, key, planVal)
+			resetListValueIfNeeded(ctx, client, resourceIdentifier, basePath, key, planVal)
 			continue
 		}
 
 		if subMap, ok := planVal.(map[string]any); ok {
-			resetListValuesRecursive(ctx, client, append(slices.Clone(basePath), key), subMap)
+			resetListValuesRecursive(ctx, client, resourceIdentifier, append(slices.Clone(basePath), key), subMap)
 		}
 	}
 }

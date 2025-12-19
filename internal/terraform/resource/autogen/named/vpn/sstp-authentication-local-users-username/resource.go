@@ -33,7 +33,7 @@ type vpnSstpAuthenticationLocalUsersUsername struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnSstpAuthenticationLocalUsersUsername) GetClient() client.Client {
+func (r *vpnSstpAuthenticationLocalUsersUsername) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type vrfNameProtocolsBgpAddressFamilyIPvsixVpnNetwork struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsBgpAddressFamilyIPvsixVpnNetwork) GetClient() client.Client {
+func (r *vrfNameProtocolsBgpAddressFamilyIPvsixVpnNetwork) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

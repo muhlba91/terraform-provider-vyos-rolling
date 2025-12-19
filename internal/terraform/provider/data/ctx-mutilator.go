@@ -14,13 +14,14 @@ type CtxMutilator func(context.Context) context.Context
 /*
 NewProviderData sets defaults
 */
-func NewProviderData(c client.Client) ProviderData {
+func NewProviderData(c *client.Client) ProviderData {
 	return ProviderData{
 		Client: c,
 		Config: Config{
 			CrudSkipCheckParentBeforeCreate: false,
 			CrudSkipExistingResourceCheck:   false,
 			CrudSkipCheckChildBeforeDelete:  false,
+			ManualBindingOverrides:          map[string]string{},
 		},
 	}
 }

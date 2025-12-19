@@ -33,7 +33,7 @@ type serviceMonitoringTelegrafSplunk struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringTelegrafSplunk) GetClient() client.Client {
+func (r *serviceMonitoringTelegrafSplunk) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type serviceDhcpServerHighAvailability struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpServerHighAvailability) GetClient() client.Client {
+func (r *serviceDhcpServerHighAvailability) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

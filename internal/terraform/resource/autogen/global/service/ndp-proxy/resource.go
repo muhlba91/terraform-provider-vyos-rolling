@@ -33,7 +33,7 @@ type serviceNdpProxy struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceNdpProxy) GetClient() client.Client {
+func (r *serviceNdpProxy) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

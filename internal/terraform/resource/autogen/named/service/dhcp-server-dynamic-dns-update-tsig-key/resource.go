@@ -33,7 +33,7 @@ type serviceDhcpServerDynamicDNSUpdateTsigKey struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpServerDynamicDNSUpdateTsigKey) GetClient() client.Client {
+func (r *serviceDhcpServerDynamicDNSUpdateTsigKey) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

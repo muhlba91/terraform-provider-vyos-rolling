@@ -33,7 +33,7 @@ type systemSflowServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemSflowServer) GetClient() client.Client {
+func (r *systemSflowServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

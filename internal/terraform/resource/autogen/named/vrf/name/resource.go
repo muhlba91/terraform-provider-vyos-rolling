@@ -33,7 +33,7 @@ type vrfName struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfName) GetClient() client.Client {
+func (r *vrfName) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

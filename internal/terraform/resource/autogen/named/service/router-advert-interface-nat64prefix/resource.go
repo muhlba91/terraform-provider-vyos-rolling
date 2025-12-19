@@ -33,7 +33,7 @@ type serviceRouterAdvertInterfaceNatsixfourprefix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceRouterAdvertInterfaceNatsixfourprefix) GetClient() client.Client {
+func (r *serviceRouterAdvertInterfaceNatsixfourprefix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

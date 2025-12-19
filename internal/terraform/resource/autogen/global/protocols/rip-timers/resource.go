@@ -33,7 +33,7 @@ type protocolsRIPTimers struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPTimers) GetClient() client.Client {
+func (r *protocolsRIPTimers) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

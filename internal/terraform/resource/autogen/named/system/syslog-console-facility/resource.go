@@ -33,7 +33,7 @@ type systemSyslogConsoleFacility struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemSyslogConsoleFacility) GetClient() client.Client {
+func (r *systemSyslogConsoleFacility) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

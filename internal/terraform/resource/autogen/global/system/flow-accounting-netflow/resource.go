@@ -33,7 +33,7 @@ type systemFlowAccountingNetflow struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemFlowAccountingNetflow) GetClient() client.Client {
+func (r *systemFlowAccountingNetflow) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

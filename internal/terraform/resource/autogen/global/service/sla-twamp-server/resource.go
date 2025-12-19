@@ -33,7 +33,7 @@ type serviceSLATwampServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSLATwampServer) GetClient() client.Client {
+func (r *serviceSLATwampServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

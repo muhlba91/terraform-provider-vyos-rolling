@@ -33,7 +33,7 @@ type servicePppoeServerAuthenticationRadiusDynamicAuthor struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerAuthenticationRadiusDynamicAuthor) GetClient() client.Client {
+func (r *servicePppoeServerAuthenticationRadiusDynamicAuthor) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

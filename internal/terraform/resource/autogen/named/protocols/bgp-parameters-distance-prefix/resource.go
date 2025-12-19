@@ -33,7 +33,7 @@ type protocolsBgpParametersDistancePrefix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpParametersDistancePrefix) GetClient() client.Client {
+func (r *protocolsBgpParametersDistancePrefix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

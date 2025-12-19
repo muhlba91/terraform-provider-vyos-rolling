@@ -33,7 +33,7 @@ type serviceLldp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceLldp) GetClient() client.Client {
+func (r *serviceLldp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

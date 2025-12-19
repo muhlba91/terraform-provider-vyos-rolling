@@ -33,7 +33,7 @@ type serviceMDNSRepeater struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMDNSRepeater) GetClient() client.Client {
+func (r *serviceMDNSRepeater) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

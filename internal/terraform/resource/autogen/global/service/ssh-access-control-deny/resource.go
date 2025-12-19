@@ -33,7 +33,7 @@ type serviceTCPAccessControlDeny struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceTCPAccessControlDeny) GetClient() client.Client {
+func (r *serviceTCPAccessControlDeny) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

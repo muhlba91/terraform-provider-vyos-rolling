@@ -33,7 +33,7 @@ type systemOptionKernelDebug struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemOptionKernelDebug) GetClient() client.Client {
+func (r *systemOptionKernelDebug) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

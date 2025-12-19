@@ -33,7 +33,7 @@ type firewallBrIDgeForwardFilter struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallBrIDgeForwardFilter) GetClient() client.Client {
+func (r *firewallBrIDgeForwardFilter) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

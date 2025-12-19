@@ -33,7 +33,7 @@ type serviceDhcpServerSharedNetworkNameSubnetOptionStaticRoute struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpServerSharedNetworkNameSubnetOptionStaticRoute) GetClient() client.Client {
+func (r *serviceDhcpServerSharedNetworkNameSubnetOptionStaticRoute) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

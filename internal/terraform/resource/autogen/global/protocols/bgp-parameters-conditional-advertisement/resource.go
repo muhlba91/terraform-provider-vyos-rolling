@@ -33,7 +33,7 @@ type protocolsBgpParametersConditionalAdvertisement struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpParametersConditionalAdvertisement) GetClient() client.Client {
+func (r *protocolsBgpParametersConditionalAdvertisement) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type interfacesInput struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesInput) GetClient() client.Client {
+func (r *interfacesInput) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -76,7 +76,9 @@ func Create(ctx context.Context, r helpers.VyosResource, req resource.CreateRequ
 // model must be a ptr
 // this function is separated out to keep the terraform provider
 // logic and API logic separate so we can test the API logic easier
-func create(ctx context.Context, providerCfg data.ProviderData, c client.Client, planModel helpers.VyosTopResourceDataModel) error {
+func create(ctx context.Context, providerCfg data.ProviderData, c *client.Client, planModel helpers.VyosTopResourceDataModel) error {
+	resourcePath := planModel.GetVyosPath()
+
 	// Check if nearest parent exists
 	if !providerCfg.Config.CrudSkipCheckParentBeforeCreate && (len(planModel.GetVyosNamedParentPath()) > 0) {
 		tools.Debug(ctx, fmt.Sprintf("checking for parent: '%s'", planModel.GetVyosNamedParentPath()))
@@ -166,7 +168,7 @@ func create(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 		if err != nil {
 			return fmt.Errorf("failed to read existing resource for update: %w", err)
 		}
-		err = update(ctx, c, stateModel, planModel)
+		err = update(ctx, c, stateModel, planModel, resourcePath)
 		if err != nil {
 			return fmt.Errorf("failed to update existing resource: %w", err)
 		}
@@ -182,16 +184,16 @@ func create(ctx context.Context, providerCfg data.ProviderData, c client.Client,
 
 	// Create vyos api ops
 	tools.Trace(ctx, "Formatting vyos operations")
-	vyosOps := helpers.GenerateVyosOps(ctx, planModel.GetVyosPath(), vyosData)
+	vyosOps := helpers.GenerateVyosOps(ctx, resourcePath, vyosData)
 	tools.Trace(ctx, "Compiled vyos operations", map[string]interface{}{"vyosOps": vyosOps})
 
 	// Stage changes
 	tools.Debug(ctx, "staging vyos changes api calls")
-	c.StageSet(ctx, vyosOps)
+	c.StageSet(ctx, resourcePath, vyosOps)
 
 	// Commit changes
 	tools.Info(ctx, "committing vyos changes api calls")
-	response, err := c.CommitChanges(ctx)
+	response, err := c.CommitChanges(ctx, resourcePath)
 	if err != nil {
 		return fmt.Errorf("unable to create resource '%s' due to client error: %w", planModel.GetVyosPath(), err)
 	}

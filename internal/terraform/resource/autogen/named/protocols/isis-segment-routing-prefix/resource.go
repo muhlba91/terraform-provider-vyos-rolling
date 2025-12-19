@@ -33,7 +33,7 @@ type protocolsIsisSegmentRoutingPrefix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisSegmentRoutingPrefix) GetClient() client.Client {
+func (r *protocolsIsisSegmentRoutingPrefix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

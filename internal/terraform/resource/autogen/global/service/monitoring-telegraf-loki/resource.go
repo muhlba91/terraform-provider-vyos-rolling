@@ -33,7 +33,7 @@ type serviceMonitoringTelegrafLoki struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringTelegrafLoki) GetClient() client.Client {
+func (r *serviceMonitoringTelegrafLoki) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

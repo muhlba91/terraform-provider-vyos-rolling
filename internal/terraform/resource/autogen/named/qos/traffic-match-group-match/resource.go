@@ -33,7 +33,7 @@ type qosTrafficMatchGroupMatch struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosTrafficMatchGroupMatch) GetClient() client.Client {
+func (r *qosTrafficMatchGroupMatch) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

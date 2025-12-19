@@ -33,7 +33,7 @@ type serviceWebproxy struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceWebproxy) GetClient() client.Client {
+func (r *serviceWebproxy) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

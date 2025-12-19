@@ -33,7 +33,7 @@ type serviceDhcpvsixServerSharedNetworkNameSubnetStaticMapping struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpvsixServerSharedNetworkNameSubnetStaticMapping) GetClient() client.Client {
+func (r *serviceDhcpvsixServerSharedNetworkNameSubnetStaticMapping) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

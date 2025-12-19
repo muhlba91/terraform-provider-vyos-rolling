@@ -33,7 +33,7 @@ type qosPolicyRandomDetectPrecedence struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyRandomDetectPrecedence) GetClient() client.Client {
+func (r *qosPolicyRandomDetectPrecedence) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

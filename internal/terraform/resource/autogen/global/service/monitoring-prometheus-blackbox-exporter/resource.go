@@ -33,7 +33,7 @@ type serviceMonitoringPrometheusBlackboxExporter struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringPrometheusBlackboxExporter) GetClient() client.Client {
+func (r *serviceMonitoringPrometheusBlackboxExporter) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

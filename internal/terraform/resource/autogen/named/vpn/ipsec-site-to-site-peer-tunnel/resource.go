@@ -33,7 +33,7 @@ type vpnIPsecSiteToSitePeerTunnel struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnIPsecSiteToSitePeerTunnel) GetClient() client.Client {
+func (r *vpnIPsecSiteToSitePeerTunnel) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

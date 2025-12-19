@@ -33,7 +33,7 @@ type vpnLtwotpRemoteAccessAuthenticationRadiusRateLimit struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnLtwotpRemoteAccessAuthenticationRadiusRateLimit) GetClient() client.Client {
+func (r *vpnLtwotpRemoteAccessAuthenticationRadiusRateLimit) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

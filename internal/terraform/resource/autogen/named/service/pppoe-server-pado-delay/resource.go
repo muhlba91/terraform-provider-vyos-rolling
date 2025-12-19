@@ -33,7 +33,7 @@ type servicePppoeServerPadoDelay struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerPadoDelay) GetClient() client.Client {
+func (r *servicePppoeServerPadoDelay) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

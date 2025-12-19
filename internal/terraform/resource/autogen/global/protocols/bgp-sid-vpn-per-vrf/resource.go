@@ -33,7 +33,7 @@ type protocolsBgpSIDVpnPerVrf struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpSIDVpnPerVrf) GetClient() client.Client {
+func (r *protocolsBgpSIDVpnPerVrf) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

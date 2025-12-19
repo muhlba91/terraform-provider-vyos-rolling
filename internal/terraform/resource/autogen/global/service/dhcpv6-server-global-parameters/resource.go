@@ -33,7 +33,7 @@ type serviceDhcpvsixServerGlobalParameters struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpvsixServerGlobalParameters) GetClient() client.Client {
+func (r *serviceDhcpvsixServerGlobalParameters) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type vpnLtwotpRemoteAccessPppOptions struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnLtwotpRemoteAccessPppOptions) GetClient() client.Client {
+func (r *vpnLtwotpRemoteAccessPppOptions) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

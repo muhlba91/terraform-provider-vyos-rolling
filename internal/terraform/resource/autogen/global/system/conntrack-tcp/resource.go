@@ -33,7 +33,7 @@ type systemConntrackTCP struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConntrackTCP) GetClient() client.Client {
+func (r *systemConntrackTCP) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

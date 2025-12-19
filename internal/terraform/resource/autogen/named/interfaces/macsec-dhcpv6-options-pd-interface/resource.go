@@ -33,7 +33,7 @@ type interfacesMacsecDhcpvsixOptionsPdInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesMacsecDhcpvsixOptionsPdInterface) GetClient() client.Client {
+func (r *interfacesMacsecDhcpvsixOptionsPdInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

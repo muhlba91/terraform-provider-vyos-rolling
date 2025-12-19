@@ -33,7 +33,7 @@ type systemUpdateCheck struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemUpdateCheck) GetClient() client.Client {
+func (r *systemUpdateCheck) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type systemIPImportTable struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemIPImportTable) GetClient() client.Client {
+func (r *systemIPImportTable) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

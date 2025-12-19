@@ -33,7 +33,7 @@ type vpnOpenconnectAccountingRadiusServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnOpenconnectAccountingRadiusServer) GetClient() client.Client {
+func (r *vpnOpenconnectAccountingRadiusServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type systemOption struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemOption) GetClient() client.Client {
+func (r *systemOption) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

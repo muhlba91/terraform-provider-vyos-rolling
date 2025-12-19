@@ -33,7 +33,7 @@ type policyPrefixListsixRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyPrefixListsixRule) GetClient() client.Client {
+func (r *policyPrefixListsixRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

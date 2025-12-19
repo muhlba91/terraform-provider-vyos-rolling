@@ -14,7 +14,7 @@
 	}
 
 	// GetClient returns the vyos api client
-	func (r *{{.BaseNameG}}) GetClient() client.Client {
+	func (r *{{.BaseNameG}}) GetClient() *client.Client {
 		return r.providerData.Client
 	}
 

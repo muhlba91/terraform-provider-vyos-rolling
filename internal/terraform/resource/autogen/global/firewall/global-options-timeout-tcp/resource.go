@@ -33,7 +33,7 @@ type firewallGlobalOptionsTimeoutTCP struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallGlobalOptionsTimeoutTCP) GetClient() client.Client {
+func (r *firewallGlobalOptionsTimeoutTCP) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -10,7 +10,7 @@ import (
 ProviderData used to communicate prodiver configs and features to the resources
 */
 type ProviderData struct {
-	Client        client.Client
+	Client        *client.Client
 	Config        Config
 	ctxMutilators []CtxMutilator
 }
@@ -40,4 +40,5 @@ type Config struct {
 	CrudSkipExistingResourceCheck   bool
 	CrudSkipCheckChildBeforeDelete  bool
 	CrudDefaultTimeouts             float64
+	ManualBindingOverrides          map[string]string
 }

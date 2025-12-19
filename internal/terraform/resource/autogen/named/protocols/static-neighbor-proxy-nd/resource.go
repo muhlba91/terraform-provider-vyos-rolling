@@ -33,7 +33,7 @@ type protocolsStaticNeighborProxyNd struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsStaticNeighborProxyNd) GetClient() client.Client {
+func (r *protocolsStaticNeighborProxyNd) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsBgpParametersTCPKeepalive struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpParametersTCPKeepalive) GetClient() client.Client {
+func (r *protocolsBgpParametersTCPKeepalive) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsBabelDistributeListIPvfourInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBabelDistributeListIPvfourInterface) GetClient() client.Client {
+func (r *protocolsBabelDistributeListIPvfourInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

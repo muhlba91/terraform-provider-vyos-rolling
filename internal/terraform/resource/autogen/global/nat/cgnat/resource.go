@@ -33,7 +33,7 @@ type natCgnat struct {
 }
 
 // GetClient returns the vyos api client
-func (r *natCgnat) GetClient() client.Client {
+func (r *natCgnat) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

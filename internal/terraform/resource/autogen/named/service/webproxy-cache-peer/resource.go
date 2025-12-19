@@ -33,7 +33,7 @@ type serviceWebproxyCachePeer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceWebproxyCachePeer) GetClient() client.Client {
+func (r *serviceWebproxyCachePeer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

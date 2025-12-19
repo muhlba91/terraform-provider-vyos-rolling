@@ -33,7 +33,7 @@ type interfacesPppoe struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesPppoe) GetClient() client.Client {
+func (r *interfacesPppoe) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

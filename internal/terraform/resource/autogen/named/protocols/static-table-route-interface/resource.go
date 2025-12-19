@@ -33,7 +33,7 @@ type protocolsStaticTableRouteInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsStaticTableRouteInterface) GetClient() client.Client {
+func (r *protocolsStaticTableRouteInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

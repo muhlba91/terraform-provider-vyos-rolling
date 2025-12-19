@@ -33,7 +33,7 @@ type systemOptionKernelMemory struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemOptionKernelMemory) GetClient() client.Client {
+func (r *systemOptionKernelMemory) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

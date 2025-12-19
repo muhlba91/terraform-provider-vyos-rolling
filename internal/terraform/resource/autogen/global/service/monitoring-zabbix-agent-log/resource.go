@@ -33,7 +33,7 @@ type serviceMonitoringZabbixAgentLog struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringZabbixAgentLog) GetClient() client.Client {
+func (r *serviceMonitoringZabbixAgentLog) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

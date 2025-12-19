@@ -33,7 +33,7 @@ type serviceStunnelClientPsk struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceStunnelClientPsk) GetClient() client.Client {
+func (r *serviceStunnelClientPsk) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

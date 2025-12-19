@@ -33,7 +33,7 @@ type highAvailabilityVrrpGroup struct {
 }
 
 // GetClient returns the vyos api client
-func (r *highAvailabilityVrrpGroup) GetClient() client.Client {
+func (r *highAvailabilityVrrpGroup) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

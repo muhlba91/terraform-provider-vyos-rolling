@@ -33,7 +33,7 @@ type systemAcceleration struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemAcceleration) GetClient() client.Client {
+func (r *systemAcceleration) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

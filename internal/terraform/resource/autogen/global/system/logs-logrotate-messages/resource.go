@@ -33,7 +33,7 @@ type systemLogsLogrotateMessages struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemLogsLogrotateMessages) GetClient() client.Client {
+func (r *systemLogsLogrotateMessages) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

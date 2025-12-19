@@ -33,7 +33,7 @@ type interfacesWirelessSecURItyWpaRadiusServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesWirelessSecURItyWpaRadiusServer) GetClient() client.Client {
+func (r *interfacesWirelessSecURItyWpaRadiusServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

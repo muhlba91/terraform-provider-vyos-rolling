@@ -33,7 +33,7 @@ type systemConfigManagementCommitConfirm struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConfigManagementCommitConfirm) GetClient() client.Client {
+func (r *systemConfigManagementCommitConfirm) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

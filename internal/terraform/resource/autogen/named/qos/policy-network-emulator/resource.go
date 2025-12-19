@@ -33,7 +33,7 @@ type qosPolicyNetworkEmulator struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyNetworkEmulator) GetClient() client.Client {
+func (r *qosPolicyNetworkEmulator) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

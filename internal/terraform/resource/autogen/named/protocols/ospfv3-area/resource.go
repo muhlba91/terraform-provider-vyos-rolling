@@ -33,7 +33,7 @@ type protocolsOspfvthreeArea struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfvthreeArea) GetClient() client.Client {
+func (r *protocolsOspfvthreeArea) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsOpenfabricDomainInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOpenfabricDomainInterface) GetClient() client.Client {
+func (r *protocolsOpenfabricDomainInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type serviceHTTPSAPIGraphqlCors struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceHTTPSAPIGraphqlCors) GetClient() client.Client {
+func (r *serviceHTTPSAPIGraphqlCors) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsOspfAreaVirtualLink struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfAreaVirtualLink) GetClient() client.Client {
+func (r *protocolsOspfAreaVirtualLink) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type qosPolicyPriorityQueueClass struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyPriorityQueueClass) GetClient() client.Client {
+func (r *qosPolicyPriorityQueueClass) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsOspfvthreeLogAdjacencyChanges struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfvthreeLogAdjacencyChanges) GetClient() client.Client {
+func (r *protocolsOspfvthreeLogAdjacencyChanges) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type firewallBrIDgeName struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallBrIDgeName) GetClient() client.Client {
+func (r *firewallBrIDgeName) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

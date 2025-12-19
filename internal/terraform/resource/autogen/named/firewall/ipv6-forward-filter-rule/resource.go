@@ -33,7 +33,7 @@ type firewallIPvsixForwardFilterRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallIPvsixForwardFilterRule) GetClient() client.Client {
+func (r *firewallIPvsixForwardFilterRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

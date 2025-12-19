@@ -33,7 +33,7 @@ type policyLargeCommunityListRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyLargeCommunityListRule) GetClient() client.Client {
+func (r *policyLargeCommunityListRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

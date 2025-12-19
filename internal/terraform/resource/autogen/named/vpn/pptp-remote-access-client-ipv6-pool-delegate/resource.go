@@ -33,7 +33,7 @@ type vpnPptpRemoteAccessClientIPvsixPoolDelegate struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnPptpRemoteAccessClientIPvsixPoolDelegate) GetClient() client.Client {
+func (r *vpnPptpRemoteAccessClientIPvsixPoolDelegate) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

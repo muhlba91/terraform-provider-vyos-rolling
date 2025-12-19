@@ -33,7 +33,7 @@ type interfacesBonding struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesBonding) GetClient() client.Client {
+func (r *interfacesBonding) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

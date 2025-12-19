@@ -33,7 +33,7 @@ type pkiDh struct {
 }
 
 // GetClient returns the vyos api client
-func (r *pkiDh) GetClient() client.Client {
+func (r *pkiDh) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

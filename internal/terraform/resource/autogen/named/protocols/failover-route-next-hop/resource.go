@@ -33,7 +33,7 @@ type protocolsFailoverRouteNextHop struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsFailoverRouteNextHop) GetClient() client.Client {
+func (r *protocolsFailoverRouteNextHop) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

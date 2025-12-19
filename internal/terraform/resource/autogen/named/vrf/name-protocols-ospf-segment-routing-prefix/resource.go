@@ -33,7 +33,7 @@ type vrfNameProtocolsOspfSegmentRoutingPrefix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsOspfSegmentRoutingPrefix) GetClient() client.Client {
+func (r *vrfNameProtocolsOspfSegmentRoutingPrefix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

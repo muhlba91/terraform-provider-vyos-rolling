@@ -33,7 +33,7 @@ type serviceEventHandlerEventScrIPtEnvironment struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceEventHandlerEventScrIPtEnvironment) GetClient() client.Client {
+func (r *serviceEventHandlerEventScrIPtEnvironment) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

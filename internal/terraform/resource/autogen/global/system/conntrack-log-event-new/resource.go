@@ -33,7 +33,7 @@ type systemConntrackLogEventNew struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConntrackLogEventNew) GetClient() client.Client {
+func (r *systemConntrackLogEventNew) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

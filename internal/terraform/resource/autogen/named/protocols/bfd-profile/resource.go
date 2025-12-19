@@ -33,7 +33,7 @@ type protocolsBfdProfile struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBfdProfile) GetClient() client.Client {
+func (r *protocolsBfdProfile) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

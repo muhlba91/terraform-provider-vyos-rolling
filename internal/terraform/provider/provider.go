@@ -36,6 +36,7 @@ type VyosProviderModel struct {
 	IgnoreMissingParentRes types.Bool   `tfsdk:"ignore_missing_parent_resource_on_create"`
 	IgnoreChildResOnDelete types.Bool   `tfsdk:"ignore_child_resource_on_delete"`
 	DefaultTimeouts        types.Number `tfsdk:"default_timeouts"`
+	ManualBindingOverrides types.Map    `tfsdk:"manual_binding_overrides"`
 }
 
 // Metadata method to define the provider type name for inclusion in each data source and resource type name.
@@ -102,6 +103,11 @@ func (p *VyosProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 					"\n\n  !> **WARNING:** This is extremely destructive and will delete everything below the destroyed resource.",
 				Optional: true,
 			},
+			"manual_binding_overrides": schema.MapAttribute{
+				MarkdownDescription: "Optional map where keys are VyOS path prefixes (joined by spaces) and values are binding identifiers. Resources whose paths match the same identifier are committed together, which is useful for manual batching overrides.",
+				Optional:            true,
+				ElementType:         types.StringType,
+			},
 		},
 	}
 }
@@ -156,9 +162,22 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	}
 
 	// Client configuration for data sources and resources
-	config := data.NewProviderData(
-		client.NewClient(ctx, endpoint, apiKey, "TODO: add useragent with provider version", disableVerify),
-	)
+	clientInstance := client.NewClient(ctx, endpoint, apiKey, "TODO: add useragent with provider version", disableVerify)
+
+	var bindingOverrides map[string]string
+	if !providerModel.ManualBindingOverrides.IsNull() && !providerModel.ManualBindingOverrides.IsUnknown() {
+		var overrides map[string]string
+		diags := providerModel.ManualBindingOverrides.ElementsAs(ctx, &overrides, false)
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		bindingOverrides = overrides
+		clientInstance.SetBindingOverrides(overrides)
+	}
+
+	config := data.NewProviderData(clientInstance)
+	config.Config.ManualBindingOverrides = bindingOverrides
 
 	// Add ctx mutilators to provider data
 	config.CtxMutilatorAdd(ctxMutilators...)

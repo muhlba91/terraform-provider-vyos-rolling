@@ -33,7 +33,7 @@ type qosPolicyShaperHfsc struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyShaperHfsc) GetClient() client.Client {
+func (r *qosPolicyShaperHfsc) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

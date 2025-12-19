@@ -33,7 +33,7 @@ type systemLoginUserAuthenticationPublicKeys struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemLoginUserAuthenticationPublicKeys) GetClient() client.Client {
+func (r *systemLoginUserAuthenticationPublicKeys) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type systemIPTCPMss struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemIPTCPMss) GetClient() client.Client {
+func (r *systemIPTCPMss) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

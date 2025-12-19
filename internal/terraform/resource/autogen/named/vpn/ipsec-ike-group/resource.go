@@ -33,7 +33,7 @@ type vpnIPsecIkeGroup struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnIPsecIkeGroup) GetClient() client.Client {
+func (r *vpnIPsecIkeGroup) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

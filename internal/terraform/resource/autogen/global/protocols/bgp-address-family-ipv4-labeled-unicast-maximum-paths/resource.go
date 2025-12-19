@@ -33,7 +33,7 @@ type protocolsBgpAddressFamilyIPvfourLabeledUnicastMaximumPaths struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpAddressFamilyIPvfourLabeledUnicastMaximumPaths) GetClient() client.Client {
+func (r *protocolsBgpAddressFamilyIPvfourLabeledUnicastMaximumPaths) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

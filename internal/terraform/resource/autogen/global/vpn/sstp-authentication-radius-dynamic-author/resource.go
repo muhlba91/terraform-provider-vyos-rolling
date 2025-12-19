@@ -33,7 +33,7 @@ type vpnSstpAuthenticationRadiusDynamicAuthor struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnSstpAuthenticationRadiusDynamicAuthor) GetClient() client.Client {
+func (r *vpnSstpAuthenticationRadiusDynamicAuthor) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

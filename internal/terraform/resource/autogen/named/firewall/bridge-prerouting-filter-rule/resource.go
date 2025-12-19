@@ -33,7 +33,7 @@ type firewallBrIDgePreroutingFilterRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallBrIDgePreroutingFilterRule) GetClient() client.Client {
+func (r *firewallBrIDgePreroutingFilterRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

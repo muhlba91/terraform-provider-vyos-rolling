@@ -33,7 +33,7 @@ type vpnOpenconnectAuthenticationIDentityBasedConfig struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnOpenconnectAuthenticationIDentityBasedConfig) GetClient() client.Client {
+func (r *vpnOpenconnectAuthenticationIDentityBasedConfig) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

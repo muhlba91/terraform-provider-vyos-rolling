@@ -33,7 +33,7 @@ type protocolsEigrpMetric struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsEigrpMetric) GetClient() client.Client {
+func (r *protocolsEigrpMetric) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

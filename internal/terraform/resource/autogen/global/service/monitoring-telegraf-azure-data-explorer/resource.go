@@ -33,7 +33,7 @@ type serviceMonitoringTelegrafAzureDataExplorer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringTelegrafAzureDataExplorer) GetClient() client.Client {
+func (r *serviceMonitoringTelegrafAzureDataExplorer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

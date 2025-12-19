@@ -33,7 +33,7 @@ type protocolsPimsixRpAddress struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsPimsixRpAddress) GetClient() client.Client {
+func (r *protocolsPimsixRpAddress) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

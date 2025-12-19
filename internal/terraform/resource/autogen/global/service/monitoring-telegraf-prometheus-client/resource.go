@@ -33,7 +33,7 @@ type serviceMonitoringTelegrafPrometheusClient struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceMonitoringTelegrafPrometheusClient) GetClient() client.Client {
+func (r *serviceMonitoringTelegrafPrometheusClient) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

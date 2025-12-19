@@ -33,7 +33,7 @@ type interfacesWirelessVif struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesWirelessVif) GetClient() client.Client {
+func (r *interfacesWirelessVif) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

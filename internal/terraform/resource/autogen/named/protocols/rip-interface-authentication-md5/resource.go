@@ -33,7 +33,7 @@ type protocolsRIPInterfaceAuthenticationMdfive struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPInterfaceAuthenticationMdfive) GetClient() client.Client {
+func (r *protocolsRIPInterfaceAuthenticationMdfive) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

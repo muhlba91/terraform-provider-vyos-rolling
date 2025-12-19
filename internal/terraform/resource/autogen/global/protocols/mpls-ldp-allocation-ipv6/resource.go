@@ -33,7 +33,7 @@ type protocolsMplsLdpAllocationIPvsix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsMplsLdpAllocationIPvsix) GetClient() client.Client {
+func (r *protocolsMplsLdpAllocationIPvsix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

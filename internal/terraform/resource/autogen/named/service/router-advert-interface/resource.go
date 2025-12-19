@@ -33,7 +33,7 @@ type serviceRouterAdvertInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceRouterAdvertInterface) GetClient() client.Client {
+func (r *serviceRouterAdvertInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

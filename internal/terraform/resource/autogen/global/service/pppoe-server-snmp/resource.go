@@ -33,7 +33,7 @@ type servicePppoeServerSnmp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerSnmp) GetClient() client.Client {
+func (r *servicePppoeServerSnmp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

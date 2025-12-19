@@ -33,7 +33,7 @@ type protocolsIsisDefaultInformationOriginateIPvsixLevelOne struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisDefaultInformationOriginateIPvsixLevelOne) GetClient() client.Client {
+func (r *protocolsIsisDefaultInformationOriginateIPvsixLevelOne) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

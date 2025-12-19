@@ -33,7 +33,7 @@ type protocolsOspfInterfaceAuthenticationMdfiveKeyID struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfInterfaceAuthenticationMdfiveKeyID) GetClient() client.Client {
+func (r *protocolsOspfInterfaceAuthenticationMdfiveKeyID) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

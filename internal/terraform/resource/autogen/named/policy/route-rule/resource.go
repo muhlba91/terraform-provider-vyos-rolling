@@ -33,7 +33,7 @@ type policyRouteRule struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyRouteRule) GetClient() client.Client {
+func (r *policyRouteRule) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

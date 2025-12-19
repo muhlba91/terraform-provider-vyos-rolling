@@ -33,7 +33,7 @@ type protocolsBgpNeighborLocalRole struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpNeighborLocalRole) GetClient() client.Client {
+func (r *protocolsBgpNeighborLocalRole) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

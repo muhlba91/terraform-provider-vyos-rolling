@@ -33,7 +33,7 @@ type serviceHTTPSAPIKeysID struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceHTTPSAPIKeysID) GetClient() client.Client {
+func (r *serviceHTTPSAPIKeysID) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

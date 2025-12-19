@@ -33,7 +33,7 @@ type protocolsIsisFastRerouteLfaLocalTiebreakerNodeProtectingIndex struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisFastRerouteLfaLocalTiebreakerNodeProtectingIndex) GetClient() client.Client {
+func (r *protocolsIsisFastRerouteLfaLocalTiebreakerNodeProtectingIndex) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

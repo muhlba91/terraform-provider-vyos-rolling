@@ -33,7 +33,7 @@ type vpnLtwotpRemoteAccessIPsecSettingsAuthenticationXfivezeronine struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnLtwotpRemoteAccessIPsecSettingsAuthenticationXfivezeronine) GetClient() client.Client {
+func (r *vpnLtwotpRemoteAccessIPsecSettingsAuthenticationXfivezeronine) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

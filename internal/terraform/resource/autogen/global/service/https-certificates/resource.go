@@ -33,7 +33,7 @@ type serviceHTTPSCertificates struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceHTTPSCertificates) GetClient() client.Client {
+func (r *serviceHTTPSCertificates) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

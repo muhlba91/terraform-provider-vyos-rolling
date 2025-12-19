@@ -33,7 +33,7 @@ type qosPolicyRandomDetect struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyRandomDetect) GetClient() client.Client {
+func (r *qosPolicyRandomDetect) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

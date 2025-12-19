@@ -33,7 +33,7 @@ type firewallGlobalOptionsApplyToBrIDgedTrafficAcceptInvalID struct {
 }
 
 // GetClient returns the vyos api client
-func (r *firewallGlobalOptionsApplyToBrIDgedTrafficAcceptInvalID) GetClient() client.Client {
+func (r *firewallGlobalOptionsApplyToBrIDgedTrafficAcceptInvalID) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type protocolsRIPngDefaultInformation struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPngDefaultInformation) GetClient() client.Client {
+func (r *protocolsRIPngDefaultInformation) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

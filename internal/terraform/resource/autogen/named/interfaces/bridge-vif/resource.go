@@ -33,7 +33,7 @@ type interfacesBrIDgeVif struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesBrIDgeVif) GetClient() client.Client {
+func (r *interfacesBrIDgeVif) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

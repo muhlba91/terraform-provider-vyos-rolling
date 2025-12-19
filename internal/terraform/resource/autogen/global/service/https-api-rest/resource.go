@@ -33,7 +33,7 @@ type serviceHTTPSAPIRest struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceHTTPSAPIRest) GetClient() client.Client {
+func (r *serviceHTTPSAPIRest) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

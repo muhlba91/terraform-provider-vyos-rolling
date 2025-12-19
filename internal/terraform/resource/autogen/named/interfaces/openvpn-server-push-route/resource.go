@@ -33,7 +33,7 @@ type interfacesOpenvpnServerPushRoute struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesOpenvpnServerPushRoute) GetClient() client.Client {
+func (r *interfacesOpenvpnServerPushRoute) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

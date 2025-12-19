@@ -33,7 +33,7 @@ type policyExtcommunityList struct {
 }
 
 // GetClient returns the vyos api client
-func (r *policyExtcommunityList) GetClient() client.Client {
+func (r *policyExtcommunityList) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

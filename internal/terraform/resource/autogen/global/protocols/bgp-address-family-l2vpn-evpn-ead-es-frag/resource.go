@@ -33,7 +33,7 @@ type protocolsBgpAddressFamilyLtwovpnEvpnEadEsFrag struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpAddressFamilyLtwovpnEvpnEadEsFrag) GetClient() client.Client {
+func (r *protocolsBgpAddressFamilyLtwovpnEvpnEadEsFrag) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

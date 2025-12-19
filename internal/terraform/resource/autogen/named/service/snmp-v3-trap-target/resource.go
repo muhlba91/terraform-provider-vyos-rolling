@@ -33,7 +33,7 @@ type serviceSnmpVthreeTrapTarget struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSnmpVthreeTrapTarget) GetClient() client.Client {
+func (r *serviceSnmpVthreeTrapTarget) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

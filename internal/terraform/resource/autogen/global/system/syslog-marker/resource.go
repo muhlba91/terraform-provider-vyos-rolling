@@ -33,7 +33,7 @@ type systemSyslogMarker struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemSyslogMarker) GetClient() client.Client {
+func (r *systemSyslogMarker) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

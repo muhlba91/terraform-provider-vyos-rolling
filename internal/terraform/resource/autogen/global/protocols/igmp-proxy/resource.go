@@ -33,7 +33,7 @@ type protocolsIgmpProxy struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIgmpProxy) GetClient() client.Client {
+func (r *protocolsIgmpProxy) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

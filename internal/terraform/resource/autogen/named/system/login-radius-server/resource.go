@@ -33,7 +33,7 @@ type systemLoginRadiusServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemLoginRadiusServer) GetClient() client.Client {
+func (r *systemLoginRadiusServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

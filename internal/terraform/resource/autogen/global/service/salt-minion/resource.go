@@ -33,7 +33,7 @@ type serviceSaltMinion struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSaltMinion) GetClient() client.Client {
+func (r *serviceSaltMinion) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

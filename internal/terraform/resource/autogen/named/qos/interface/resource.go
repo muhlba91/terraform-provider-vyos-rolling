@@ -33,7 +33,7 @@ type qosInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosInterface) GetClient() client.Client {
+func (r *qosInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

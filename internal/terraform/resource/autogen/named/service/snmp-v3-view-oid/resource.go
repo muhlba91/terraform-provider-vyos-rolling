@@ -33,7 +33,7 @@ type serviceSnmpVthreeViewOID struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSnmpVthreeViewOID) GetClient() client.Client {
+func (r *serviceSnmpVthreeViewOID) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

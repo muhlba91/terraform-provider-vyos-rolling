@@ -33,7 +33,7 @@ type protocolsRIPngTimers struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPngTimers) GetClient() client.Client {
+func (r *protocolsRIPngTimers) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

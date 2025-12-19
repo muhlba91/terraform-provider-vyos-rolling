@@ -33,7 +33,7 @@ type serviceIPoeServerShaper struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceIPoeServerShaper) GetClient() client.Client {
+func (r *serviceIPoeServerShaper) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

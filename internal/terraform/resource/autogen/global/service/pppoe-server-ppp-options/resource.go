@@ -33,7 +33,7 @@ type servicePppoeServerPppOptions struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerPppOptions) GetClient() client.Client {
+func (r *servicePppoeServerPppOptions) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

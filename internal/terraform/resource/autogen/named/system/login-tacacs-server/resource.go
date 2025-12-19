@@ -33,7 +33,7 @@ type systemLoginTacacsServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemLoginTacacsServer) GetClient() client.Client {
+func (r *systemLoginTacacsServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

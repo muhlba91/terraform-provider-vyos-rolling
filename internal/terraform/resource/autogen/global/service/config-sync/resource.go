@@ -33,7 +33,7 @@ type serviceConfigSync struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceConfigSync) GetClient() client.Client {
+func (r *serviceConfigSync) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

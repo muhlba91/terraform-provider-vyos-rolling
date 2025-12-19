@@ -33,7 +33,7 @@ type protocolsBgpAddressFamilyIPvsixFlowspecLocalInstall struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpAddressFamilyIPvsixFlowspecLocalInstall) GetClient() client.Client {
+func (r *protocolsBgpAddressFamilyIPvsixFlowspecLocalInstall) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

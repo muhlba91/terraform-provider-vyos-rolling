@@ -33,7 +33,7 @@ type protocolsOspfAutoCost struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfAutoCost) GetClient() client.Client {
+func (r *protocolsOspfAutoCost) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

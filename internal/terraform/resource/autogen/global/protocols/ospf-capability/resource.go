@@ -33,7 +33,7 @@ type protocolsOspfCapability struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfCapability) GetClient() client.Client {
+func (r *protocolsOspfCapability) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

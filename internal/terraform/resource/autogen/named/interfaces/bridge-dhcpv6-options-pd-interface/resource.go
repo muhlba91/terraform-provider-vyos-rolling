@@ -33,7 +33,7 @@ type interfacesBrIDgeDhcpvsixOptionsPdInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesBrIDgeDhcpvsixOptionsPdInterface) GetClient() client.Client {
+func (r *interfacesBrIDgeDhcpvsixOptionsPdInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

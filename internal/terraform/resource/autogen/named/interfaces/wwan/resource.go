@@ -33,7 +33,7 @@ type interfacesWwan struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesWwan) GetClient() client.Client {
+func (r *interfacesWwan) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

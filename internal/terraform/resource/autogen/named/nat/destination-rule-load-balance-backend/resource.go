@@ -33,7 +33,7 @@ type natDestinationRuleLoadBalanceBackend struct {
 }
 
 // GetClient returns the vyos api client
-func (r *natDestinationRuleLoadBalanceBackend) GetClient() client.Client {
+func (r *natDestinationRuleLoadBalanceBackend) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type serviceIPoeServerAuthenticationRadiusServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceIPoeServerAuthenticationRadiusServer) GetClient() client.Client {
+func (r *serviceIPoeServerAuthenticationRadiusServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

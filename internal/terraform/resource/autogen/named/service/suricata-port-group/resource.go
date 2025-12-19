@@ -33,7 +33,7 @@ type serviceSURIcataPortGroup struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSURIcataPortGroup) GetClient() client.Client {
+func (r *serviceSURIcataPortGroup) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

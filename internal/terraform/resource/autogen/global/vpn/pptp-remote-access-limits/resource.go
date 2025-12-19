@@ -33,7 +33,7 @@ type vpnPptpRemoteAccessLimits struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnPptpRemoteAccessLimits) GetClient() client.Client {
+func (r *vpnPptpRemoteAccessLimits) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

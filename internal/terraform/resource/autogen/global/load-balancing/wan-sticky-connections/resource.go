@@ -33,7 +33,7 @@ type loadBalancingWanStickyConnections struct {
 }
 
 // GetClient returns the vyos api client
-func (r *loadBalancingWanStickyConnections) GetClient() client.Client {
+func (r *loadBalancingWanStickyConnections) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

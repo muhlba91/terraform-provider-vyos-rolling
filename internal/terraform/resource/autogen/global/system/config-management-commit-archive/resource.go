@@ -33,7 +33,7 @@ type systemConfigManagementCommitArchive struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemConfigManagementCommitArchive) GetClient() client.Client {
+func (r *systemConfigManagementCommitArchive) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

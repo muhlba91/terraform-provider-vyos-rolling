@@ -33,7 +33,7 @@ type loadBalancingWanRuleInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *loadBalancingWanRuleInterface) GetClient() client.Client {
+func (r *loadBalancingWanRuleInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

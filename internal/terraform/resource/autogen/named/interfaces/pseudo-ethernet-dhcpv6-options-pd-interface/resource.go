@@ -33,7 +33,7 @@ type interfacesPseudoEthernetDhcpvsixOptionsPdInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesPseudoEthernetDhcpvsixOptionsPdInterface) GetClient() client.Client {
+func (r *interfacesPseudoEthernetDhcpvsixOptionsPdInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type serviceNtpPtp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceNtpPtp) GetClient() client.Client {
+func (r *serviceNtpPtp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

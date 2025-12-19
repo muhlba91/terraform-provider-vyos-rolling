@@ -33,7 +33,7 @@ type pkiOpenTCP struct {
 }
 
 // GetClient returns the vyos api client
-func (r *pkiOpenTCP) GetClient() client.Client {
+func (r *pkiOpenTCP) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

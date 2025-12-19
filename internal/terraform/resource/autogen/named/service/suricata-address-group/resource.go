@@ -33,7 +33,7 @@ type serviceSURIcataAddressGroup struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceSURIcataAddressGroup) GetClient() client.Client {
+func (r *serviceSURIcataAddressGroup) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

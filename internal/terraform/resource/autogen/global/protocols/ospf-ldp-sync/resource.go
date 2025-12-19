@@ -33,7 +33,7 @@ type protocolsOspfLdpSync struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfLdpSync) GetClient() client.Client {
+func (r *protocolsOspfLdpSync) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

@@ -33,7 +33,7 @@ type vpnOpenconnectSsl struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnOpenconnectSsl) GetClient() client.Client {
+func (r *vpnOpenconnectSsl) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

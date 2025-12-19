@@ -33,7 +33,7 @@ type protocolsOspfMaxMetricRouterLsa struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfMaxMetricRouterLsa) GetClient() client.Client {
+func (r *protocolsOspfMaxMetricRouterLsa) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

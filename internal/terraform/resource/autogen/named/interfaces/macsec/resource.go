@@ -33,7 +33,7 @@ type interfacesMacsec struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesMacsec) GetClient() client.Client {
+func (r *interfacesMacsec) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

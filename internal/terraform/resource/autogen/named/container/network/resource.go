@@ -33,7 +33,7 @@ type containerNetwork struct {
 }
 
 // GetClient returns the vyos api client
-func (r *containerNetwork) GetClient() client.Client {
+func (r *containerNetwork) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

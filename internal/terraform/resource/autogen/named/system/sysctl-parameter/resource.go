@@ -33,7 +33,7 @@ type systemSysctlParameter struct {
 }
 
 // GetClient returns the vyos api client
-func (r *systemSysctlParameter) GetClient() client.Client {
+func (r *systemSysctlParameter) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

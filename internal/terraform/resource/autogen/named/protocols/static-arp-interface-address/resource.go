@@ -33,7 +33,7 @@ type protocolsStaticArpInterfaceAddress struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsStaticArpInterfaceAddress) GetClient() client.Client {
+func (r *protocolsStaticArpInterfaceAddress) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

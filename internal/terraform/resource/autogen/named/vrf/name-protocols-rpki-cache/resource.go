@@ -33,7 +33,7 @@ type vrfNameProtocolsRpkiCache struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsRpkiCache) GetClient() client.Client {
+func (r *vrfNameProtocolsRpkiCache) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

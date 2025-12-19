@@ -33,7 +33,7 @@ type serviceDNSForwardingZoneCache struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDNSForwardingZoneCache) GetClient() client.Client {
+func (r *serviceDNSForwardingZoneCache) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

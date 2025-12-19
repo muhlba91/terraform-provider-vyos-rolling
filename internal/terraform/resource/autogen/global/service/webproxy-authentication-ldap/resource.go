@@ -33,7 +33,7 @@ type serviceWebproxyAuthenticationLdap struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceWebproxyAuthenticationLdap) GetClient() client.Client {
+func (r *serviceWebproxyAuthenticationLdap) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

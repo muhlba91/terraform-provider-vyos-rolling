@@ -33,7 +33,7 @@ type protocolsBgpParametersBestpath struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBgpParametersBestpath) GetClient() client.Client {
+func (r *protocolsBgpParametersBestpath) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

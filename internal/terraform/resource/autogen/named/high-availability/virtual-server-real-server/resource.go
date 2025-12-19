@@ -33,7 +33,7 @@ type highAvailabilityVirtualServerRealServer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *highAvailabilityVirtualServerRealServer) GetClient() client.Client {
+func (r *highAvailabilityVirtualServerRealServer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

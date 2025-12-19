@@ -33,7 +33,7 @@ type serviceWebproxyURLFiltering struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceWebproxyURLFiltering) GetClient() client.Client {
+func (r *serviceWebproxyURLFiltering) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

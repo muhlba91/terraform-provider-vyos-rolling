@@ -33,7 +33,7 @@ type vpnIPsecOptions struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vpnIPsecOptions) GetClient() client.Client {
+func (r *vpnIPsecOptions) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

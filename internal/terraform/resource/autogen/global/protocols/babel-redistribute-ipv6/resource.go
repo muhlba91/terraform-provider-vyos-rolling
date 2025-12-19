@@ -33,7 +33,7 @@ type protocolsBabelRedistributeIPvsix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBabelRedistributeIPvsix) GetClient() client.Client {
+func (r *protocolsBabelRedistributeIPvsix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

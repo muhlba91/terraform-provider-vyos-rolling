@@ -33,7 +33,7 @@ type serviceIPoeServerAuthenticationInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceIPoeServerAuthenticationInterface) GetClient() client.Client {
+func (r *serviceIPoeServerAuthenticationInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

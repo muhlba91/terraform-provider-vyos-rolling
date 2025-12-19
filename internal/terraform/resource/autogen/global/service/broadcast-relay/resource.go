@@ -33,7 +33,7 @@ type serviceBroadcastRelay struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceBroadcastRelay) GetClient() client.Client {
+func (r *serviceBroadcastRelay) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

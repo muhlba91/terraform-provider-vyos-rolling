@@ -33,7 +33,7 @@ type interfacesMacsecSecURItyStaticPeer struct {
 }
 
 // GetClient returns the vyos api client
-func (r *interfacesMacsecSecURItyStaticPeer) GetClient() client.Client {
+func (r *interfacesMacsecSecURItyStaticPeer) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

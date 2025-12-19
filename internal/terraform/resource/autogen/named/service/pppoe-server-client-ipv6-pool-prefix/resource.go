@@ -33,7 +33,7 @@ type servicePppoeServerClientIPvsixPoolPrefix struct {
 }
 
 // GetClient returns the vyos api client
-func (r *servicePppoeServerClientIPvsixPoolPrefix) GetClient() client.Client {
+func (r *servicePppoeServerClientIPvsixPoolPrefix) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

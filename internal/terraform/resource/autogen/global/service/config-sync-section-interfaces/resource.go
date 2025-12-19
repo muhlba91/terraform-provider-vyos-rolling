@@ -33,7 +33,7 @@ type serviceConfigSyncSectionInterfaces struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceConfigSyncSectionInterfaces) GetClient() client.Client {
+func (r *serviceConfigSyncSectionInterfaces) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

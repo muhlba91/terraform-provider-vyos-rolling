@@ -33,7 +33,7 @@ type qosPolicyDropTail struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyDropTail) GetClient() client.Client {
+func (r *qosPolicyDropTail) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

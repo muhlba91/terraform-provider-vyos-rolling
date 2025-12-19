@@ -33,7 +33,7 @@ type serviceDhcpvsixRelayUpstreamInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpvsixRelayUpstreamInterface) GetClient() client.Client {
+func (r *serviceDhcpvsixRelayUpstreamInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

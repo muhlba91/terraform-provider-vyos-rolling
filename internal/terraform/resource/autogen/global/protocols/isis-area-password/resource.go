@@ -33,7 +33,7 @@ type protocolsIsisAreaPassword struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsIsisAreaPassword) GetClient() client.Client {
+func (r *protocolsIsisAreaPassword) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

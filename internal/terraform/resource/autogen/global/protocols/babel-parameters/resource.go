@@ -33,7 +33,7 @@ type protocolsBabelParameters struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsBabelParameters) GetClient() client.Client {
+func (r *protocolsBabelParameters) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

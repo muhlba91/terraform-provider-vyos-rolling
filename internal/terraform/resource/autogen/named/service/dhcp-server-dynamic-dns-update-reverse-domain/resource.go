@@ -33,7 +33,7 @@ type serviceDhcpServerDynamicDNSUpdateReverseDomain struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceDhcpServerDynamicDNSUpdateReverseDomain) GetClient() client.Client {
+func (r *serviceDhcpServerDynamicDNSUpdateReverseDomain) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

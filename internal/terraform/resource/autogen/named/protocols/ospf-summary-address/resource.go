@@ -33,7 +33,7 @@ type protocolsOspfSummaryAddress struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsOspfSummaryAddress) GetClient() client.Client {
+func (r *protocolsOspfSummaryAddress) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

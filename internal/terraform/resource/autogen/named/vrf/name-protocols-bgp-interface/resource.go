@@ -33,7 +33,7 @@ type vrfNameProtocolsBgpInterface struct {
 }
 
 // GetClient returns the vyos api client
-func (r *vrfNameProtocolsBgpInterface) GetClient() client.Client {
+func (r *vrfNameProtocolsBgpInterface) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

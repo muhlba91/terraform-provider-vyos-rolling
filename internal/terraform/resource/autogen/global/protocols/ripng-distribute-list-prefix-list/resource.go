@@ -33,7 +33,7 @@ type protocolsRIPngDistributeListPrefixList struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPngDistributeListPrefixList) GetClient() client.Client {
+func (r *protocolsRIPngDistributeListPrefixList) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

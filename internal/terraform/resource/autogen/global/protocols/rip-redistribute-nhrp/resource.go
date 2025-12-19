@@ -33,7 +33,7 @@ type protocolsRIPRedistributeNhrp struct {
 }
 
 // GetClient returns the vyos api client
-func (r *protocolsRIPRedistributeNhrp) GetClient() client.Client {
+func (r *protocolsRIPRedistributeNhrp) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

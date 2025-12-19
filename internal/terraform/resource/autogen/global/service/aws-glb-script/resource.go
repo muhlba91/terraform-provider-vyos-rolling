@@ -33,7 +33,7 @@ type serviceAwsGlbScrIPt struct {
 }
 
 // GetClient returns the vyos api client
-func (r *serviceAwsGlbScrIPt) GetClient() client.Client {
+func (r *serviceAwsGlbScrIPt) GetClient() *client.Client {
 	return r.providerData.Client
 }
 

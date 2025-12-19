@@ -33,7 +33,7 @@ type qosPolicyRoundRobin struct {
 }
 
 // GetClient returns the vyos api client
-func (r *qosPolicyRoundRobin) GetClient() client.Client {
+func (r *qosPolicyRoundRobin) GetClient() *client.Client {
 	return r.providerData.Client
 }
 
