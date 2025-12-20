@@ -10,6 +10,9 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 ROOT_DIR := $(CURDIR)
+TOOLS_BIN := $(ROOT_DIR)/.tools/bin
+export PATH := $(TOOLS_BIN):$(PATH)
+INPUT_ARGS :=
 
 HOSTNAME=github.com
 NAMESPACE=echowings
@@ -121,7 +124,7 @@ data/vyos-1x-info.txt:
 	xmllint --format --recover --output '.build/schema-definitions.xsd' '.build/schema-definitions.xsd'
 
 # Generate go structs from XSD
-internal/vyos/schemadefinition/autogen-structs.go: data/vyos-1x-info.txt internal/vyos/schemadefinition/interface-definition.go .build/schema-definitions.xsd
+internal/vyos/schemadefinition/autogen-structs.go: data/vyos-1x-info.txt internal/vyos/schemadefinition/interface-definition.go .build/schema-definitions.xsd | ensure-gofumpt ensure-xgen
 	@echo -e "\n\n###########################################################################"
 	echo Make internal/vyos/schemadefinition/autogen-structs.go
 
@@ -171,8 +174,8 @@ internal/vyos/schemadefinition/autogen-structs.go: data/vyos-1x-info.txt interna
 	sudo docker container create --name make-interface-definitions -v repo:/docker-volume busybox
 	sudo docker cp .build/vyos-1x make-interface-definitions:/docker-volume
 
-	# Build interface definitions using the vyos build container.
-	sudo docker run --rm -v repo:/docker-volume -w /docker-volume/vyos-1x docker.io/vyos/vyos-build:current make interface_definitions
+	# Build interface definitions using the vyos build container (clear MAKEFLAGS to keep nested make happy)
+	sudo docker run --rm -v repo:/docker-volume -w /docker-volume/vyos-1x docker.io/vyos/vyos-build:current env -u MAKEFLAGS -u MFLAGS -u MAKELEVEL make interface_definitions
 
 	# Clean up the tmp resources
 	sudo docker cp make-interface-definitions:/docker-volume/vyos-1x/build/interface-definitions .build/interface-definitions
@@ -189,7 +192,7 @@ internal/vyos/vyosinterfaces/autogen.go: \
 											tools/generate-vyos-infterface-definition-structs \
 											$(shell find internal/vyos/schemadefinition -type f) \
 											.build/interface-definitions \
-											internal/vyos/schemadefinition/autogen-structs.go
+								internal/vyos/schemadefinition/autogen-structs.go | ensure-gofumpt
 	@echo -e "\n\n###########################################################################"
 	echo Make internal/vyos/vyosinterfaces/autogen.go
 
@@ -227,9 +230,9 @@ internal/vyos/vyosinterfaces/autogen.go: \
 	gofumpt -w ../../internal/vyos/vyosinterfaces/*.go
 
 internal/terraform/resource/autogen/package.go: \
-									data/vyos-1x-info.txt \
-									internal/vyos/vyosinterfaces/autogen.go \
-									$(shell find tools/generate-terraform-resource-full -type f)
+								data/vyos-1x-info.txt \
+								internal/vyos/vyosinterfaces/autogen.go \
+								$(shell find tools/generate-terraform-resource-full -type f) | ensure-gofumpt ensure-goimports
 	@echo -e "\n\n###########################################################################"
 	echo Make internal/terraform/resource/autogen/package.go
 
@@ -252,6 +255,35 @@ internal/terraform/resource/autogen/package.go: \
 	# Clean up code
 	gofumpt -w "../../internal/terraform/resource/autogen/"
 	goimports -w "../../internal/terraform/resource/autogen"
+
+.PHONY: ensure-gofumpt ensure-goimports ensure-tfplugindocs ensure-xgen
+ensure-gofumpt:
+	@command -v gofumpt >/dev/null 2>&1 || { \
+		echo "Installing gofumpt (mvdan.cc/gofumpt@latest)"; \
+		mkdir -p "$(TOOLS_BIN)"; \
+		GOBIN="$(TOOLS_BIN)" go install mvdan.cc/gofumpt@latest; \
+	}
+
+ensure-goimports:
+	@command -v goimports >/dev/null 2>&1 || { \
+		echo "Installing goimports (golang.org/x/tools/cmd/goimports@latest)"; \
+		mkdir -p "$(TOOLS_BIN)"; \
+		GOBIN="$(TOOLS_BIN)" go install golang.org/x/tools/cmd/goimports@latest; \
+	}
+
+ensure-tfplugindocs:
+	@command -v tfplugindocs >/dev/null 2>&1 || { \
+		echo "Installing tfplugindocs (github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest)"; \
+		mkdir -p "$(TOOLS_BIN)"; \
+		GOBIN="$(TOOLS_BIN)" go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest; \
+	}
+
+ensure-xgen:
+	@command -v xgen >/dev/null 2>&1 || { \
+		echo "Installing xgen (github.com/xuri/xgen/cmd/xgen@latest)"; \
+		mkdir -p "$(TOOLS_BIN)"; \
+		GOBIN="$(TOOLS_BIN)" go install github.com/xuri/xgen/cmd/xgen@latest; \
+	}
 
 # Pretty-name target for human usage
 generate: internal/terraform/resource/autogen/package.go
@@ -392,7 +424,7 @@ provider-schema:
 docs/index.md: \
 				build \
 				internal/terraform/resource/autogen/package.go \
-				$(shell find templates/ -type f)
+				$(shell find templates/ -type f) | ensure-tfplugindocs
 	@echo -e "\n\n###########################################################################"
 	echo Make docs/index.md
 

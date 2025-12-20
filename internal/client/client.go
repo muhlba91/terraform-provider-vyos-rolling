@@ -125,6 +125,12 @@ type commitState struct {
 	completed map[string]resourceResult
 }
 
+const (
+	gatewayRetryInitialDelay = 500 * time.Millisecond
+	gatewayRetryMultiplier   = 1.5
+	gatewayRetryMaxDelay     = 5 * time.Second
+)
+
 func newCommitState() *commitState {
 	return &commitState{
 		pending:   make(map[string]*resourceBatch),
@@ -392,6 +398,7 @@ func (c *Client) sendOperations(ctx context.Context, operations []map[string]int
 	tools.Info(ctx, "Creating configure request for endpoint", map[string]interface{}{"endpoint": endpoint, "operationCount": len(operations)})
 
 	backOffDelay := 500 * time.Millisecond
+	gatewayBackOffDelay := gatewayRetryInitialDelay
 	const (
 		lockBackOffMultiplier = 1.5
 		lockBackOffMax        = 10 * time.Second
@@ -415,6 +422,15 @@ func (c *Client) sendOperations(ctx context.Context, operations []map[string]int
 		resp.Body.Close()
 		if readErr != nil {
 			return nil, fmt.Errorf("failed to read http response: %w", readErr)
+		}
+
+		if resp.StatusCode == http.StatusBadGateway {
+			tools.Warn(ctx, "VyOS API returned 502 Bad Gateway, retrying configure request", map[string]interface{}{"attempt": attempt, "backOff": gatewayBackOffDelay})
+			if err := waitForLock(ctx, gatewayBackOffDelay); err != nil {
+				return nil, fmt.Errorf("commit aborted while waiting for gateway recovery: %w", err)
+			}
+			gatewayBackOffDelay = increaseGatewayBackOff(gatewayBackOffDelay)
+			continue
 		}
 
 		if resp.StatusCode >= 500 {
@@ -489,6 +505,21 @@ func waitForLock(ctx context.Context, delay time.Duration) error {
 	}
 }
 
+func increaseGatewayBackOff(current time.Duration) time.Duration {
+	if current >= gatewayRetryMaxDelay {
+		return gatewayRetryMaxDelay
+	}
+
+	next := time.Duration(float64(current) * gatewayRetryMultiplier)
+	if next > gatewayRetryMaxDelay {
+		return gatewayRetryMaxDelay
+	}
+	if next <= 0 {
+		return gatewayRetryInitialDelay
+	}
+	return next
+}
+
 func isCommitLockError(errVal any) bool {
 	msg, ok := errVal.(string)
 	if !ok {
@@ -530,57 +561,69 @@ func (c *Client) Has(ctx context.Context, path []string) (bool, error) {
 
 	payloadEnc := payload.Encode()
 	tools.Trace(ctx, "Request payload encoded", map[string]interface{}{"payload": payloadEnc})
-	req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
-	tools.Trace(ctx, "Request created", map[string]interface{}{"error": err})
-	if err != nil {
-		return false, fmt.Errorf("failed to create http request object: %w", err)
-	}
+	gatewayBackOffDelay := gatewayRetryInitialDelay
 
-	req.Header.Set("User-Agent", c.userAgent)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	tools.Trace(ctx, "Request headers set")
-
-	resp, err := c.httpClient.Do(req)
-	tools.Trace(ctx, "Request complete", map[string]interface{}{"error": err})
-	if err != nil {
-		tools.Trace(ctx, "failed to complete http request", map[string]interface{}{"error": err})
-		return false, fmt.Errorf("failed to complete http request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		tools.Trace(ctx, "failed to read http response", map[string]interface{}{"error": err})
-		return false, fmt.Errorf("failed to read http response: %w", err)
-	}
-
-	var ret map[string]interface{}
-
-	err = json.Unmarshal(body, &ret)
-	if err != nil {
-		tools.Trace(ctx, "failed to unmarshal http response body", map[string]interface{}{"error": err, "body": body})
-		return false, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
-	}
-
-	if ret["success"] == true {
-
-		if retB, ok := ret["data"].(bool); ok {
-			tools.Trace(ctx, "resource check complete", map[string]interface{}{"result": retB})
-			return retB, nil
+	for attempt := 0; ; attempt++ {
+		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
+		tools.Trace(ctx, "Request created", map[string]interface{}{"error": err})
+		if err != nil {
+			return false, fmt.Errorf("failed to create http request object: %w", err)
 		}
-		tools.Trace(ctx, "[api error]: could not convert returned 'data' field to bool", map[string]interface{}{"ret": ret})
-		return false, fmt.Errorf("[api error]: could not convert returned 'data' field to bool: %v", ret)
-	}
 
-	if errmsg, ok := ret["error"]; ok {
-		if errmsg, ok := errmsg.(string); ok {
-			tools.Trace(ctx, "[api error]", map[string]interface{}{"errmsg": errmsg})
-			return false, clienterrors.NewNotFoundError("[api error]: %s", errmsg)
+		req.Header.Set("User-Agent", c.userAgent)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		tools.Trace(ctx, "Request headers set")
+
+		resp, err := c.httpClient.Do(req)
+		tools.Trace(ctx, "Request complete", map[string]interface{}{"error": err})
+		if err != nil {
+			tools.Trace(ctx, "failed to complete http request", map[string]interface{}{"error": err})
+			return false, fmt.Errorf("failed to complete http request: %w", err)
 		}
-	}
+		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if err != nil {
+			tools.Trace(ctx, "failed to read http response", map[string]interface{}{"error": err})
+			return false, fmt.Errorf("failed to read http response: %w", err)
+		}
 
-	tools.Trace(ctx, "[api error]", map[string]interface{}{"ret": ret})
-	return false, clienterrors.NewNotFoundError("[api error]: %v", ret)
+		if resp.StatusCode == http.StatusBadGateway {
+			tools.Warn(ctx, "VyOS API returned 502 Bad Gateway, retrying exists request", map[string]interface{}{"attempt": attempt, "backOff": gatewayBackOffDelay})
+			if err := waitForLock(ctx, gatewayBackOffDelay); err != nil {
+				return false, fmt.Errorf("request aborted while waiting for gateway recovery: %w", err)
+			}
+			gatewayBackOffDelay = increaseGatewayBackOff(gatewayBackOffDelay)
+			continue
+		}
+
+		var ret map[string]interface{}
+
+		err = json.Unmarshal(body, &ret)
+		if err != nil {
+			tools.Trace(ctx, "failed to unmarshal http response body", map[string]interface{}{"error": err, "body": body})
+			return false, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
+		}
+
+		if ret["success"] == true {
+
+			if retB, ok := ret["data"].(bool); ok {
+				tools.Trace(ctx, "resource check complete", map[string]interface{}{"result": retB})
+				return retB, nil
+			}
+			tools.Trace(ctx, "[api error]: could not convert returned 'data' field to bool", map[string]interface{}{"ret": ret})
+			return false, fmt.Errorf("[api error]: could not convert returned 'data' field to bool: %v", ret)
+		}
+
+		if errmsg, ok := ret["error"]; ok {
+			if errmsg, ok := errmsg.(string); ok {
+				tools.Trace(ctx, "[api error]", map[string]interface{}{"errmsg": errmsg})
+				return false, clienterrors.NewNotFoundError("[api error]: %s", errmsg)
+			}
+		}
+
+		tools.Trace(ctx, "[api error]", map[string]interface{}{"ret": ret})
+		return false, clienterrors.NewNotFoundError("[api error]: %v", ret)
+	}
 }
 
 // Get returns the config found under path if it exists
@@ -609,48 +652,60 @@ func (c *Client) Get(ctx context.Context, path []string) (any, error) {
 
 	payloadEnc := payload.Encode()
 	tools.Debug(ctx, "Request payload encoded", map[string]interface{}{"payload": payloadEnc})
-	req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create http request object: %w", err)
-	}
+	gatewayBackOffDelay := gatewayRetryInitialDelay
 
-	req.Header.Set("User-Agent", c.userAgent)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to complete http request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read http response: %w", err)
-	}
-
-	var ret map[string]interface{}
-
-	err = json.Unmarshal(body, &ret)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
-	}
-
-	if ret["success"] == true {
-
-		return ret["data"], nil
-	}
-
-	if errmsg, ok := ret["error"]; ok {
-		if errmsg, ok := errmsg.(string); ok && errmsg == "Configuration under specified path is empty\n" {
-			return nil, clienterrors.NewNotFoundError(
-				"[%s]: %s",
-				strings.Join(path, " "),
-				strings.TrimSuffix(errmsg, "\n"),
-			)
+	for attempt := 0; ; attempt++ {
+		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
+		if err != nil {
+			return nil, fmt.Errorf("failed to create http request object: %w", err)
 		}
 
-		return nil, fmt.Errorf("[api error]: %s", errmsg)
-	}
+		req.Header.Set("User-Agent", c.userAgent)
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	return nil, fmt.Errorf("[api error]: %v", ret)
+		resp, err := c.httpClient.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("failed to complete http request: %w", err)
+		}
+		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if err != nil {
+			return nil, fmt.Errorf("failed to read http response: %w", err)
+		}
+
+		if resp.StatusCode == http.StatusBadGateway {
+			tools.Warn(ctx, "VyOS API returned 502 Bad Gateway, retrying showConfig request", map[string]interface{}{"attempt": attempt, "backOff": gatewayBackOffDelay})
+			if err := waitForLock(ctx, gatewayBackOffDelay); err != nil {
+				return nil, fmt.Errorf("request aborted while waiting for gateway recovery: %w", err)
+			}
+			gatewayBackOffDelay = increaseGatewayBackOff(gatewayBackOffDelay)
+			continue
+		}
+
+		var ret map[string]interface{}
+
+		err = json.Unmarshal(body, &ret)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
+		}
+
+		if ret["success"] == true {
+
+			return ret["data"], nil
+		}
+
+		if errmsg, ok := ret["error"]; ok {
+			if errmsg, ok := errmsg.(string); ok && errmsg == "Configuration under specified path is empty\n" {
+				return nil, clienterrors.NewNotFoundError(
+					"[%s]: %s",
+					strings.Join(path, " "),
+					strings.TrimSuffix(errmsg, "\n"),
+				)
+			}
+
+			return nil, fmt.Errorf("[api error]: %s", errmsg)
+		}
+
+		return nil, fmt.Errorf("[api error]: %v", ret)
+	}
 }
