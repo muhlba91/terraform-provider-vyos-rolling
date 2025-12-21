@@ -36,6 +36,7 @@ type VyosProviderModel struct {
 	IgnoreMissingParentRes types.Bool   `tfsdk:"ignore_missing_parent_resource_on_create"`
 	IgnoreChildResOnDelete types.Bool   `tfsdk:"ignore_child_resource_on_delete"`
 	DefaultTimeouts        types.Number `tfsdk:"default_timeouts"`
+	HTTPRequestRetries     types.Int64  `tfsdk:"http_request_retries"`
 	ManualBindingOverrides types.Map    `tfsdk:"manual_binding_overrides"`
 }
 
@@ -83,6 +84,10 @@ func (p *VyosProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 			},
 			"default_timeouts": schema.NumberAttribute{
 				MarkdownDescription: "Default Create/Read/Update/Destroy timeouts in minutes, can be overridden on a per resource basis. If not configured, defaults to 15.",
+				Optional:            true,
+			},
+			"http_request_retries": schema.Int64Attribute{
+				MarkdownDescription: "Number of additional attempts to retry HTTP API calls when a network error occurs. Defaults to 0 (no retries).",
 				Optional:            true,
 			},
 			"overwrite_existing_resources_on_create": schema.BoolAttribute{
@@ -154,6 +159,20 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		disableVerify = false
 	}
 
+	var httpRequestRetries int
+	if !providerModel.HTTPRequestRetries.IsNull() && !providerModel.HTTPRequestRetries.IsUnknown() {
+		retries := providerModel.HTTPRequestRetries.ValueInt64()
+		if retries < 0 {
+			resp.Diagnostics.AddAttributeError(
+				path.Root("http_request_retries"),
+				"Negative retry attempts are not allowed",
+				"Please specify a value greater than or equal to zero.",
+			)
+			return
+		}
+		httpRequestRetries = int(retries)
+	}
+
 	ctxMutilators := data.CtxMutilators(endpoint, apiKey)
 
 	// Run ctx mutilators for client
@@ -162,7 +181,7 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	}
 
 	// Client configuration for data sources and resources
-	clientInstance := client.NewClient(ctx, endpoint, apiKey, "TODO: add useragent with provider version", disableVerify)
+	clientInstance := client.NewClientWithRetries(ctx, endpoint, apiKey, "TODO: add useragent with provider version", disableVerify, httpRequestRetries)
 
 	var bindingOverrides map[string]string
 	if !providerModel.ManualBindingOverrides.IsNull() && !providerModel.ManualBindingOverrides.IsUnknown() {

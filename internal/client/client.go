@@ -30,6 +30,32 @@ func NewClient(
 	userAgent string,
 	disableVerify bool,
 ) *Client {
+	return newClient(ctx, endpoint, apiKey, userAgent, disableVerify, 0)
+}
+
+// NewClientWithRetries is an overload of NewClient that allows configuring HTTP retry attempts.
+func NewClientWithRetries(
+	ctx context.Context,
+	endpoint string,
+	apiKey string,
+	userAgent string,
+	disableVerify bool,
+	retryAttempts int,
+) *Client {
+	return newClient(ctx, endpoint, apiKey, userAgent, disableVerify, retryAttempts)
+}
+
+func newClient(
+	ctx context.Context,
+	endpoint string,
+	apiKey string,
+	userAgent string,
+	disableVerify bool,
+	retryAttempts int,
+) *Client {
+	if retryAttempts < 0 {
+		retryAttempts = 0
+	}
 
 	c := &Client{
 		httpClient: http.Client{},
@@ -40,6 +66,8 @@ func NewClient(
 
 		state:       newCommitState(),
 		batchWindow: 500 * time.Millisecond,
+
+		requestRetryAttempts: retryAttempts,
 	}
 
 	if disableVerify {
@@ -92,6 +120,8 @@ type Client struct {
 	commitMu    sync.Mutex
 	batchWindow time.Duration
 
+	requestRetryAttempts int
+
 	bindingMu        sync.RWMutex
 	bindingOverrides []bindingOverride
 }
@@ -129,6 +159,10 @@ const (
 	gatewayRetryInitialDelay = 500 * time.Millisecond
 	gatewayRetryMultiplier   = 1.5
 	gatewayRetryMaxDelay     = 5 * time.Second
+
+	httpRetryInitialDelay = 500 * time.Millisecond
+	httpRetryMultiplier   = 2.0
+	httpRetryMaxDelay     = 5 * time.Second
 )
 
 func newCommitState() *commitState {
@@ -405,17 +439,18 @@ func (c *Client) sendOperations(ctx context.Context, operations []map[string]int
 	)
 
 	for attempt := 0; ; attempt++ {
-		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEncoded))
-		if err != nil {
-			return nil, fmt.Errorf("failed to create http request object: %w", err)
-		}
+		resp, err := c.doRequestWithRetry(ctx, func() (*http.Request, error) {
+			req, reqErr := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEncoded))
+			if reqErr != nil {
+				return nil, fmt.Errorf("failed to create http request object: %w", reqErr)
+			}
 
-		req.Header.Set("User-Agent", c.userAgent)
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-		resp, err := c.httpClient.Do(req)
+			req.Header.Set("User-Agent", c.userAgent)
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			return req, nil
+		})
 		if err != nil {
-			return nil, fmt.Errorf("failed to complete http request: %w", err)
+			return nil, err
 		}
 
 		body, readErr := io.ReadAll(resp.Body)
@@ -520,6 +555,58 @@ func increaseGatewayBackOff(current time.Duration) time.Duration {
 	return next
 }
 
+func (c *Client) doRequestWithRetry(ctx context.Context, requestFactory func() (*http.Request, error)) (*http.Response, error) {
+	if c.requestRetryAttempts <= 0 {
+		return c.singleRequest(ctx, requestFactory)
+	}
+
+	delay := httpRetryInitialDelay
+	for attempt := 0; ; attempt++ {
+		resp, err := c.singleRequest(ctx, requestFactory)
+		if err == nil {
+			return resp, nil
+		}
+
+		if attempt >= c.requestRetryAttempts {
+			return nil, err
+		}
+
+		tools.Warn(ctx, "HTTP request failed, retrying", map[string]interface{}{"attempt": attempt + 1, "maxAttempts": c.requestRetryAttempts + 1, "error": err, "backOff": delay})
+		if waitErr := waitForLock(ctx, delay); waitErr != nil {
+			return nil, fmt.Errorf("request aborted while waiting to retry: %w", waitErr)
+		}
+		delay = increaseHTTPRequestBackOff(delay)
+	}
+}
+
+func (c *Client) singleRequest(ctx context.Context, requestFactory func() (*http.Request, error)) (*http.Response, error) {
+	req, err := requestFactory()
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to complete http request: %w", err)
+	}
+	return resp, nil
+}
+
+func increaseHTTPRequestBackOff(current time.Duration) time.Duration {
+	if current >= httpRetryMaxDelay {
+		return httpRetryMaxDelay
+	}
+
+	next := time.Duration(float64(current) * httpRetryMultiplier)
+	if next > httpRetryMaxDelay {
+		return httpRetryMaxDelay
+	}
+	if next <= 0 {
+		return httpRetryInitialDelay
+	}
+	return next
+}
+
 func isCommitLockError(errVal any) bool {
 	msg, ok := errVal.(string)
 	if !ok {
@@ -564,21 +651,21 @@ func (c *Client) Has(ctx context.Context, path []string) (bool, error) {
 	gatewayBackOffDelay := gatewayRetryInitialDelay
 
 	for attempt := 0; ; attempt++ {
-		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
-		tools.Trace(ctx, "Request created", map[string]interface{}{"error": err})
-		if err != nil {
-			return false, fmt.Errorf("failed to create http request object: %w", err)
-		}
+		resp, err := c.doRequestWithRetry(ctx, func() (*http.Request, error) {
+			req, reqErr := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
+			tools.Trace(ctx, "Request created", map[string]interface{}{"error": reqErr})
+			if reqErr != nil {
+				return nil, reqErr
+			}
 
-		req.Header.Set("User-Agent", c.userAgent)
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		tools.Trace(ctx, "Request headers set")
-
-		resp, err := c.httpClient.Do(req)
+			req.Header.Set("User-Agent", c.userAgent)
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			tools.Trace(ctx, "Request headers set")
+			return req, nil
+		})
 		tools.Trace(ctx, "Request complete", map[string]interface{}{"error": err})
 		if err != nil {
-			tools.Trace(ctx, "failed to complete http request", map[string]interface{}{"error": err})
-			return false, fmt.Errorf("failed to complete http request: %w", err)
+			return false, err
 		}
 		body, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
@@ -655,17 +742,18 @@ func (c *Client) Get(ctx context.Context, path []string) (any, error) {
 	gatewayBackOffDelay := gatewayRetryInitialDelay
 
 	for attempt := 0; ; attempt++ {
-		req, err := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
-		if err != nil {
-			return nil, fmt.Errorf("failed to create http request object: %w", err)
-		}
+		resp, err := c.doRequestWithRetry(ctx, func() (*http.Request, error) {
+			req, reqErr := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEnc))
+			if reqErr != nil {
+				return nil, fmt.Errorf("failed to create http request object: %w", reqErr)
+			}
 
-		req.Header.Set("User-Agent", c.userAgent)
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-		resp, err := c.httpClient.Do(req)
+			req.Header.Set("User-Agent", c.userAgent)
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			return req, nil
+		})
 		if err != nil {
-			return nil, fmt.Errorf("failed to complete http request: %w", err)
+			return nil, err
 		}
 		body, err := io.ReadAll(resp.Body)
 		resp.Body.Close()
