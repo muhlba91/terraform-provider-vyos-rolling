@@ -580,6 +580,13 @@ func (c *Client) doRequestWithRetry(ctx context.Context, requestFactory func() (
 }
 
 func (c *Client) singleRequest(ctx context.Context, requestFactory func() (*http.Request, error)) (*http.Response, error) {
+	if ctx != nil {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+	}
 	req, err := requestFactory()
 	if err != nil {
 		return nil, err
