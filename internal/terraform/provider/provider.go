@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"maps"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -183,7 +184,8 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	// Client configuration for data sources and resources
 	clientInstance := client.NewClientWithRetries(ctx, endpoint, apiKey, "TODO: add useragent with provider version", disableVerify, httpRequestRetries)
 
-	var bindingOverrides map[string]string
+	combinedBindingOverrides := maps.Clone(defaultBindingOverrides())
+
 	if !providerModel.ManualBindingOverrides.IsNull() && !providerModel.ManualBindingOverrides.IsUnknown() {
 		var overrides map[string]string
 		diags := providerModel.ManualBindingOverrides.ElementsAs(ctx, &overrides, false)
@@ -191,12 +193,20 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		if resp.Diagnostics.HasError() {
 			return
 		}
-		bindingOverrides = overrides
-		clientInstance.SetBindingOverrides(overrides)
+		if combinedBindingOverrides == nil {
+			combinedBindingOverrides = map[string]string{}
+		}
+		for prefix, binding := range overrides {
+			combinedBindingOverrides[prefix] = binding
+		}
+	}
+
+	if len(combinedBindingOverrides) > 0 {
+		clientInstance.SetBindingOverrides(combinedBindingOverrides)
 	}
 
 	config := data.NewProviderData(clientInstance)
-	config.Config.ManualBindingOverrides = bindingOverrides
+	config.Config.ManualBindingOverrides = combinedBindingOverrides
 
 	// Add ctx mutilators to provider data
 	config.CtxMutilatorAdd(ctxMutilators...)
@@ -223,6 +233,12 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	// Send provider data
 	resp.DataSourceData = config
 	resp.ResourceData = config
+}
+
+func defaultBindingOverrides() map[string]string {
+	return map[string]string{
+		"firewall": "firewall",
+	}
 }
 
 // Resources method to define the provider's resources.
