@@ -4,6 +4,9 @@
 <!--TOC-->
 
 - [CHANGELOG](#changelog)
+  - [Release 0.7.202507150 (2025-12-23 04-29-06 UTC)](#release-07202507150-2025-12-23-04-29-06-utc)
+    - [Project changes](#project-changes)
+      - [Bug fixes](#bug-fixes)
   - [Release 0.6.202507150 (2025-12-23 02-27-11 UTC)](#release-06202507150-2025-12-23-02-27-11-utc)
     - [Project changes](#project-changes)
       - [Features](#features)
@@ -147,6 +150,12 @@
   - [Previous changelogs](#previous-changelogs)
 
 <!--TOC-->
+
+
+## Release 0.7.202507150 (2025-12-23 04-29-06 UTC)
+### Project changes
+#### Bug fixes
+* inline firewall zone `from` bindings so OpenTofu can push zone membership and cross-zone rules in a single transaction, preventing transient lockouts when applying firewall changes
 
 
 ## Release 0.6.202507150 (2025-12-23 02-27-11 UTC)

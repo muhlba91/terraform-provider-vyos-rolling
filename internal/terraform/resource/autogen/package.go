@@ -507,7 +507,6 @@ import (
 	namedfirewallipvsixoutputrawrule "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv6-output-raw-rule"
 	namedfirewallipvsixpreroutingrawrule "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/ipv6-prerouting-raw-rule"
 	namedfirewallzone "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/zone"
-	namedfirewallzonefrom "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/firewall/zone-from"
 	namedhighavailabilityvirtualserver "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/high-availability/virtual-server"
 	namedhighavailabilityvirtualserverrealserver "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/high-availability/virtual-server-real-server"
 	namedhighavailabilityvrrpgroup "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen/named/high-availability/vrrp-group"
@@ -1504,7 +1503,6 @@ func GetResources() []func() resource.Resource {
 		namedfirewallipvsixoutputrawrule.NewFirewallIPvsixOutputRawRule,
 		namedfirewallipvsixpreroutingrawrule.NewFirewallIPvsixPreroutingRawRule,
 		namedfirewallzone.NewFirewallZone,
-		namedfirewallzonefrom.NewFirewallZoneFrom,
 		namedhighavailabilityvirtualserver.NewHighAvailabilityVirtualServer,
 		namedhighavailabilityvirtualserverrealserver.NewHighAvailabilityVirtualServerRealServer,
 		namedhighavailabilityvrrpgroup.NewHighAvailabilityVrrpGroup,

@@ -53,6 +53,12 @@ var MergeBaseNodeOverrides = []MergeBaseNodeOverride{
 		from: []string{"service", "conntrack-sync"},
 		to:   []string{"interface"},
 	},
+
+	// firewall, zone
+	{
+		from: []string{"firewall", "zone"},
+		to:   []string{"from"},
+	},
 }
 
 type MergeBaseNodeOverride struct {

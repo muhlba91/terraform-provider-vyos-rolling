@@ -53,7 +53,7 @@ type FirewallZone struct {
 
 	// TagNodes
 
-	ExistsTagFirewallZoneFrom bool `tfsdk:"-" vyos:"from,child"`
+	TagFirewallZoneFrom map[string]*FirewallZoneFrom `tfsdk:"from" vyos:"from,omitempty"`
 
 	// Nodes
 
@@ -241,6 +241,19 @@ func (o FirewallZone) ResourceSchemaAttributes(ctx context.Context) map[string]s
 		},
 
 		// TagNodes
+
+		"from": schema.MapNestedAttribute{
+			NestedObject: schema.NestedAttributeObject{
+				Attributes: FirewallZoneFrom{}.ResourceSchemaAttributes(ctx),
+			},
+			Optional: true,
+			MarkdownDescription: `Zone from which to filter traffic
+
+`,
+			Description: `Zone from which to filter traffic
+
+`,
+		},
 
 		// Nodes
 
