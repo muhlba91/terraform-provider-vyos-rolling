@@ -263,6 +263,12 @@ internal/terraform/resource/autogen/package.go: \
 		else \
 			cp -a "../../internal/terraform/resource/overrides/." "../../internal/terraform/resource/autogen/"; \
 		fi; \
+		find "../../internal/terraform/resource/autogen" -type f -name "*.go" -print0 | \
+		while IFS= read -r -d '' file; do \
+			if grep -q "manual_firewall_zone_override" "$${file}"; then \
+				python3 -c 'import pathlib,sys; path=pathlib.Path(sys.argv[1]); text=path.read_text(); prefix="//go:build manual_firewall_zone_override\\n// +build manual_firewall_zone_override\\n\\n"; text = text[len(prefix):] if text.startswith(prefix) else text; path.write_text(text)' "$${file}"; \
+			fi; \
+		done; \
 	fi
 
 .PHONY: ensure-gofumpt ensure-goimports ensure-tfplugindocs ensure-xgen
@@ -396,7 +402,6 @@ build-all: test
 			fi;
 				echo "Building for $${os} ($${arch}) version $${version}"
 				build_dir="${DIST_DIR}/registry.terraform.io/$(NAMESPACE)/$(PROVIDER_NAME)/$${version}/$${os}_$${arch}"
-
 			mkdir -p "$${build_dir}/";
 			GOOS="$$os" \
 			GOARCH="$$arch" \
@@ -420,12 +425,11 @@ provider-schema:
 	cp data/provider-schema.json .build/new-provider-schema.json
 
 	echo create copy with clean provider name
-	old_name="$$(cat .build/new-provider-schema.json | jq -r '.provider_schemas | keys | .[0]')"
+	old_name="$$(jq -r '.provider_schemas | keys | .[0]' .build/new-provider-schema.json)"
 	jq \
 		--arg old_name "$$old_name" \
 		'.provider_schemas.vyos=.provider_schemas[$$old_name] | del(.provider_schemas[$$old_name])' \
-		.build/new-provider-schema.json \
-		> .build/renamed-provider-schema.json
+		.build/new-provider-schema.json > .build/renamed-provider-schema.json
 
 	echo Copy old schema to build dir
 	git show "$$(git tag | sort -V | tail -n1)":data/provider-schema.json > .build/old-provider-schema.json
