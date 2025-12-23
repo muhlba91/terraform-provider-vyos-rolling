@@ -95,7 +95,7 @@ func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *clie
 	}
 
 	zoneNames := sortedMapKeys(restorable)
-	if err := waitForReferencedZones(ctx, c, zoneNames); err != nil {
+	if err := waitForReferencedFirewallZones(ctx, c, zoneNames); err != nil {
 		return err
 	}
 
@@ -124,7 +124,7 @@ func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *clie
 	return nil
 }
 
-func waitForReferencedZones(ctx context.Context, c *client.Client, zoneNames []string) error {
+func waitForReferencedFirewallZones(ctx context.Context, c *client.Client, zoneNames []string) error {
 	if len(zoneNames) == 0 {
 		return nil
 	}
