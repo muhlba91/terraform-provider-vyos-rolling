@@ -36,6 +36,29 @@ func Create(ctx context.Context, r helpers.VyosResource, req resource.CreateRequ
 	}
 	tools.Trace(ctx, "Fetched plan data", map[string]interface{}{"model": planModel})
 
+	var createPlanRestore func()
+	var postCreate func(context.Context) error
+	if adjuster, ok := planModel.(helpers.CreatePlanAdjuster); ok {
+		tools.Debug(ctx, "Applying resource-specific create plan adjustments")
+		adjustment, err := adjuster.AdjustCreatePlan(ctx, r.GetClient())
+		if err != nil {
+			resp.Diagnostics.Append(diag.NewErrorDiagnostic(
+				"unable to prepare resource for create",
+				err.Error(),
+			))
+			return
+		}
+		createPlanRestore = adjustment.Restore
+		postCreate = adjustment.PostApply
+		if createPlanRestore != nil {
+			defer func() {
+				if createPlanRestore != nil {
+					createPlanRestore()
+				}
+			}()
+		}
+	}
+
 	ctx = context.WithValue(ctx, resourcePathCtxKey("resource"), planModel.GetVyosPath())
 
 	// Setup timeout
@@ -58,6 +81,22 @@ func Create(ctx context.Context, r helpers.VyosResource, req resource.CreateRequ
 		return
 	}
 	tools.Debug(ctx, "resource created")
+
+	if postCreate != nil {
+		tools.Debug(ctx, "Running post-create plan adjustments")
+		if err := postCreate(ctx); err != nil {
+			resp.Diagnostics.Append(diag.NewErrorDiagnostic(
+				"unable to finalize resource create",
+				err.Error(),
+			))
+			return
+		}
+	}
+
+	if createPlanRestore != nil {
+		createPlanRestore()
+		createPlanRestore = nil
+	}
 
 	// Add ID to the resource model
 	tools.Info(ctx, "setting newly created resource id")

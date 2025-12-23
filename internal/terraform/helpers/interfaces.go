@@ -51,3 +51,21 @@ type VyosTopResourceDataModel interface {
 type VyosResourceDataModel interface {
 	ResourceSchemaAttributes(context.Context) map[string]schema.Attribute
 }
+
+// PlanAdjustment describes temporary plan mutations applied before interacting with VyOS.
+// Restore should revert any mutations before Terraform state is written, while PostApply
+// allows resources to run follow-up logic after the main create/update completes.
+type PlanAdjustment struct {
+	Restore   func()
+	PostApply func(context.Context) error
+}
+
+// CreatePlanAdjuster allows a resource data model to mutate its plan before create operations run.
+type CreatePlanAdjuster interface {
+	AdjustCreatePlan(ctx context.Context, client *client.Client) (PlanAdjustment, error)
+}
+
+// UpdatePlanAdjuster allows a resource data model to mutate its plan before update operations run.
+type UpdatePlanAdjuster interface {
+	AdjustUpdatePlan(ctx context.Context, client *client.Client, stateModel VyosTopResourceDataModel) (PlanAdjustment, error)
+}

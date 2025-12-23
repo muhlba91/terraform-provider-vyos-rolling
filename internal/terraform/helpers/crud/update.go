@@ -38,6 +38,24 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 		return
 	}
 
+	var updatePlanRestore func()
+	if adjuster, ok := planModel.(helpers.UpdatePlanAdjuster); ok {
+		tools.Debug(ctx, "Applying resource-specific update plan adjustments")
+		adjustment, err := adjuster.AdjustUpdatePlan(ctx, r.GetClient(), stateModel)
+		if err != nil {
+			resp.Diagnostics.AddError("unable to prepare resource for update", err.Error())
+			return
+		}
+		updatePlanRestore = adjustment.Restore
+		if updatePlanRestore != nil {
+			defer func() {
+				if updatePlanRestore != nil {
+					updatePlanRestore()
+				}
+			}()
+		}
+	}
+
 	resourceIdentifier := planModel.GetVyosPath()
 	if len(resourceIdentifier) == 0 {
 		resourceIdentifier = stateModel.GetVyosPath()
@@ -57,6 +75,11 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 	if err != nil {
 		resp.Diagnostics.AddError("API Config error", err.Error())
 		return
+	}
+
+	if updatePlanRestore != nil {
+		updatePlanRestore()
+		updatePlanRestore = nil
 	}
 
 	// Save data to Terraform state
