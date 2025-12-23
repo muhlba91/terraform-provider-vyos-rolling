@@ -1,6 +1,3 @@
-//go:build manual_firewall_zone_override
-// +build manual_firewall_zone_override
-
 package resourcemodel
 
 import (

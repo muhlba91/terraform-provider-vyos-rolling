@@ -288,12 +288,6 @@ internal/terraform/resource/autogen/package.go: \
 		else \
 			cp -a "../../internal/terraform/resource/overrides/." "../../internal/terraform/resource/autogen/"; \
 		fi; \
-		find "../../internal/terraform/resource/autogen" -type f -name "*.go" -print0 | \
-		while IFS= read -r -d '' file; do \
-			if grep -q "manual_firewall_zone_override" "$${file}"; then \
-				python3 -c 'import pathlib,sys; path=pathlib.Path(sys.argv[1]); text=path.read_text(); prefix="//go:build manual_firewall_zone_override\\n// +build manual_firewall_zone_override\\n\\n"; text = text[len(prefix):] if text.startswith(prefix) else text; path.write_text(text)' "$${file}"; \
-			fi; \
-		done; \
 	fi
 
 .PHONY: ensure-gofumpt ensure-goimports ensure-tfplugindocs ensure-xgen
