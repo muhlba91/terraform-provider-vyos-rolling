@@ -39,6 +39,7 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 	}
 
 	var updatePlanRestore func()
+	var postUpdate func(context.Context) error
 	if adjuster, ok := planModel.(helpers.UpdatePlanAdjuster); ok {
 		tools.Debug(ctx, "Applying resource-specific update plan adjustments")
 		adjustment, err := adjuster.AdjustUpdatePlan(ctx, r.GetClient(), stateModel)
@@ -47,6 +48,7 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 			return
 		}
 		updatePlanRestore = adjustment.Restore
+		postUpdate = adjustment.PostApply
 		if updatePlanRestore != nil {
 			defer func() {
 				if updatePlanRestore != nil {
@@ -75,6 +77,14 @@ func Update(ctx context.Context, r helpers.VyosResource, req resource.UpdateRequ
 	if err != nil {
 		resp.Diagnostics.AddError("API Config error", err.Error())
 		return
+	}
+
+	if postUpdate != nil {
+		tools.Debug(ctx, "Running post-update plan adjustments")
+		if err := postUpdate(ctx); err != nil {
+			resp.Diagnostics.AddError("unable to finalize resource update", err.Error())
+			return
+		}
 	}
 
 	if updatePlanRestore != nil {
