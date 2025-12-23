@@ -66,14 +66,39 @@ data/vyos-1x-info.txt:
 	mkdir -p data || true
 	mkdir -p .build || true
 
-	curl -L \
-		-H "Accept: application/vnd.github+json" \
-		-H "X-GitHub-Api-Version: 2022-11-28" \
-		--url "https://api.github.com/repos/vyos/vyos-rolling-nightly-builds/actions/runs?status=success&per_page=10" \
-			| jq -r '[.workflow_runs[] | select(.name | "VyOS rolling nightly build")] | first .run_started_at' \
-				> ".build/latest-vyos-repo-version.txt"
+	api_tmp=".build/vyos-nightly-runs.json"; \
+	latest_file=".build/latest-vyos-repo-version.txt"; \
+	rm -f "$$api_tmp" "$$latest_file"; \
+	if [ -n "$${GITHUB_TOKEN:-}" ]; then \
+		curl -sSL \
+			-H "Accept: application/vnd.github+json" \
+			-H "X-GitHub-Api-Version: 2022-11-28" \
+			-H "Authorization: Bearer $$GITHUB_TOKEN" \
+			--url "https://api.github.com/repos/vyos/vyos-rolling-nightly-builds/actions/runs?status=success&per_page=10" \
+			-o "$$api_tmp" || true; \
+	else \
+		curl -sSL \
+			-H "Accept: application/vnd.github+json" \
+			-H "X-GitHub-Api-Version: 2022-11-28" \
+			--url "https://api.github.com/repos/vyos/vyos-rolling-nightly-builds/actions/runs?status=success&per_page=10" \
+			-o "$$api_tmp" || true; \
+	fi; \
+	[ -s "$$api_tmp" ] || { echo "Warning: GitHub API response missing; using cached timestamp"; touch "$$api_tmp"; }; \
+	if ! jq -er '[.workflow_runs[] | select(.name == "VyOS rolling nightly build")] | first .run_started_at' "$$api_tmp" > "$$latest_file" 2>/dev/null; then \
+		echo "Warning: unable to parse GitHub workflow data; falling back to existing timestamp"; \
+		if [ -f data/vyos-1x-info.txt ]; then \
+			cp data/vyos-1x-info.txt "$$latest_file"; \
+		else \
+			date -u +"%Y-%m-%dT%H:%M:%SZ" > "$$latest_file"; \
+		fi; \
+	fi
 
-	echo "Currently based on version: $$(cat data/vyos-1x-info.txt)"
+	if [ -f data/vyos-1x-info.txt ]; then \
+		current_version="$$(cat data/vyos-1x-info.txt)"; \
+	else \
+		current_version="(none)"; \
+	fi; \
+	echo "Currently based on version: $$current_version"
 	echo "Newest built version: $$(cat .build/latest-vyos-repo-version.txt)"
 
 	if [ ! -f data/vyos-1x-info.txt ]; then
