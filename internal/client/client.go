@@ -402,14 +402,73 @@ func buildOperations(groups []*bindingGroup) []map[string]interface{} {
 		}
 	}
 	for _, grp := range groups {
-		for _, batch := range grp.resources {
-			for _, path := range batch.setOps {
-				ops = append(ops, map[string]interface{}{"op": "set", "path": path})
-			}
+		for _, path := range prioritizedSetOps(grp) {
+			ops = append(ops, map[string]interface{}{"op": "set", "path": path})
 		}
 	}
 
 	return ops
+}
+
+func prioritizedSetOps(grp *bindingGroup) [][]string {
+	if grp == nil || len(grp.resources) == 0 {
+		return nil
+	}
+
+	type weightedPath struct {
+		path   []string
+		weight int
+		order  int
+	}
+
+	paths := make([]weightedPath, 0)
+	nextOrder := 0
+	for _, batch := range grp.resources {
+		for _, path := range batch.setOps {
+			paths = append(paths, weightedPath{
+				path:   path,
+				weight: firewallZoneSetWeight(path),
+				order:  nextOrder,
+			})
+			nextOrder++
+		}
+	}
+
+	sort.SliceStable(paths, func(i, j int) bool {
+		if paths[i].weight == paths[j].weight {
+			return paths[i].order < paths[j].order
+		}
+		return paths[i].weight < paths[j].weight
+	})
+
+	result := make([][]string, 0, len(paths))
+	for _, entry := range paths {
+		result = append(result, entry.path)
+	}
+
+	return result
+}
+
+func firewallZoneSetWeight(path []string) int {
+	if isFirewallZoneMemberInterface(path) {
+		return 100
+	}
+	return 0
+}
+
+func isFirewallZoneMemberInterface(path []string) bool {
+	if len(path) < 6 {
+		return false
+	}
+	if path[0] != "firewall" || path[1] != "zone" {
+		return false
+	}
+	for i := 2; i < len(path)-1; i++ {
+		if path[i] == "member" && path[i+1] == "interface" {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *Client) sendOperations(ctx context.Context, operations []map[string]interface{}) (any, error) {
