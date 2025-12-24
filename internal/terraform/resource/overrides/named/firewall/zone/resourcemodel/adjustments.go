@@ -21,29 +21,13 @@ var _ helpers.UpdatePlanAdjuster = (*FirewallZone)(nil)
 // the target router so VyOS does not reject the commit. Skipped entries are
 // restored after create so a follow up apply can reattach them once peers exist.
 func (o *FirewallZone) AdjustCreatePlan(ctx context.Context, c *client.Client) (helpers.PlanAdjustment, error) {
-	plan, err := o.adjustMissingFromReferences(ctx, c)
-	if err != nil {
-		return plan, err
-	}
-	local, err := o.adjustLocalZoneDefaultAction(ctx, c)
-	if err != nil {
-		return plan, err
-	}
-	return mergePlanAdjustments(plan, local), nil
+	return o.adjustMissingFromReferences(ctx, c)
 }
 
 // AdjustUpdatePlan mirrors the create behavior to cover replacement scenarios
 // where referencing zones may have been removed between applies.
 func (o *FirewallZone) AdjustUpdatePlan(ctx context.Context, c *client.Client, _ helpers.VyosTopResourceDataModel) (helpers.PlanAdjustment, error) {
-	plan, err := o.adjustMissingFromReferences(ctx, c)
-	if err != nil {
-		return plan, err
-	}
-	local, err := o.adjustLocalZoneDefaultAction(ctx, c)
-	if err != nil {
-		return plan, err
-	}
-	return mergePlanAdjustments(plan, local), nil
+	return o.adjustMissingFromReferences(ctx, c)
 }
 
 func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *client.Client) (helpers.PlanAdjustment, error) {
@@ -96,40 +80,6 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 	}, nil
 }
 
-func (o *FirewallZone) adjustLocalZoneDefaultAction(ctx context.Context, c *client.Client) (helpers.PlanAdjustment, error) {
-	if o == nil || o.LeafFirewallZoneLocalZone.IsNull() || o.LeafFirewallZoneLocalZone.IsUnknown() || !o.LeafFirewallZoneLocalZone.ValueBool() {
-		return helpers.PlanAdjustment{}, nil
-	}
-
-	desired := o.LeafFirewallZoneDefaultAction
-	if desired.IsNull() || desired.IsUnknown() {
-		return helpers.PlanAdjustment{}, nil
-	}
-
-	switch desired.ValueString() {
-	case "drop", "reject":
-	default:
-		return helpers.PlanAdjustment{}, nil
-	}
-
-	tools.Warn(ctx, "local firewall zone default action temporarily relaxed", map[string]interface{}{
-		"zone":   o.SelfIdentifier.FirewallZone.ValueString(),
-		"action": desired.ValueString(),
-	})
-
-	original := cloneStringValue(desired)
-	o.LeafFirewallZoneDefaultAction = types.StringValue("accept")
-
-	return helpers.PlanAdjustment{
-		Restore: func() {
-			o.LeafFirewallZoneDefaultAction = original
-		},
-		PostApply: func(ctx context.Context) error {
-			return o.reapplyLocalZoneDefaultAction(ctx, c, original)
-		},
-	}, nil
-}
-
 func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *client.Client, skipped []string, original map[string]*FirewallZoneFrom) error {
 	if len(skipped) == 0 {
 		return nil
@@ -173,35 +123,6 @@ func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *clie
 		"zone":           o.SelfIdentifier.FirewallZone.ValueString(),
 		"restored_from":  zoneNames,
 		"restorable_cnt": len(restorable),
-	})
-
-	return nil
-}
-
-func (o *FirewallZone) reapplyLocalZoneDefaultAction(ctx context.Context, c *client.Client, desired types.String) error {
-	if desired.IsNull() || desired.IsUnknown() {
-		return nil
-	}
-
-	patch := &firewallZoneDefaultActionPatch{LeafFirewallZoneDefaultAction: desired}
-	vyosData, err := helpers.MarshalVyos(ctx, patch)
-	if err != nil {
-		return fmt.Errorf("marshal local firewall zone default-action patch: %w", err)
-	}
-
-	resourcePath := o.GetVyosPath()
-	c.StageSet(ctx, resourcePath, helpers.GenerateVyosOps(ctx, resourcePath, vyosData))
-	resp, err := c.CommitChanges(ctx, resourcePath)
-	if err != nil {
-		return fmt.Errorf("commit local firewall zone default-action patch: %w", err)
-	}
-	if resp != nil {
-		tools.Warn(ctx, "local firewall zone default-action patch returned non-nil response", map[string]interface{}{"response": resp})
-	}
-
-	tools.Info(ctx, "local firewall zone default-action restored post-apply", map[string]interface{}{
-		"zone":   o.SelfIdentifier.FirewallZone.ValueString(),
-		"action": desired.ValueString(),
 	})
 
 	return nil
@@ -269,10 +190,6 @@ type firewallZoneFromPatch struct {
 	TagFirewallZoneFrom map[string]*FirewallZoneFrom `tfsdk:"from" vyos:"from"`
 }
 
-type firewallZoneDefaultActionPatch struct {
-	LeafFirewallZoneDefaultAction types.String `tfsdk:"default_action" vyos:"default-action"`
-}
-
 func (firewallZoneFromPatch) ResourceSchemaAttributes(ctx context.Context) map[string]schema.Attribute {
 	return map[string]schema.Attribute{}
 }
@@ -310,42 +227,5 @@ func cloneStringValue(val types.String) types.String {
 		return types.StringUnknown()
 	default:
 		return types.StringValue(val.ValueString())
-	}
-}
-
-func mergePlanAdjustments(first, second helpers.PlanAdjustment) helpers.PlanAdjustment {
-	return helpers.PlanAdjustment{
-		Restore:   mergeRestore(first.Restore, second.Restore),
-		PostApply: mergePostApply(first.PostApply, second.PostApply),
-	}
-}
-
-func mergeRestore(first, second func()) func() {
-	switch {
-	case first == nil:
-		return second
-	case second == nil:
-		return first
-	default:
-		return func() {
-			first()
-			second()
-		}
-	}
-}
-
-func mergePostApply(first, second func(context.Context) error) func(context.Context) error {
-	switch {
-	case first == nil:
-		return second
-	case second == nil:
-		return first
-	default:
-		return func(ctx context.Context) error {
-			if err := first(ctx); err != nil {
-				return err
-			}
-			return second(ctx)
-		}
 	}
 }
