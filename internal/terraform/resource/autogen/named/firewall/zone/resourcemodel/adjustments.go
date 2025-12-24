@@ -38,6 +38,8 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 	originalFrom := o.TagFirewallZoneFrom
 	filtered := make(map[string]*FirewallZoneFrom, len(originalFrom))
 	skipped := make([]string, 0)
+	originalDefaultAction := types.String{}
+	relaxedDefaultAction := false
 
 	for fromName, fromCfg := range originalFrom {
 		exists, err := c.Has(ctx, []string{"firewall", "zone", fromName})
@@ -70,60 +72,97 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 	}
 	skippedCopy := append([]string(nil), skipped...)
 
+	if o.LeafFirewallZoneLocalZone.ValueBool() && !o.LeafFirewallZoneDefaultAction.IsNull() && !o.LeafFirewallZoneDefaultAction.IsUnknown() && o.LeafFirewallZoneDefaultAction.ValueString() == "drop" {
+		relaxedDefaultAction = true
+		originalDefaultAction = cloneStringValue(o.LeafFirewallZoneDefaultAction)
+		o.LeafFirewallZoneDefaultAction = types.StringValue("accept")
+		tools.Warn(ctx, "local firewall zone default action temporarily relaxed", map[string]interface{}{
+			"zone":   o.SelfIdentifier.FirewallZone.ValueString(),
+			"action": originalDefaultAction.ValueString(),
+		})
+	}
+
 	return helpers.PlanAdjustment{
 		Restore: func() {
 			o.TagFirewallZoneFrom = originalFrom
+			if relaxedDefaultAction {
+				o.LeafFirewallZoneDefaultAction = cloneStringValue(originalDefaultAction)
+			}
 		},
 		PostApply: func(ctx context.Context) error {
-			return o.reapplyMissingFromReferences(ctx, c, skippedCopy, originalFrom)
+			return o.reapplyMissingFromReferences(ctx, c, skippedCopy, originalFrom, relaxedDefaultAction, originalDefaultAction)
 		},
 	}, nil
 }
 
-func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *client.Client, skipped []string, original map[string]*FirewallZoneFrom) error {
-	if len(skipped) == 0 {
+func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *client.Client, skipped []string, original map[string]*FirewallZoneFrom, relaxedDefaultAction bool, originalDefaultAction types.String) error {
+	needFromRestore := len(skipped) > 0
+	needDefaultRestore := relaxedDefaultAction && !originalDefaultAction.IsNull() && !originalDefaultAction.IsUnknown()
+
+	if !needFromRestore && !needDefaultRestore {
 		return nil
 	}
 
-	restorable := make(map[string]*FirewallZoneFrom, len(skipped))
-	for _, name := range skipped {
-		cfg, ok := original[name]
-		if !ok || cfg == nil {
-			continue
+	var restorable map[string]*FirewallZoneFrom
+	if needFromRestore {
+		restorable = make(map[string]*FirewallZoneFrom, len(skipped))
+		for _, name := range skipped {
+			cfg, ok := original[name]
+			if !ok || cfg == nil {
+				continue
+			}
+			restorable[name] = cloneFirewallZoneFrom(cfg)
 		}
-		restorable[name] = cloneFirewallZoneFrom(cfg)
+
+		if len(restorable) == 0 {
+			needFromRestore = false
+		}
 	}
 
-	if len(restorable) == 0 {
-		return nil
+	var zoneNames []string
+	if needFromRestore {
+		zoneNames = sortedMapKeys(restorable)
+		if err := waitForReferencedFirewallZones(ctx, c, zoneNames); err != nil {
+			return err
+		}
 	}
 
-	zoneNames := sortedMapKeys(restorable)
-	if err := waitForReferencedFirewallZones(ctx, c, zoneNames); err != nil {
-		return err
+	patch := &firewallZoneRestorePatch{}
+	if needFromRestore {
+		patch.TagFirewallZoneFrom = restorable
+	}
+	if needDefaultRestore {
+		patch.LeafFirewallZoneDefaultAction = cloneStringValue(originalDefaultAction)
 	}
 
-	patch := &firewallZoneFromPatch{TagFirewallZoneFrom: restorable}
 	vyosData, err := helpers.MarshalVyos(ctx, patch)
 	if err != nil {
-		return fmt.Errorf("marshal firewall zone 'from' patch: %w", err)
+		return fmt.Errorf("marshal firewall zone restoration patch: %w", err)
 	}
 
 	resourcePath := o.GetVyosPath()
 	c.StageSet(ctx, resourcePath, helpers.GenerateVyosOps(ctx, resourcePath, vyosData))
 	resp, err := c.CommitChanges(ctx, resourcePath)
 	if err != nil {
-		return fmt.Errorf("commit firewall zone 'from' restoration: %w", err)
+		return fmt.Errorf("commit firewall zone restoration: %w", err)
 	}
 	if resp != nil {
-		tools.Warn(ctx, "post-apply firewall zone reference restoration returned non-nil response", map[string]interface{}{"response": resp})
+		tools.Warn(ctx, "post-apply firewall zone restoration returned non-nil response", map[string]interface{}{"response": resp})
 	}
 
-	tools.Info(ctx, "firewall zone references restored post-apply", map[string]interface{}{
-		"zone":           o.SelfIdentifier.FirewallZone.ValueString(),
-		"restored_from":  zoneNames,
-		"restorable_cnt": len(restorable),
-	})
+	if needFromRestore {
+		tools.Info(ctx, "firewall zone references restored post-apply", map[string]interface{}{
+			"zone":           o.SelfIdentifier.FirewallZone.ValueString(),
+			"restored_from":  zoneNames,
+			"restorable_cnt": len(restorable),
+			"default_action": originalDefaultAction.ValueString(),
+		})
+	} else if needDefaultRestore {
+		tools.Info(ctx, "firewall zone default action restored post-apply", map[string]interface{}{
+			"zone":           o.SelfIdentifier.FirewallZone.ValueString(),
+			"default_action": originalDefaultAction.ValueString(),
+		})
+	}
 
 	return nil
 }
@@ -186,11 +225,12 @@ func waitForReferencedFirewallZones(ctx context.Context, c *client.Client, zoneN
 	return nil
 }
 
-type firewallZoneFromPatch struct {
-	TagFirewallZoneFrom map[string]*FirewallZoneFrom `tfsdk:"from" vyos:"from"`
+type firewallZoneRestorePatch struct {
+	LeafFirewallZoneDefaultAction types.String                 `tfsdk:"default_action" vyos:"default-action,omitempty"`
+	TagFirewallZoneFrom           map[string]*FirewallZoneFrom `tfsdk:"from" vyos:"from,omitempty"`
 }
 
-func (firewallZoneFromPatch) ResourceSchemaAttributes(ctx context.Context) map[string]schema.Attribute {
+func (firewallZoneRestorePatch) ResourceSchemaAttributes(ctx context.Context) map[string]schema.Attribute {
 	return map[string]schema.Attribute{}
 }
 
