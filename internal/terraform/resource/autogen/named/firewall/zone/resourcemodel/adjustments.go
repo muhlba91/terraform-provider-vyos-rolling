@@ -60,7 +60,13 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 		"missing_from": skipped,
 	})
 
-	o.TagFirewallZoneFrom = filtered
+	if len(filtered) == 0 {
+		// Clear the entire block to avoid emitting `set firewall zone <name> from`
+		// without nested values, which VyOS rejects.
+		o.TagFirewallZoneFrom = nil
+	} else {
+		o.TagFirewallZoneFrom = filtered
+	}
 	skippedCopy := append([]string(nil), skipped...)
 
 	return helpers.PlanAdjustment{
