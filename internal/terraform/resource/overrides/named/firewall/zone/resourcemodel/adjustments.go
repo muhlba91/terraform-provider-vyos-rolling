@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers"
@@ -90,7 +91,7 @@ func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *clie
 		if !ok || cfg == nil {
 			continue
 		}
-		restorable[name] = cfg
+		restorable[name] = cloneFirewallZoneFrom(cfg)
 	}
 
 	if len(restorable) == 0 {
@@ -200,4 +201,31 @@ func sortedMapKeys[T any](m map[string]T) []string {
 	}
 	sort.Strings(keys)
 	return keys
+}
+
+func cloneFirewallZoneFrom(src *FirewallZoneFrom) *FirewallZoneFrom {
+	if src == nil {
+		return nil
+	}
+
+	clone := &FirewallZoneFrom{}
+	if fw := src.NodeFirewallZoneFromFirewall; fw != nil {
+		clone.NodeFirewallZoneFromFirewall = &FirewallZoneFromFirewall{
+			LeafFirewallZoneFromFirewallName:       cloneStringValue(fw.LeafFirewallZoneFromFirewallName),
+			LeafFirewallZoneFromFirewallIPvsixName: cloneStringValue(fw.LeafFirewallZoneFromFirewallIPvsixName),
+		}
+	}
+
+	return clone
+}
+
+func cloneStringValue(val types.String) types.String {
+	switch {
+	case val.IsNull():
+		return types.StringNull()
+	case val.IsUnknown():
+		return types.StringUnknown()
+	default:
+		return types.StringValue(val.ValueString())
+	}
 }
