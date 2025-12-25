@@ -562,6 +562,11 @@ func (c *Client) sendOperations(ctx context.Context, operations []map[string]int
 			continue
 		}
 
+		tools.Warn(ctx, "VyOS configure request failed", map[string]interface{}{
+			"status":     resp.Status,
+			"error":      ret["error"],
+			"operations": operations,
+		})
 		return nil, apiErr
 	}
 }
