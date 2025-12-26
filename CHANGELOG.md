@@ -4,6 +4,7 @@
 <!--TOC-->
 
 - [CHANGELOG](#changelog)
+  - [Release 0.17.202507151 (2025-12-26 08-27-50 UTC)](#release-017202507151-2025-12-26-08-27-50-utc)
   - [Release 0.17.202507150 (2025-12-24 18-15-06 UTC)](#release-017202507150-2025-12-24-18-15-06-utc)
     - [Project changes](#project-changes)
       - [Features](#features)
@@ -188,6 +189,9 @@
   - [Previous changelogs](#previous-changelogs)
 
 <!--TOC-->
+
+
+## Release 0.17.202507151 (2025-12-26 08-27-50 UTC)
 
 
 ## Release 0.17.202507150 (2025-12-24 18-15-06 UTC)
