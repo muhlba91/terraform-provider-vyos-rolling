@@ -2,6 +2,7 @@ package resourcemodel
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -10,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/client"
+	"github.com/echowings/terraform-provider-vyos-rolling/internal/client/clienterrors"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers/tools"
 )
@@ -31,68 +33,136 @@ func (o *FirewallZone) AdjustUpdatePlan(ctx context.Context, c *client.Client, _
 }
 
 func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *client.Client) (helpers.PlanAdjustment, error) {
-	if o == nil || len(o.TagFirewallZoneFrom) == 0 {
+	if o == nil {
 		return helpers.PlanAdjustment{}, nil
+	}
+
+	zoneName := ""
+	if o.SelfIdentifier != nil {
+		zoneName = o.SelfIdentifier.FirewallZone.ValueString()
 	}
 
 	originalFrom := o.TagFirewallZoneFrom
 	filtered := make(map[string]*FirewallZoneFrom, len(originalFrom))
 	skipped := make([]string, 0)
-	originalDefaultAction := types.String{}
-	relaxedDefaultAction := false
 
-	for fromName, fromCfg := range originalFrom {
-		exists, err := c.Has(ctx, []string{"firewall", "zone", fromName})
-		if err != nil {
-			return helpers.PlanAdjustment{}, fmt.Errorf("checking referenced zone %q: %w", fromName, err)
+	if len(originalFrom) > 0 {
+		for fromName, fromCfg := range originalFrom {
+			exists, err := c.Has(ctx, []string{"firewall", "zone", fromName})
+			if err != nil {
+				return helpers.PlanAdjustment{}, fmt.Errorf("checking referenced zone %q: %w", fromName, err)
+			}
+			if !exists {
+				skipped = append(skipped, fromName)
+				continue
+			}
+			filtered[fromName] = fromCfg
 		}
-		if !exists {
-			skipped = append(skipped, fromName)
-			continue
+
+		if len(skipped) > 0 {
+			sort.Strings(skipped)
+			tools.Warn(ctx, "firewall zone references missing peers, temporarily skipping", map[string]interface{}{
+				"zone":         zoneName,
+				"missing_from": skipped,
+			})
+
+			if len(filtered) == 0 {
+				// Clear the entire block to avoid emitting `set firewall zone <name> from`
+				// without nested values, which VyOS rejects.
+				o.TagFirewallZoneFrom = nil
+			} else {
+				o.TagFirewallZoneFrom = filtered
+			}
 		}
-		filtered[fromName] = fromCfg
 	}
 
-	if len(skipped) == 0 {
+	originalDefaultAction := types.String{}
+	relaxedDefaultAction := false
+	relaxedBecauseFromMissingOnDevice := false
+
+	// Safety: creating/updating a zone with default-action=drop before any
+	// `from` rules exist can lock out management or even router-originated traffic
+	// (e.g. WAN missing `from local` prevents pings/DNS).
+	if !o.LeafFirewallZoneDefaultAction.IsNull() && !o.LeafFirewallZoneDefaultAction.IsUnknown() && o.LeafFirewallZoneDefaultAction.ValueString() == "drop" {
+		fromExists := false
+		if zoneName != "" {
+			// NOTE: `exists` returns true for empty config blocks; we need to know
+			// whether there are any *actual* zone-from entries.
+			data, err := c.Get(ctx, []string{"firewall", "zone", zoneName, "from"})
+			switch {
+			case err == nil:
+				fromExists = configNonEmpty(data)
+			case errorsIsNotFound(err):
+				fromExists = false
+			default:
+				return helpers.PlanAdjustment{}, fmt.Errorf("checking firewall zone %q from entries: %w", zoneName, err)
+			}
+		}
+
+		if !fromExists {
+			relaxedDefaultAction = true
+			relaxedBecauseFromMissingOnDevice = true
+			originalDefaultAction = cloneStringValue(o.LeafFirewallZoneDefaultAction)
+			// VyOS does not accept "accept" here (valid values are drop/reject).
+			// To avoid lockout, temporarily omit default-action so the zone behaves
+			// permissively until zone-from rules exist.
+			o.LeafFirewallZoneDefaultAction = types.StringNull()
+			tools.Warn(ctx, "firewall zone default action temporarily relaxed (no from rules yet)", map[string]interface{}{
+				"zone":   zoneName,
+				"action": originalDefaultAction.ValueString(),
+			})
+		}
+	}
+
+	if len(skipped) == 0 && !relaxedDefaultAction {
 		return helpers.PlanAdjustment{}, nil
 	}
 
-	sort.Strings(skipped)
-	tools.Warn(ctx, "firewall zone references missing peers, temporarily skipping", map[string]interface{}{
-		"zone":         o.SelfIdentifier.FirewallZone.ValueString(),
-		"missing_from": skipped,
-	})
-
-	if len(filtered) == 0 {
-		// Clear the entire block to avoid emitting `set firewall zone <name> from`
-		// without nested values, which VyOS rejects.
-		o.TagFirewallZoneFrom = nil
-	} else {
-		o.TagFirewallZoneFrom = filtered
-	}
 	skippedCopy := append([]string(nil), skipped...)
-
-	if o.LeafFirewallZoneLocalZone.ValueBool() && !o.LeafFirewallZoneDefaultAction.IsNull() && !o.LeafFirewallZoneDefaultAction.IsUnknown() && o.LeafFirewallZoneDefaultAction.ValueString() == "drop" {
-		relaxedDefaultAction = true
-		originalDefaultAction = cloneStringValue(o.LeafFirewallZoneDefaultAction)
-		o.LeafFirewallZoneDefaultAction = types.StringValue("accept")
-		tools.Warn(ctx, "local firewall zone default action temporarily relaxed", map[string]interface{}{
-			"zone":   o.SelfIdentifier.FirewallZone.ValueString(),
-			"action": originalDefaultAction.ValueString(),
-		})
-	}
 
 	return helpers.PlanAdjustment{
 		Restore: func() {
+			// Restore only the temporary `from` filtering so state matches config.
+			// If we relaxed default-action due to missing `from` rules on-device,
+			// keep the relaxed value so Terraform state reflects what was applied.
 			o.TagFirewallZoneFrom = originalFrom
-			if relaxedDefaultAction {
+			if relaxedDefaultAction && !relaxedBecauseFromMissingOnDevice {
 				o.LeafFirewallZoneDefaultAction = cloneStringValue(originalDefaultAction)
 			}
 		},
 		PostApply: func(ctx context.Context) error {
+			if relaxedBecauseFromMissingOnDevice {
+				// Defer restoring default-action=drop until a later apply, after
+				// zone-from rules exist (managed by separate resources).
+				return nil
+			}
 			return o.reapplyMissingFromReferences(ctx, c, skippedCopy, originalFrom, relaxedDefaultAction, originalDefaultAction)
 		},
 	}, nil
+}
+
+func errorsIsNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	var nf clienterrors.NotFoundError
+	return errors.As(err, &nf)
+}
+
+func configNonEmpty(data any) bool {
+	if data == nil {
+		return false
+	}
+	switch v := data.(type) {
+	case map[string]interface{}:
+		return len(v) > 0
+	case []interface{}:
+		return len(v) > 0
+	default:
+		// Be conservative: unknown shapes might still represent a non-empty config,
+		// but for lockout-safety we treat it as empty unless clearly non-empty.
+		return false
+	}
 }
 
 func (o *FirewallZone) reapplyMissingFromReferences(ctx context.Context, c *client.Client, skipped []string, original map[string]*FirewallZoneFrom, relaxedDefaultAction bool, originalDefaultAction types.String) error {

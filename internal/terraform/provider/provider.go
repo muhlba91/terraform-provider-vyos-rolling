@@ -15,6 +15,7 @@ import (
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/helpers/tools"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen"
+	extra_firewall_zone_from "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/extra/firewall_zone_from"
 )
 
 // Ensure ScaffoldingProvider satisfies various provider interfaces.
@@ -243,7 +244,10 @@ func defaultBindingOverrides() map[string]string {
 
 // Resources method to define the provider's resources.
 func (p *VyosProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return autogen.GetResources()
+	return append(
+		autogen.GetResources(),
+		extra_firewall_zone_from.New,
+	)
 }
 
 // DataSources method to define the provider's data sources.
