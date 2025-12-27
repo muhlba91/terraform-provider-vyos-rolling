@@ -80,32 +80,51 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 	relaxedDefaultAction := false
 	relaxedBecauseFromMissingOnDevice := false
 
-	// Safety: creating/updating a zone with default-action=drop before any
-	// `from` rules exist can lock out management or even router-originated traffic
-	// (e.g. WAN missing `from local` prevents pings/DNS).
-	if !o.LeafFirewallZoneDefaultAction.IsNull() && !o.LeafFirewallZoneDefaultAction.IsUnknown() && o.LeafFirewallZoneDefaultAction.ValueString() == "drop" {
-		fromExists := false
-		if zoneName != "" {
-			// NOTE: `exists` returns true for empty config blocks; we need to know
-			// whether there are any *actual* zone-from entries.
-			data, err := c.Get(ctx, []string{"firewall", "zone", zoneName, "from"})
-			switch {
-			case err == nil:
-				fromExists = configNonEmpty(data)
-			case errorsIsNotFound(err):
-				fromExists = false
-			default:
-				return helpers.PlanAdjustment{}, fmt.Errorf("checking firewall zone %q from entries: %w", zoneName, err)
-			}
-		}
+	originalLocalZone := types.Bool{}
+	relaxedLocalZone := false
 
+	fromExists := false
+	if zoneName != "" {
+		// NOTE: `exists` returns true for empty config blocks; we need to know
+		// whether there are any *actual* zone-from entries.
+		data, err := c.Get(ctx, []string{"firewall", "zone", zoneName, "from"})
+		switch {
+		case err == nil:
+			fromExists = configNonEmpty(data)
+		case errorsIsNotFound(err):
+			fromExists = false
+		default:
+			return helpers.PlanAdjustment{}, fmt.Errorf("checking firewall zone %q from entries: %w", zoneName, err)
+		}
+	}
+
+	// Safety: enabling local-zone while `from` edges are missing will cause
+	// VyOS zone-policy to apply its implicit default drop to traffic destined
+	// to the router itself.
+	if !fromExists && !o.LeafFirewallZoneLocalZone.IsNull() && !o.LeafFirewallZoneLocalZone.IsUnknown() && o.LeafFirewallZoneLocalZone.ValueBool() {
+		relaxedLocalZone = true
+		relaxedBecauseFromMissingOnDevice = true
+		originalLocalZone = cloneBoolValue(o.LeafFirewallZoneLocalZone)
+		o.LeafFirewallZoneLocalZone = types.BoolValue(false)
+		tools.Warn(ctx, "firewall zone local-zone temporarily disabled (no from rules yet)", map[string]interface{}{
+			"zone": zoneName,
+		})
+	}
+
+	// Safety: creating/updating a zone with default-action=drop before any
+	// `from` rules exist can lock out management or even router-originated traffic.
+	// In particular, setting `local-zone` while `from` edges are missing will
+	// cause VyOS zone-policy to apply its implicit default drop to traffic
+	// destined to the router itself.
+	if !o.LeafFirewallZoneDefaultAction.IsNull() && !o.LeafFirewallZoneDefaultAction.IsUnknown() && o.LeafFirewallZoneDefaultAction.ValueString() == "drop" {
 		if !fromExists {
 			relaxedDefaultAction = true
 			relaxedBecauseFromMissingOnDevice = true
 			originalDefaultAction = cloneStringValue(o.LeafFirewallZoneDefaultAction)
 			// VyOS does not accept "accept" here (valid values are drop/reject).
-			// To avoid lockout, temporarily omit default-action so the zone behaves
-			// permissively until zone-from rules exist.
+			// Omitting default-action alone is NOT sufficient for safety because
+			// VyOS zone-policy behaves like drop until explicit `from` rules exist.
+			// local-zone is handled separately above; leave it disabled until a later apply.
 			o.LeafFirewallZoneDefaultAction = types.StringNull()
 			tools.Warn(ctx, "firewall zone default action temporarily relaxed (no from rules yet)", map[string]interface{}{
 				"zone":   zoneName,
@@ -114,7 +133,7 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 		}
 	}
 
-	if len(skipped) == 0 && !relaxedDefaultAction {
+	if len(skipped) == 0 && !relaxedDefaultAction && !relaxedLocalZone {
 		return helpers.PlanAdjustment{}, nil
 	}
 
@@ -122,23 +141,32 @@ func (o *FirewallZone) adjustMissingFromReferences(ctx context.Context, c *clien
 
 	return helpers.PlanAdjustment{
 		Restore: func() {
-			// Restore only the temporary `from` filtering so state matches config.
-			// If we relaxed default-action due to missing `from` rules on-device,
-			// keep the relaxed value so Terraform state reflects what was applied.
 			o.TagFirewallZoneFrom = originalFrom
-			if relaxedDefaultAction && !relaxedBecauseFromMissingOnDevice {
+			if relaxedDefaultAction {
 				o.LeafFirewallZoneDefaultAction = cloneStringValue(originalDefaultAction)
+			}
+			if relaxedLocalZone {
+				o.LeafFirewallZoneLocalZone = cloneBoolValue(originalLocalZone)
 			}
 		},
 		PostApply: func(ctx context.Context) error {
 			if relaxedBecauseFromMissingOnDevice {
-				// Defer restoring default-action=drop until a later apply, after
-				// zone-from rules exist (managed by separate resources).
+				// Defer restoring default-action=drop and enabling local-zone until a later apply.
 				return nil
 			}
 			return o.reapplyMissingFromReferences(ctx, c, skippedCopy, originalFrom, relaxedDefaultAction, originalDefaultAction)
 		},
 	}, nil
+}
+
+func cloneBoolValue(v types.Bool) types.Bool {
+	if v.IsNull() {
+		return types.BoolNull()
+	}
+	if v.IsUnknown() {
+		return types.BoolUnknown()
+	}
+	return types.BoolValue(v.ValueBool())
 }
 
 func errorsIsNotFound(err error) bool {
@@ -154,13 +182,11 @@ func configNonEmpty(data any) bool {
 		return false
 	}
 	switch v := data.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		return len(v) > 0
-	case []interface{}:
+	case []any:
 		return len(v) > 0
 	default:
-		// Be conservative: unknown shapes might still represent a non-empty config,
-		// but for lockout-safety we treat it as empty unless clearly non-empty.
 		return false
 	}
 }

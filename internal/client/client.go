@@ -453,7 +453,26 @@ func firewallZoneSetWeight(path []string) int {
 	if isFirewallZoneMemberInterface(path) {
 		return 100
 	}
+	if isFirewallZoneDefaultAction(path) {
+		return 90
+	}
 	return 0
+}
+
+func isFirewallZoneDefaultAction(path []string) bool {
+	if len(path) < 5 {
+		return false
+	}
+	if path[0] != "firewall" || path[1] != "zone" {
+		return false
+	}
+	// Path shape: firewall zone <name> default-action <value>
+	for i := 2; i < len(path)-1; i++ {
+		if path[i] == "default-action" {
+			return true
+		}
+	}
+	return false
 }
 
 func isFirewallZoneMemberInterface(path []string) bool {
@@ -715,10 +734,9 @@ func (c *Client) Has(ctx context.Context, path []string) (bool, error) {
 		"data": []string{string(operation)},
 	}
 
-	tools.Debug(ctx, "Creating 'exists' request for endpoint", map[string]interface{}{"endpoint": endpoint, "payload": payload})
+	tools.Debug(ctx, "Creating 'exists' request for endpoint", map[string]interface{}{"endpoint": endpoint, "path": path})
 
 	payloadEnc := payload.Encode()
-	tools.Trace(ctx, "Request payload encoded", map[string]interface{}{"payload": payloadEnc})
 	gatewayBackOffDelay := gatewayRetryInitialDelay
 
 	for attempt := 0; ; attempt++ {
@@ -806,10 +824,9 @@ func (c *Client) Get(ctx context.Context, path []string) (any, error) {
 		"data": []string{string(operation)},
 	}
 
-	tools.Info(ctx, "Creating showConfig request for endpoint", map[string]interface{}{"endpoint": endpoint, "payload": payload})
+	tools.Info(ctx, "Creating showConfig request for endpoint", map[string]interface{}{"endpoint": endpoint, "path": path})
 
 	payloadEnc := payload.Encode()
-	tools.Debug(ctx, "Request payload encoded", map[string]interface{}{"payload": payloadEnc})
 	gatewayBackOffDelay := gatewayRetryInitialDelay
 
 	for attempt := 0; ; attempt++ {

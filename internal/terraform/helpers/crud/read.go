@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -46,8 +47,113 @@ func Read(ctx context.Context, r helpers.VyosResource, req resource.ReadRequest,
 
 	var rnfErr cruderrors.ResourceNotFoundError
 	if errors.As(err, &rnfErr) {
-		resp.State.RemoveResource(ctx)
-		return
+		// `exists` can be a false-negative in some environments; before removing the
+		// resource from state, double-check via `showConfig`.
+		path := stateModel.GetVyosPath()
+		response, getErr := r.GetClient().Get(ctx, path)
+		var nfErr clienterrors.NotFoundError
+		if errors.As(getErr, &nfErr) {
+			// Some VyOS endpoints can return an empty response for the exact resource
+			// path, while still returning the resource nested under a higher-level
+			// parent path. Try to recover by fetching a parent subtree and traversing
+			// down to the resource.
+			tryRecoverFrom := func(base []string, remaining []string) (bool, error) {
+				parentResp, parentErr := r.GetClient().Get(ctx, base)
+				if errors.As(parentErr, &nfErr) {
+					return false, nil
+				}
+				if parentErr != nil {
+					return false, parentErr
+				}
+				cur, ok := parentResp.(map[string]any)
+				if !ok {
+					return false, nil
+				}
+
+				// Some API responses include one or more of the queried base segments
+				// as wrapper keys (e.g. {"firewall": {"zone": {...}}} when querying
+				// ["firewall"] or ["firewall","zone"]). Unwrap these wrappers before
+				// attempting to traverse the remaining path.
+				for _, seg := range base {
+					val, ok := cur[seg]
+					if !ok {
+						continue
+					}
+					next, ok := val.(map[string]any)
+					if !ok {
+						continue
+					}
+					cur = next
+				}
+
+				for i, seg := range remaining {
+					val, ok := cur[seg]
+					if !ok {
+						return false, nil
+					}
+					if i == len(remaining)-1 {
+						leafMap, ok := val.(map[string]any)
+						if !ok {
+							return false, nil
+						}
+						if unmarshalErr := helpers.UnmarshalVyos(ctx, leafMap, stateModel); unmarshalErr != nil {
+							return false, unmarshalErr
+						}
+						return true, nil
+					}
+					next, ok := val.(map[string]any)
+					if !ok {
+						return false, nil
+					}
+					cur = next
+				}
+				return false, nil
+			}
+
+			// Try a few increasingly higher-level parents.
+			for cut := len(path) - 1; cut >= 1 && cut >= len(path)-3; cut-- {
+				base := path[:cut]
+				remaining := path[cut:]
+				recovered, recErr := tryRecoverFrom(base, remaining)
+				if recErr != nil {
+					resp.Diagnostics.AddError("unable to retrieve config", recErr.Error())
+					return
+				}
+				if recovered {
+					err = nil
+					break
+				}
+			}
+			if err != nil {
+				// Be conservative: some VyOS endpoints can return false negatives for
+				// `exists` and even `showConfig` on the exact path and nearby parents.
+				// Removing from state would force a recreate on the next plan/apply,
+				// which can be dangerous for networking constructs.
+				resp.Diagnostics.AddWarning(
+					"unable to confirm resource presence during refresh",
+					fmt.Sprintf("Keeping prior state because the VyOS API did not return configuration for path %q", strings.Join(path, " ")),
+				)
+				helpers.UnknownToNull(ctx, stateModel)
+				resp.Diagnostics.Append(resp.State.Set(ctx, stateModel)...)
+				return
+			}
+		} else {
+			if getErr != nil {
+				resp.Diagnostics.AddError("unable to retrieve config", getErr.Error())
+				return
+			}
+			if responseAssrt, ok := response.(map[string]any); ok {
+				unmarshalErr := helpers.UnmarshalVyos(ctx, responseAssrt, stateModel)
+				if unmarshalErr != nil {
+					resp.Diagnostics.AddError("unable to retrieve config", unmarshalErr.Error())
+					return
+				}
+				err = nil
+			} else {
+				resp.Diagnostics.AddError("unable to retrieve config", fmt.Errorf("unknown api response: %#v", response).Error())
+				return
+			}
+		}
 	}
 	if err != nil {
 		resp.Diagnostics.AddError("unable to retrieve config", err.Error())
