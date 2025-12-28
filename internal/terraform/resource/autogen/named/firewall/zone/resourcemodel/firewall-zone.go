@@ -169,71 +169,71 @@ func (o FirewallZone) ResourceSchemaAttributes(ctx context.Context) map[string]s
 
 		"description":
 
-			/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (description) */
-			schema.StringAttribute{
-				Optional: true,
-				MarkdownDescription: `Description
+		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (description) */
+		schema.StringAttribute{
+			Optional: true,
+			MarkdownDescription: `Description
 
     |  Format  |  Description  |
     |----------|---------------|
     |  txt     |  Description  |
 `,
-				Description: `Description
+			Description: `Description
 
     |  Format  |  Description  |
     |----------|---------------|
     |  txt     |  Description  |
 `,
-			},
+		},
 
 		"default_log":
 
-			/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (default-log) */
-			schema.BoolAttribute{
-				Optional: true,
-				MarkdownDescription: `Log packets hitting default-action
+		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (default-log) */
+		schema.BoolAttribute{
+			Optional: true,
+			MarkdownDescription: `Log packets hitting default-action
 
 `,
-				Description: `Log packets hitting default-action
+			Description: `Log packets hitting default-action
 
 `,
-				Default: booldefault.StaticBool(false),
-			},
+			Default: booldefault.StaticBool(false),
+		},
 
 		"default_action":
 
-			/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (default-action) */
-			schema.StringAttribute{
-				Optional: true,
-				MarkdownDescription: `Default-action for traffic coming into this zone
+		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (default-action) */
+		schema.StringAttribute{
+			Optional: true,
+			MarkdownDescription: `Default-action for traffic coming into this zone
 
     |  Format  |  Description             |
     |----------|--------------------------|
     |  drop    |  Drop silently           |
     |  reject  |  Drop and notify source  |
 `,
-				Description: `Default-action for traffic coming into this zone
+			Description: `Default-action for traffic coming into this zone
 
     |  Format  |  Description             |
     |----------|--------------------------|
     |  drop    |  Drop silently           |
     |  reject  |  Drop and notify source  |
 `,
-			},
+		},
 
 		"local_zone":
 
-			/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (local-zone) */
-			schema.BoolAttribute{
-				Optional: true,
-				MarkdownDescription: `Zone to be local-zone
+		/* tools/generate-terraform-resource-full/templates/resources/common/resource-model-schema-attrtype.gotmpl #resource-model-schema-attrtype (local-zone) */
+		schema.BoolAttribute{
+			Optional: true,
+			MarkdownDescription: `Zone to be local-zone
 
 `,
-				Description: `Zone to be local-zone
+			Description: `Zone to be local-zone
 
 `,
-				Default: booldefault.StaticBool(false),
-			},
+			Default: booldefault.StaticBool(false),
+		},
 
 		// TagNodes
 
