@@ -85,10 +85,12 @@ provider "vyos" {
 
 - `certificate` (Attributes) (see [below for nested schema](#nestedatt--certificate))
 - `default_timeouts` (Number) Default Create/Read/Update/Destroy timeouts in minutes, can be overridden on a per resource basis. If not configured, defaults to 15.
+- `http_request_retries` (Number) Number of additional attempts to retry HTTP API calls when a network error occurs. Defaults to 0 (no retries).
 - `ignore_child_resource_on_delete` (Boolean) Disables the check to see if the resource has any child resources.This can be useful when only a parent resource is configured via terraform.This has no effect on global resources.
 
   !> **WARNING:** This is extremely destructive and will delete everything below the destroyed resource.
 - `ignore_missing_parent_resource_on_create` (Boolean) Disables the check to see if the required parent resource exists on the target machine.This can be helpful when encountering a bug with the provider.
+- `manual_binding_overrides` (Map of String) Optional map where keys are VyOS path prefixes (joined by spaces) and values are binding identifiers. Resources whose paths match the same identifier are committed together, which is useful for manual batching overrides.
 - `overwrite_existing_resources_on_create` (Boolean) Disables the check to see if the resource already exists on the target machine, resulting in possibly overwriting configs without notice.This can be helpful when trying to avoid and change many resources at once.
 
 <a id="nestedatt--certificate"></a>

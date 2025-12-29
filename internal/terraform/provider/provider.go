@@ -16,6 +16,7 @@ import (
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/provider/data"
 	"github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/autogen"
 	extra_firewall_zone_from "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/extra/firewall_zone_from"
+	extra_system_image_upgrade "github.com/echowings/terraform-provider-vyos-rolling/internal/terraform/resource/extra/system_image_upgrade"
 )
 
 // Ensure ScaffoldingProvider satisfies various provider interfaces.
@@ -247,6 +248,7 @@ func (p *VyosProvider) Resources(ctx context.Context) []func() resource.Resource
 	return append(
 		autogen.GetResources(),
 		extra_firewall_zone_from.New,
+		extra_system_image_upgrade.New,
 	)
 }
 

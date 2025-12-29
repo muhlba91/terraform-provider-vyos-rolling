@@ -885,3 +885,153 @@ func (c *Client) Get(ctx context.Context, path []string) (any, error) {
 		return nil, fmt.Errorf("[api error]: %v", ret)
 	}
 }
+
+// callEndpoint executes a single operation against one of the VyOS API endpoints.
+//
+// The provider uses the form-data style described in the VyOS API docs:
+//   - key=<api_key>
+//   - data=<json>
+//
+// Endpoint paths should be the suffix, e.g. "/show", "/image", "/reboot", "/config-file".
+func (c *Client) callEndpoint(ctx context.Context, endpointPath string, operation any) (any, error) {
+	endpointPath = strings.TrimSpace(endpointPath)
+	if endpointPath == "" {
+		return nil, fmt.Errorf("endpoint path is required")
+	}
+	if !strings.HasPrefix(endpointPath, "/") {
+		endpointPath = "/" + endpointPath
+	}
+
+	endpoint := c.endpoint + endpointPath
+	operationJSON, err := json.Marshal(operation)
+	if err != nil {
+		return nil, fmt.Errorf("fail json marshal operation: %w", err)
+	}
+
+	payload := url.Values{
+		"key":  []string{c.apiKey},
+		"data": []string{string(operationJSON)},
+	}
+
+	payloadEncoded := payload.Encode()
+	gatewayBackOffDelay := gatewayRetryInitialDelay
+
+	for attempt := 0; ; attempt++ {
+		resp, err := c.doRequestWithRetry(ctx, func() (*http.Request, error) {
+			req, reqErr := http.NewRequestWithContext(ctx, "POST", endpoint, strings.NewReader(payloadEncoded))
+			if reqErr != nil {
+				return nil, fmt.Errorf("failed to create http request object: %w", reqErr)
+			}
+			req.Header.Set("User-Agent", c.userAgent)
+			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			return req, nil
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		body, readErr := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		if readErr != nil {
+			return nil, fmt.Errorf("failed to read http response: %w", readErr)
+		}
+
+		if resp.StatusCode == http.StatusBadGateway {
+			tools.Warn(ctx, "VyOS API returned 502 Bad Gateway, retrying request", map[string]interface{}{"attempt": attempt, "backOff": gatewayBackOffDelay, "endpoint": endpoint})
+			if err := waitForLock(ctx, gatewayBackOffDelay); err != nil {
+				return nil, fmt.Errorf("request aborted while waiting for gateway recovery: %w", err)
+			}
+			gatewayBackOffDelay = increaseGatewayBackOff(gatewayBackOffDelay)
+			continue
+		}
+
+		if resp.StatusCode >= 500 {
+			return nil, fmt.Errorf("http error [%s]: %s", resp.Status, string(body))
+		}
+
+		var ret map[string]interface{}
+		if err := json.Unmarshal(body, &ret); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal http response body: '%s' as json: %w", body, err)
+		}
+
+		if ret["success"] == true {
+			return ret["data"], nil
+		}
+
+		return nil, fmt.Errorf("API ERROR [%s]: %v", resp.Status, ret["error"])
+	}
+}
+
+// Show executes an operational mode "show" command via the /show endpoint.
+// Example: Show(ctx, []string{"system", "image"}).
+func (c *Client) Show(ctx context.Context, path []string) (string, error) {
+	data, err := c.callEndpoint(ctx, "/show", map[string]interface{}{"op": "show", "path": path})
+	if err != nil {
+		return "", err
+	}
+	if data == nil {
+		return "", nil
+	}
+	if s, ok := data.(string); ok {
+		return s, nil
+	}
+	return fmt.Sprint(data), nil
+}
+
+// ImageAdd installs a VyOS image from a given ISO URL via the /image endpoint.
+func (c *Client) ImageAdd(ctx context.Context, isoURL string) (string, error) {
+	data, err := c.callEndpoint(ctx, "/image", map[string]interface{}{"op": "add", "url": isoURL})
+	if err != nil {
+		return "", err
+	}
+	if data == nil {
+		return "", nil
+	}
+	if s, ok := data.(string); ok {
+		return s, nil
+	}
+	return fmt.Sprint(data), nil
+}
+
+// ImageDelete deletes an installed image by name via the /image endpoint.
+func (c *Client) ImageDelete(ctx context.Context, name string) (string, error) {
+	data, err := c.callEndpoint(ctx, "/image", map[string]interface{}{"op": "delete", "name": name})
+	if err != nil {
+		return "", err
+	}
+	if data == nil {
+		return "", nil
+	}
+	if s, ok := data.(string); ok {
+		return s, nil
+	}
+	return fmt.Sprint(data), nil
+}
+
+// Reboot initiates a reboot via the /reboot endpoint.
+// The API docs show path ["now"], but the argument is kept generic for forward compatibility.
+func (c *Client) Reboot(ctx context.Context, path []string) error {
+	_, err := c.callEndpoint(ctx, "/reboot", map[string]interface{}{"op": "reboot", "path": path})
+	return err
+}
+
+// ConfigFileSave saves the running configuration via the /config-file endpoint.
+// If file is empty, VyOS saves to /config/config.boot.
+func (c *Client) ConfigFileSave(ctx context.Context, file string) (string, error) {
+	op := map[string]interface{}{"op": "save"}
+	if strings.TrimSpace(file) != "" {
+		op["file"] = file
+	}
+
+	data, err := c.callEndpoint(ctx, "/config-file", op)
+	if err != nil {
+		return "", err
+	}
+	if data == nil {
+		return "", nil
+	}
+	if s, ok := data.(string); ok {
+		return s, nil
+	}
+	return fmt.Sprint(data), nil
+}

@@ -4,17 +4,20 @@ page_title: "vyos_firewall_zone_from Resource - vyos"
 subcategory: "Firewall"
 
 description: |-
-  Firewall⯯Zone-policy⯯Zone from which to filter traffic
+  Firewall
+  ⯯
+  Zone-policy
+  ⯯
+  Zone from which to filter traffic
 ---
 
 # vyos_firewall_zone_from (Resource)
 <center>
 
-
-Firewall  
-⯯  
-Zone-policy  
-⯯  
+Firewall
+⯯
+Zone-policy
+⯯
 **Zone from which to filter traffic**
 
 

@@ -30,6 +30,7 @@ Firewall
       - [default_action](#default_action)
       - [default_log](#default_log)
       - [description](#description)
+      - [from](#from)
       - [intra_zone_filtering](#intra_zone_filtering)
       - [local_zone](#local_zone)
       - [member](#member)
@@ -37,6 +38,8 @@ Firewall
     - [Read-Only](#read-only)
       - [id](#id)
     - [Nested Schema for `identifier`](#nested-schema-for-identifier)
+    - [Nested Schema for `from`](#nested-schema-for-from)
+    - [Nested Schema for `from.firewall`](#nested-schema-for-fromfirewall)
     - [Nested Schema for `intra_zone_filtering`](#nested-schema-for-intra_zone_filtering)
     - [Nested Schema for `intra_zone_filtering.firewall`](#nested-schema-for-intra_zone_filteringfirewall)
     - [Nested Schema for `member`](#nested-schema-for-member)
@@ -70,6 +73,8 @@ Firewall
     |  Format  &emsp;|  Description  |
     |----------|---------------|
     |  txt     &emsp;|  Description  |
+#### from
+- `from` (Attributes Map) Zone from which to filter traffic (see [below for nested schema](#nestedatt--from))
 #### intra_zone_filtering
 - `intra_zone_filtering` (Attributes) Intra-zone filtering (see [below for nested schema](#nestedatt--intra_zone_filtering))
 #### local_zone
@@ -94,6 +99,23 @@ Required:
     |  Format  &emsp;|  Description  |
     |----------|---------------|
     |  txt     &emsp;|  Zone name    |
+
+
+<a id="nestedatt--from"></a>
+### Nested Schema for `from`
+
+Optional:
+
+- `firewall` (Attributes) Firewall options (see [below for nested schema](#nestedatt--from--firewall))
+
+<a id="nestedatt--from--firewall"></a>
+### Nested Schema for `from.firewall`
+
+Optional:
+
+- `ipv6_name` (String) IPv6 firewall ruleset
+- `name` (String) IPv4 firewall ruleset
+
 
 
 <a id="nestedatt--intra_zone_filtering"></a>

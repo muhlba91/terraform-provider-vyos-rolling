@@ -197,7 +197,8 @@ func (o FirewallZone) ResourceSchemaAttributes(ctx context.Context) map[string]s
 			Description: `Log packets hitting default-action
 
 `,
-			Default: booldefault.StaticBool(false),
+			Default:  booldefault.StaticBool(false),
+			Computed: true,
 		},
 
 		"default_action":
@@ -232,7 +233,8 @@ func (o FirewallZone) ResourceSchemaAttributes(ctx context.Context) map[string]s
 			Description: `Zone to be local-zone
 
 `,
-			Default: booldefault.StaticBool(false),
+			Default:  booldefault.StaticBool(false),
+			Computed: true,
 		},
 
 		// TagNodes

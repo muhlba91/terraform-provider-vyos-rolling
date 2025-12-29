@@ -87,6 +87,16 @@ that the Terraform Registry renders).
 - The `vyos-iac` repo inside this workspace shows a full end-to-end usage
 	pattern with YAML-driven modules.
 
+### Operational actions (imperative)
+
+Most resources in this provider are declarative configuration. A small set of
+"operational" resources intentionally perform actions.
+
+- `vyos_system_image_upgrade` installs a pinned ISO via the HTTPS API `/image`
+	endpoint and can optionally reboot the device. Run it in a separate apply
+	(for example `tofu apply -target=vyos_system_image_upgrade.<name>`) because a
+	reboot will interrupt other operations.
+
 ## Development
 
 Prerequisites:
