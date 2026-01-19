@@ -91,3 +91,21 @@ func TestUnmarshalStringFromNestedTagNode(t *testing.T) {
 		t.Fatalf("flow isolation nat flag was not set")
 	}
 }
+
+func TestUnmarshalStringFromEmptyMap(t *testing.T) {
+	ctx := context.Background()
+
+	data := map[string]any{
+		"flow-isolation": map[string]any{},
+	}
+
+	got := &qoscake.QosPolicyCake{}
+	err := helpers.UnmarshalVyos(ctx, data, got)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	if !got.LeafQosPolicyCakeFlowIsolation.IsNull() {
+		t.Fatalf("flow isolation should be null when payload is empty map")
+	}
+}

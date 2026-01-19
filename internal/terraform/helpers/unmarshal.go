@@ -87,6 +87,8 @@ func UnmarshalVyos(ctx context.Context, data map[string]any, value VyosResourceD
 
 				if dataValue == nil {
 					tfval = basetypes.NewStringNull()
+				} else if mapValue, ok := dataValue.(map[string]any); ok && len(mapValue) == 0 {
+					tfval = basetypes.NewStringNull()
 				} else {
 					stringValue, err := vyosStringValue(dataValue)
 					if err != nil {
