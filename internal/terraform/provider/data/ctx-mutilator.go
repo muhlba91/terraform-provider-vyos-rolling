@@ -22,6 +22,7 @@ func NewProviderData(c *client.Client) ProviderData {
 			CrudSkipExistingResourceCheck:   false,
 			CrudSkipCheckChildBeforeDelete:  false,
 			ManualBindingOverrides:          map[string]string{},
+			ReadRemoveMissingOnRefresh:      true,
 		},
 	}
 }

@@ -92,6 +92,7 @@ provider "vyos" {
 - `ignore_missing_parent_resource_on_create` (Boolean) Disables the check to see if the required parent resource exists on the target machine.This can be helpful when encountering a bug with the provider.
 - `manual_binding_overrides` (Map of String) Optional map where keys are VyOS path prefixes (joined by spaces) and values are binding identifiers. Resources whose paths match the same identifier are committed together, which is useful for manual batching overrides.
 - `overwrite_existing_resources_on_create` (Boolean) Disables the check to see if the resource already exists on the target machine, resulting in possibly overwriting configs without notice.This can be helpful when trying to avoid and change many resources at once.
+- `remove_missing_on_refresh` (Boolean) When true, resources that are in state but missing from the VyOS API during refresh will be removed from state so they can be recreated on the next plan/apply. This is useful if the device lost config after reboot. Defaults to true.
 
 <a id="nestedatt--certificate"></a>
 ### Nested Schema for `certificate`

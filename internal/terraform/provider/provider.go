@@ -38,6 +38,7 @@ type VyosProviderModel struct {
 	OverwriteExistingRes   types.Bool   `tfsdk:"overwrite_existing_resources_on_create"`
 	IgnoreMissingParentRes types.Bool   `tfsdk:"ignore_missing_parent_resource_on_create"`
 	IgnoreChildResOnDelete types.Bool   `tfsdk:"ignore_child_resource_on_delete"`
+	RemoveMissingOnRefresh types.Bool   `tfsdk:"remove_missing_on_refresh"`
 	DefaultTimeouts        types.Number `tfsdk:"default_timeouts"`
 	HTTPRequestRetries     types.Int64  `tfsdk:"http_request_retries"`
 	ManualBindingOverrides types.Map    `tfsdk:"manual_binding_overrides"`
@@ -109,6 +110,12 @@ func (p *VyosProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 					"This can be useful when only a parent resource is configured via terraform." +
 					"This has no effect on global resources." +
 					"\n\n  !> **WARNING:** This is extremely destructive and will delete everything below the destroyed resource.",
+				Optional: true,
+			},
+			"remove_missing_on_refresh": schema.BoolAttribute{
+				MarkdownDescription: "When true, resources that are in state but missing from the VyOS API during refresh " +
+					"will be removed from state so they can be recreated on the next plan/apply. " +
+					"This is useful if the device lost config after reboot. Defaults to true.",
 				Optional: true,
 			},
 			"manual_binding_overrides": schema.MapAttribute{
@@ -231,6 +238,11 @@ func (p *VyosProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	config.Config.CrudSkipExistingResourceCheck = providerModel.OverwriteExistingRes.ValueBool()
 	config.Config.CrudSkipCheckParentBeforeCreate = providerModel.IgnoreMissingParentRes.ValueBool()
 	config.Config.CrudSkipCheckChildBeforeDelete = providerModel.IgnoreChildResOnDelete.ValueBool()
+	if providerModel.RemoveMissingOnRefresh.IsNull() || providerModel.RemoveMissingOnRefresh.IsUnknown() {
+		// Keep default.
+	} else {
+		config.Config.ReadRemoveMissingOnRefresh = providerModel.RemoveMissingOnRefresh.ValueBool()
+	}
 
 	// Send provider data
 	resp.DataSourceData = config

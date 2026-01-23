@@ -41,4 +41,5 @@ type Config struct {
 	CrudSkipCheckChildBeforeDelete  bool
 	CrudDefaultTimeouts             float64
 	ManualBindingOverrides          map[string]string
+	ReadRemoveMissingOnRefresh      bool
 }

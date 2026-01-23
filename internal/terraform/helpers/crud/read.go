@@ -125,6 +125,14 @@ func Read(ctx context.Context, r helpers.VyosResource, req resource.ReadRequest,
 				}
 			}
 			if err != nil {
+				if r.GetProviderConfig().Config.ReadRemoveMissingOnRefresh {
+					resp.Diagnostics.AddWarning(
+						"resource missing during refresh",
+						fmt.Sprintf("Removing from state because the VyOS API did not return configuration for path %q", strings.Join(path, " ")),
+					)
+					resp.State.RemoveResource(ctx)
+					return
+				}
 				// Be conservative: some VyOS endpoints can return false negatives for
 				// `exists` and even `showConfig` on the exact path and nearby parents.
 				// Removing from state would force a recreate on the next plan/apply,
